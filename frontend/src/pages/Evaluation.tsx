@@ -1,11 +1,14 @@
+import type { ReactNode } from "react";
 import Markdown from "react-markdown";
-import { Link, useParams } from "react-router-dom";
+import { Link, NavLink, useParams } from "react-router-dom";
 import remarkGfm from "remark-gfm";
 import { api } from "../api/client";
 import type { ComparisonTable, ExperimentRun, MetricDefinition } from "../api/types";
 import { ComparisonCard, ConfigFlags, DefinitionsTable } from "../components/ComparisonTable";
-import { Card, Chip, EmptyState, ErrorBanner, Spinner } from "../components/ui";
-import { dateTime, num } from "../lib/format";
+import { EvaluationOverview } from "../components/EvaluationOverview";
+import { EvaluationStatusCard } from "../components/EvaluationStatus";
+import { Card, Chip, EmptyState, Expandable, ErrorBanner, Spinner } from "../components/ui";
+import { UNAVAILABLE, dateTime, num } from "../lib/format";
 import { useApi } from "../lib/hooks";
 
 const KIND: Record<string, { title: string; about: string; columns: [string, string][]; config?: boolean }> = {
@@ -14,8 +17,8 @@ const KIND: Record<string, { title: string; about: string; columns: [string, str
     about: "17 hand-labelled issues in a fixture repository plus a clean negative-control file.",
     config: true,
     columns: [
-      ["recall", "Recall"],
-      ["recall_llm", "Recall (LLM-only issues)"],
+      ["recall", "Issue recall"],
+      ["recall_llm", "Semantic recall (1 issue)"],
       ["defect_precision", "Defect precision"],
       ["negative_fp", "False positives (clean file)"],
       ["mean_line_error", "Line error"],
@@ -85,7 +88,7 @@ const KIND: Record<string, { title: string; about: string; columns: [string, str
     ],
   },
   timing: {
-    title: "Timing benchmark (median total seconds per review, first input)",
+    title: "Historical timing benchmark, Groq (median total seconds per review, first input)",
     about: "Fixed inputs, interleaved repeats, concurrency 1. A Static Only, B LLM Only, C Static + LLM, D Static + LLM + RAG.",
     columns: [
       ["repeats", "Repeats"],
@@ -108,11 +111,24 @@ const KIND: Record<string, { title: string; about: string; columns: [string, str
   },
   runtime: {
     title: "File-size benchmark",
-    about: "Review time for small, medium and large files. Details are on the Performance page.",
+    about: "Review time for small, medium and large files. Rounds and files are what was planned; the run counts show what finished. Details are on the Performance page.",
     columns: [
       ["mode", "Mode"],
-      ["repeats", "Rounds"],
-      ["inputs", "Files"],
+      ["repeats", "Rounds planned"],
+      ["inputs", "Files planned"],
+      ["complete", "Runs complete"],
+      ["partial", "Partial"],
+      ["failed", "Failed"],
+      ["skipped", "Skipped"],
+    ],
+  },
+  gemini_smoke: {
+    title: "Gemini smoke test",
+    about: "Small live requests on one synthetic file. Rate-limit behaviour is simulated in unit tests.",
+    columns: [
+      ["live_checks", "Live checks"],
+      ["live_passed", "Passed"],
+      ["failed", "Failed"],
     ],
   },
   ablation: {
@@ -126,8 +142,29 @@ const KIND: Record<string, { title: string; about: string; columns: [string, str
   },
 };
 
-function cell(x: unknown): string {
-  return typeof x === "string" ? x : num(x);
+const MIN_PAIRED_N = 30;
+const COUNT_KEYS = new Set([
+  "n", "n_queries", "repeats", "inputs", "complete", "partial", "failed", "skipped",
+  "live_checks", "live_passed", "negative_fp",
+]); // prettier-ignore
+
+/** One cell of the runs table. A run that scored nothing has no metrics, only a sample count. */
+function cell(run: ExperimentRun, key: string): { text: string; title?: string } {
+  const x = run.headline[key];
+  const n = typeof run.headline.n === "number" ? run.headline.n : null;
+  if (x === null || x === undefined) return { text: UNAVAILABLE };
+  if (n === 0 && key !== "n") return { text: UNAVAILABLE, title: "no samples were evaluated in this run" };
+  if (n !== null && n < MIN_PAIRED_N && key.includes("roc_auc")) {
+    return { text: UNAVAILABLE, title: `not reported: ${n} samples are too few for ROC-AUC` };
+  }
+  if (typeof x === "string") return { text: x };
+  return { text: COUNT_KEYS.has(key) ? num(x) : x.toFixed(3) };
+}
+
+function smallRunLabel(run: ExperimentRun): string | null {
+  const n = run.headline.n;
+  if (typeof n !== "number" || n >= MIN_PAIRED_N) return null;
+  return n === 0 ? "no samples evaluated" : `preliminary, n = ${n}`;
 }
 
 function RunTable({ kind, runs }: { kind: string; runs: ExperimentRun[] }) {
@@ -158,10 +195,13 @@ function RunTable({ kind, runs }: { kind: string; runs: ExperimentRun[] }) {
                     {dateTime(r.started_at)}
                   </Link>
                   {r.errors > 0 && <span className="ml-2 text-xs text-ink-3">({r.errors} failed samples)</span>}
+                  {smallRunLabel(r) && (
+                    <span className="ml-2 inline-block whitespace-nowrap rounded bg-surface-2 px-1.5 py-0.5 text-xs text-ink-2">{smallRunLabel(r)}</span>
+                  )}
                 </td>
                 <td className="py-2 pr-4 text-ink-2">{r.experiment?.model ?? r.model ?? "static only"}</td>
                 {spec.config && (
-                  <td className="py-2 pr-4 text-xs text-ink-2">
+                  <td className="whitespace-nowrap py-2 pr-4 text-xs text-ink-2">
                     {r.experiment?.configuration ? (
                       <span className="flex flex-col gap-0.5">
                         <span className="text-ink">{r.experiment.configuration.label}</span>
@@ -172,11 +212,14 @@ function RunTable({ kind, runs }: { kind: string; runs: ExperimentRun[] }) {
                     )}
                   </td>
                 )}
-                {spec.columns.map(([key]) => (
-                  <td key={key} className="tabular py-2 pr-4 text-right text-ink">
-                    {cell(r.headline[key])}
-                  </td>
-                ))}
+                {spec.columns.map(([key]) => {
+                  const c = cell(r, key);
+                  return (
+                    <td key={key} title={c.title} className={`tabular py-2 pr-4 text-right ${c.text === UNAVAILABLE ? "text-xs text-ink-3" : "text-ink"}`}>
+                      {c.text}
+                    </td>
+                  );
+                })}
               </tr>
             ))}
           </tbody>
@@ -186,61 +229,147 @@ function RunTable({ kind, runs }: { kind: string; runs: ExperimentRun[] }) {
   );
 }
 
-function BaselineComparison() {
-  const { data, error, loading } = useApi(() => api.evaluationSummary(), []);
-  if (error) return <ErrorBanner title="Could not load the baseline comparison" message={error} />;
-  if (loading && !data) {
-    return (
-      <div className="flex items-center gap-2 text-sm text-ink-2">
-        <Spinner /> Building the baseline comparison…
-      </div>
-    );
-  }
-  if (!data) return null;
-  const defs: Record<string, MetricDefinition> = Object.fromEntries(data.definitions.map((d) => [d.key, d]));
-  const sections = new Map<string, ComparisonTable[]>();
-  for (const t of data.tables) sections.set(t.section, [...(sections.get(t.section) ?? []), t]);
+function EvaluationTabs() {
+  const tab = ({ isActive }: { isActive: boolean }) =>
+    `rounded-lg px-3 py-1.5 text-sm ${isActive ? "bg-accent-wash font-medium text-ink" : "text-ink-2 hover:bg-surface-2"}`;
   return (
-    <div className="space-y-4">
-      <Card>
-        <ul className="ml-4 list-disc space-y-1 text-xs text-ink-2">
-          {data.scope.map((s) => (
-            <li key={s}>{s}</li>
-          ))}
-        </ul>
-      </Card>
-      {data.master && <ComparisonCard table={data.master} definitions={defs} />}
-      {[...sections.entries()].map(([section, tables]) => (
-        <section key={section} className="space-y-3">
-          <h2 className="pt-2 text-base font-semibold text-ink">{section}</h2>
-          {tables.map((t) => (
-            <ComparisonCard key={t.id} table={t} definitions={defs} />
-          ))}
-        </section>
-      ))}
-      <details className="rounded-xl border border-line bg-surface p-4 text-sm">
-        <summary className="cursor-pointer font-medium text-ink">Metric definitions (formula, scale, direction)</summary>
-        <div className="mt-3">
-          <DefinitionsTable definitions={data.definitions} />
+    <nav aria-label="Evaluation views" className="flex gap-1">
+      <NavLink to="/evaluation" end className={tab}>
+        Overview
+      </NavLink>
+      <NavLink to="/evaluation/runs" className={tab}>
+        Saved runs
+      </NavLink>
+    </nav>
+  );
+}
+
+function Section({ id, number, title, children }: { id: string; number: number; title: string; children: ReactNode }) {
+  return (
+    <section id={id} className="scroll-mt-20 space-y-3">
+      <h2 className="text-base font-semibold text-ink">
+        {number}. {title}
+      </h2>
+      {children}
+    </section>
+  );
+}
+
+const SECTIONS = [
+  { id: "planted", title: "Planted-issue detection", prefix: "1." },
+  { id: "classification", title: "CodeReviewer classification", prefix: "2." },
+  { id: "comments", title: "Review comment generation", prefix: "3." },
+  { id: "retrieval", title: "RAG retrieval", prefix: "4." },
+  { id: "risk", title: "Risk ranking", prefix: "5." },
+];
+
+export function EvaluationList() {
+  const summary = useApi(() => api.evaluationSummary(), []);
+  const runs = useApi(() => api.listExperiments(), []);
+  const data = summary.data;
+  const defs: Record<string, MetricDefinition> = Object.fromEntries((data?.definitions ?? []).map((d) => [d.key, d]));
+  const cards = (tables: ComparisonTable[]) => tables.map((t) => <ComparisonCard key={t.id} table={t} definitions={defs} />);
+  const tables = data?.tables ?? [];
+  const supplementary = tables.filter((t) => t.supplementary);
+  const known = tables.filter((t) => !t.supplementary && t.section.match(/^[1-6]/));
+  const other = tables.filter((t) => !t.supplementary && !t.section.match(/^[1-6]/));
+  const gemini = tables.filter((t) => t.section.startsWith("6a"));
+  const staticOnly = tables.filter((t) => t.section.startsWith("6b"));
+  const historical = known.filter((t) => t.section.startsWith("6") && !gemini.includes(t) && !staticOnly.includes(t));
+  return (
+    <div className="space-y-5">
+      <div className="flex flex-wrap items-start justify-between gap-3">
+        <div>
+          <h1 className="text-xl font-semibold text-ink">Evaluation</h1>
+          <p className="mt-1 max-w-3xl text-sm text-ink-2">
+            Results of the Code Review Agent, read from saved benchmark runs. Unmeasured values show as Unavailable.
+          </p>
         </div>
-      </details>
+        <EvaluationTabs />
+      </div>
+      {summary.error && <ErrorBanner title="Could not load the evaluation summary" message={summary.error} />}
+      {runs.error && <ErrorBanner title="Could not load evaluation runs" message={runs.error} />}
+      {summary.loading && !data && (
+        <div className="flex items-center gap-2 text-sm text-ink-2">
+          <Spinner /> Building the evaluation summary…
+        </div>
+      )}
+      {data && (
+        <>
+          <EvaluationOverview summary={data} runs={runs.data ?? []} />
+          {data.status && <EvaluationStatusCard status={data.status} />}
+          <nav aria-label="Evaluation sections" className="flex flex-wrap gap-x-1 gap-y-1 text-xs">
+            {[{ id: "baseline", title: "Baseline comparison" }, ...SECTIONS, { id: "performance", title: "Performance and efficiency" }, { id: "supplementary", title: "Supplementary" }].map((s) => (
+              <a key={s.id} href={`#${s.id}`} className="rounded-md bg-surface-2 px-2 py-1 text-ink-2 hover:text-ink">
+                {s.title}
+              </a>
+            ))}
+          </nav>
+          <Section id="baseline" number={1} title="Baseline comparison">
+            {data.master ? <ComparisonCard table={data.master} definitions={defs} /> : <EmptyState title="No baseline comparison yet" />}
+          </Section>
+          {SECTIONS.map((s, i) => (
+            <Section key={s.id} id={s.id} number={i + 2} title={s.title}>
+              {cards(known.filter((t) => t.section.startsWith(s.prefix)))}
+            </Section>
+          ))}
+          <Section id="performance" number={7} title="Performance and efficiency">
+            {cards(gemini)}
+            {cards(staticOnly)}
+            {historical.length > 0 && (
+              <Expandable title="Historical timing, not Gemini" count={historical.length}>
+                <p className="mb-2 text-ink-2">A different provider. These are not an estimate for Gemini.</p>
+                <div className="space-y-3">{cards(historical)}</div>
+              </Expandable>
+            )}
+          </Section>
+          {other.length > 0 && <div className="space-y-3">{cards(other)}</div>}
+          {supplementary.length > 0 && (
+            <section id="supplementary" className="scroll-mt-20 space-y-3">
+              <h2 className="text-base font-semibold text-ink">Supplementary evaluation</h2>
+              <p className="text-xs text-ink-2">Not a primary result. It has not been checked against human ratings.</p>
+              {cards(supplementary)}
+            </section>
+          )}
+          <div className="grid items-start gap-2 md:grid-cols-2">
+            <Expandable title="Metric definitions" count={data.definitions.length}>
+              <DefinitionsTable definitions={data.definitions} />
+            </Expandable>
+            <Expandable title="Scope of these results" count={data.scope.length}>
+              <ul className="ml-4 list-disc space-y-1 text-ink-2">
+                {data.scope.map((s) => (
+                  <li key={s}>{s}</li>
+                ))}
+              </ul>
+            </Expandable>
+          </div>
+        </>
+      )}
     </div>
   );
 }
 
-export function EvaluationList() {
+const RUN_KINDS = ["planted", "codereviewer_cls", "codereviewer_msg", "hunk_risk", "retrieval", "runtime", "gemini_smoke", "timing", "classifier", "ablation", "usefulness"];
+
+/** The complete history: every saved run, grouped, including stopped ones. */
+export function EvaluationRuns() {
   const { data, error, loading } = useApi(() => api.listExperiments(), []);
+  const summary = useApi(() => api.evaluationSummary(), []);
   const groups = new Map<string, ExperimentRun[]>();
   for (const r of data ?? []) groups.set(r.headline.kind, [...(groups.get(r.headline.kind) ?? []), r]);
+  const other = [...groups.keys()].filter((k) => !RUN_KINDS.includes(k));
+  const stopped = summary.data?.status?.unfinished_runs ?? [];
   return (
     <div className="space-y-4">
-      <div>
-        <h1 className="text-xl font-semibold text-ink">Evaluation</h1>
-        <p className="mt-1 text-sm text-ink-2">
-          Results of saved benchmark runs (<code className="font-mono text-xs">experiments/results</code>). Every number
-          comes from a run's <code className="font-mono text-xs">metrics.json</code>; run more with{" "}
-          <code className="font-mono text-xs">python -m marl_agents.cli eval …</code>
-        </p>
+      <div className="flex flex-wrap items-start justify-between gap-3">
+        <div>
+          <h1 className="text-xl font-semibold text-ink">Saved runs</h1>
+          <p className="mt-1 max-w-3xl text-sm text-ink-2">
+            Every saved run{data ? ` (${data.length})` : ""}, newest first within each group. Each number comes from that run's{" "}
+            <code className="font-mono text-xs">metrics.json</code>.
+          </p>
+        </div>
+        <EvaluationTabs />
       </div>
       {error && <ErrorBanner title="Could not load evaluation runs" message={error} />}
       {loading && !data && (
@@ -248,12 +377,30 @@ export function EvaluationList() {
           <Spinner /> Loading…
         </div>
       )}
-      <h2 className="text-base font-semibold text-ink">Baseline comparison</h2>
-      <BaselineComparison />
-      <h2 className="pt-4 text-base font-semibold text-ink">All saved runs</h2>
       {data && data.length === 0 && <EmptyState title="No evaluation runs saved yet" />}
-      {["planted", "codereviewer_cls", "codereviewer_msg", "hunk_risk", "retrieval", "timing", "runtime", "classifier", "ablation", "usefulness"].map(
-        (kind) => groups.has(kind) && <RunTable key={kind} kind={kind} runs={groups.get(kind)!} />,
+      {stopped.length > 0 && (
+        <Card title={`Stopped runs (${stopped.length})`}>
+          <p className="-mt-2 mb-2 text-xs text-ink-3">These never saved metrics, so they have no results to open.</p>
+          <ul className="ml-4 list-disc space-y-0.5 break-all font-mono text-xs text-ink-2">
+            {stopped.map((s) => (
+              <li key={s}>{s}</li>
+            ))}
+          </ul>
+        </Card>
+      )}
+      {RUN_KINDS.map((kind) => groups.has(kind) && <RunTable key={kind} kind={kind} runs={groups.get(kind)!} />)}
+      {other.length > 0 && (
+        <Card title="Other runs">
+          <ul className="space-y-0.5 text-xs">
+            {other.flatMap((k) => groups.get(k)!).map((r) => (
+              <li key={r.name}>
+                <Link to={`/evaluation/${r.name}`} className="break-all font-mono text-accent-ink hover:underline">
+                  {r.name}
+                </Link>
+              </li>
+            ))}
+          </ul>
+        </Card>
       )}
     </div>
   );
@@ -277,6 +424,10 @@ export function EvaluationDetail() {
       <p className="text-xs text-ink-3">
         <Link to="/evaluation" className="hover:underline">
           Evaluation
+        </Link>{" "}
+        /{" "}
+        <Link to="/evaluation/runs" className="hover:underline">
+          Saved runs
         </Link>{" "}
         / {data.name}
       </p>

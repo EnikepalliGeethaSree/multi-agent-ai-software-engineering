@@ -1,7 +1,7 @@
 import { Link, Route, Routes } from "react-router-dom";
 import { Layout } from "./components/Layout";
 import { EmptyState } from "./components/ui";
-import { EvaluationDetail, EvaluationList } from "./pages/Evaluation";
+import { EvaluationDetail, EvaluationList, EvaluationRuns } from "./pages/Evaluation";
 import History from "./pages/History";
 import NewReview from "./pages/NewReview";
 import Performance from "./pages/Performance";
@@ -26,6 +26,7 @@ export default function App() {
         <Route path="reviews/:id" element={<ReviewDetail />} />
         <Route path="performance" element={<Performance />} />
         <Route path="evaluation" element={<EvaluationList />} />
+        <Route path="evaluation/runs" element={<EvaluationRuns />} />
         <Route path="evaluation/:name" element={<EvaluationDetail />} />
         <Route path="*" element={<NotFound />} />
       </Route>

@@ -13,6 +13,9 @@ from marl_agents.evaluation.runs import SavedRun
 CMD = "python -m marl_agents.cli eval"
 LLM_CONFIG = "--config configs/gemini.yaml"
 ALL_CONFIGS = ",".join(ORDER)
+# A comparison needs a paired sample large enough to mean something. Smaller ones stay visible,
+# labelled preliminary, and are never promoted to a headline.
+MIN_PAIRED_N = 30
 
 
 def ratio(num: float, den: float) -> float | None:
@@ -26,6 +29,18 @@ def prf(tp: int, fp: int, fn: int) -> tuple[float | None, float | None, float | 
     if p is None or r is None:
         return p, r, None
     return p, r, (2 * p * r / (p + r) if p + r else 0.0)
+
+
+def provider_badge(runs: Iterable[SavedRun]) -> str | None:
+    """Names the provider and model behind a table, so eras are never mistaken for each other."""
+    pairs = sorted({(str(r.provider), str(r.model)) for r in runs if r.provider and r.model})
+    if not pairs:
+        return None
+    models = ", ".join(sorted({model for _, model in pairs}))
+    providers = {provider for provider, _ in pairs}
+    if providers == {"gemini"}:
+        return f"Gemini: {models}"
+    return f"Historical: {', '.join(sorted(p.title() for p in providers))} ({models})"
 
 
 def is_mock(run: SavedRun) -> bool:

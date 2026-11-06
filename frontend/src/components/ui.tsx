@@ -145,6 +145,24 @@ export function JobStatusBadge({ status }: { status: JobStatus }) {
   );
 }
 
+/** A closed panel for supporting detail. Its title and count stay visible. */
+export function Expandable({ title, count, children }: { title: string; count?: number; children: ReactNode }) {
+  return (
+    <details className="group min-w-0 rounded-lg border border-line bg-surface">
+      <summary className="flex cursor-pointer list-none items-center justify-between gap-2 rounded-lg px-3 py-2 text-xs font-medium text-ink-2 hover:bg-surface-2">
+        <span>
+          {title}
+          {count !== undefined && <span className="tabular ml-1 text-ink-3">({count})</span>}
+        </span>
+        <svg viewBox="0 0 16 16" className="size-3 shrink-0 text-ink-3 transition-transform group-open:rotate-180" aria-hidden="true">
+          <path d="M3 6l5 5 5-5" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+        </svg>
+      </summary>
+      <div className="border-t border-line px-3 py-2 text-xs">{children}</div>
+    </details>
+  );
+}
+
 export function Chip({ children }: { children: ReactNode }) {
   return (
     <span className="inline-flex items-center rounded-md bg-surface-2 px-2 py-0.5 text-xs text-ink-2">

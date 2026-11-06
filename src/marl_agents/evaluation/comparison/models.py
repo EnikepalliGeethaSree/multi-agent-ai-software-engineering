@@ -25,6 +25,17 @@ DEFINITIONS: dict[str, MetricDefinition] = {
         MetricDefinition(key="recall", name="Recall", definition="TP / (TP + FN)", scale="0-1"),
         MetricDefinition(key="f1", name="F1",
                          definition="2 x Precision x Recall / (Precision + Recall)", scale="0-1"),
+        MetricDefinition(key="issue_recall", name="Issue recall",
+                         definition="Labelled issues found / all labelled issues (any category).",
+                         scale="0-1"),
+        MetricDefinition(key="defect_precision", name="Defect precision",
+                         definition="Correct defect findings / all defect findings. Style and "
+                         "documentation findings are not in the answer key, so they are not "
+                         "counted.", scale="0-1"),
+        MetricDefinition(key="mixed_f1", name="F1 (mixed basis)",
+                         definition="Harmonic mean of defect precision and issue recall. The two "
+                         "have different denominators, so this is not a standard F1.",
+                         scale="0-1"),
         MetricDefinition(key="roc_auc", name="ROC-AUC",
                          definition="Probability that a randomly chosen positive case is scored "
                          "above a randomly chosen negative one (Mann-Whitney U; ties count 1/2): "
@@ -110,6 +121,23 @@ class ComparisonTable(BaseModel):
     notes: list[str] = Field(default_factory=list)
     supplementary: bool = False
     show_counts: bool = Field(default=True, description="Render the n / failed / runs columns.")
+    badges: list[str] = Field(default_factory=list, description="Status and provider labels.")
+    warning: str | None = Field(default=None, description="Shown above the table, always visible.")
+
+
+class StatusItem(BaseModel):
+    name: str
+    status: Literal["complete", "preliminary", "incomplete", "pending"]
+    detail: str = ""
+    run_ids: list[str] = Field(default_factory=list)
+    command: str | None = None
+
+
+class EvaluationStatus(BaseModel):
+    items: list[StatusItem] = Field(default_factory=list)
+    limitations: list[str] = Field(default_factory=list)
+    findings: list[str] = Field(default_factory=list)
+    unfinished_runs: list[str] = Field(default_factory=list)
 
 
 class EvaluationSummary(BaseModel):
@@ -118,3 +146,4 @@ class EvaluationSummary(BaseModel):
     tables: list[ComparisonTable]
     definitions: list[MetricDefinition]
     scope: list[str]
+    status: EvaluationStatus | None = None

@@ -210,11 +210,12 @@ def test_codereviewer_rows_are_paired_on_common_samples(tmp_path: Path) -> None:
     assert (a.values["precision"], a.values["recall"]) == (0.0, 0.0)
     assert a.values["adj_precision"] is None  # F401 removed: nothing flagged
     # D on {s1, s2}: s1 flagged (TP), s2 clean (TN)
-    assert (d.values["precision"], d.values["recall"], d.values["roc_auc"]) == (1.0, 1.0, 1.0)
+    assert (d.values["precision"], d.values["recall"]) == (1.0, 1.0)
+    assert d.values["roc_auc"] is None and "too few" in d.na["roc_auc"]  # n = 2: not reported
     assert any("restricted to the 3 reference samples" in n for n in a.notes)
-    assert table.fairness[0].ok and "2 samples evaluated by every configuration" in (
-        table.fairness[0].detail
-    )
+    assert table.fairness[0].ok is False  # B and C have no results, so this is not "every"
+    assert "2 of 3 requested samples" in table.fairness[0].detail
+    assert "LLM Only, Static + LLM" in table.fairness[0].detail
     assert by["llm_only"].status == "not_run" and "--configuration llm_only" in (
         by["llm_only"].how_to_run or ""
     )

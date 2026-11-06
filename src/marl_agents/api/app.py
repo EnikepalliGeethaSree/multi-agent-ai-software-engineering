@@ -112,15 +112,27 @@ def classifier_info(settings: Settings) -> dict[str, Any]:
     return {"enabled": cfg.enabled, "mode": cfg.mode, "model_dir": cfg.model_dir, "metadata": meta}
 
 
+RUN_STATES = ("complete", "partial", "failed", "skipped")
+
+
 def _headline(name: str, metrics: dict[str, Any], meta: dict[str, Any]) -> dict[str, Any]:
     """The few numbers worth showing in a table, per kind of run."""
     kind = name.split("_", 1)[-1]
     if kind.startswith("runtime"):
+        groups = metrics.get("results") or []
         return {
             "kind": "runtime",
             "mode": metrics.get("mode"),
             "repeats": metrics.get("repeats"),
             "inputs": len(metrics.get("inputs") or []),
+            **{s: sum(g.get(s, 0) for g in groups) for s in RUN_STATES},
+        }
+    if kind.startswith("gemini"):
+        return {
+            "kind": "gemini_smoke",
+            "live_checks": metrics.get("live_checks"),
+            "live_passed": metrics.get("live_passed"),
+            "failed": len(metrics.get("failed") or []),
         }
     if kind.startswith("classifier"):
         primary = metrics.get("repo_disjoint", {})

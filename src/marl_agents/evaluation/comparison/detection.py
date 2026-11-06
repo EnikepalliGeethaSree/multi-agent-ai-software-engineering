@@ -10,13 +10,16 @@ recomputed from the saved predictions with the same functions the runner uses.
 
 from __future__ import annotations
 
+import json
 from typing import Any
 
+from marl_agents.config import PROJECT_ROOT
 from marl_agents.core.schemas import Severity
 from marl_agents.evaluation.comparison.common import (
     ALL_CONFIGS,
     CMD,
     LLM_CONFIG,
+    MIN_PAIRED_N,
     compare,
     config_row,
     fairness_checks,
@@ -25,33 +28,87 @@ from marl_agents.evaluation.comparison.common import (
     not_run_row,
     pick,
     prf,
+    provider_badge,
 )
 from marl_agents.evaluation.comparison.models import Column, ComparisonTable, FairnessCheck, Row
 from marl_agents.evaluation.configurations import ORDER
 from marl_agents.evaluation.metrics import binary_metrics, corpus_bleu_avg, roc_auc
+from marl_agents.evaluation.metrics.detection import DEFECT_CATEGORIES
 from marl_agents.evaluation.metrics.text import chrf, rouge_l
 from marl_agents.evaluation.runners.code_review import CROSS_HUNK_RULES
 from marl_agents.evaluation.runs import SavedRun
 
 # ---- planted issues ------------------------------------------------------------------------------
 
+ISSUES = "Labelled issues"
+FINDINGS = "Defect findings"
 PLANTED_COLUMNS = [
-    Column(key="precision", label="Precision", metric="precision"),
-    Column(key="recall", label="Recall", metric="recall"),
-    Column(key="f1", label="F1", metric="f1"),
-    Column(key="roc_auc", label="ROC-AUC", metric="roc_auc"),
-    Column(key="tp", label="TP", digits=0),
-    Column(key="fp", label="FP", digits=0),
-    Column(key="fn", label="FN", digits=0),
-    Column(key="recall_static", label="Recall (static-detectable)", metric="recall"),
-    Column(key="recall_llm", label="Recall (semantic / LLM-only)", metric="recall"),
-    Column(key="clean_fp", label="FP in clean file", digits=0),
-    Column(key="line_error", label="Mean line error", digits=2),
-]
+    Column(key="recall", label="Issue recall", metric="issue_recall", group=ISSUES),
+    Column(key="issues_found", label="Found", digits=0, group=ISSUES),
+    Column(key="fn", label="Missed", digits=0, group=ISSUES),
+    Column(key="recall_static", label="Rule-detectable recall", metric="issue_recall",
+           group=ISSUES),
+    Column(key="recall_llm", label="Semantic recall", metric="issue_recall", group=ISSUES),
+    Column(key="precision", label="Precision", metric="defect_precision", group=FINDINGS),
+    Column(key="tp", label="Correct", digits=0, group=FINDINGS),
+    Column(key="fp", label="False positives", digits=0, group=FINDINGS),
+    Column(key="clean_fp", label="FP in clean file", digits=0, group=FINDINGS),
+    Column(key="f1", label="F1 (mixed basis)", metric="mixed_f1", group="Other"),
+    Column(key="roc_auc", label="ROC-AUC", metric="roc_auc", group="Other"),
+    Column(key="line_error", label="Mean line error", digits=2, group="Other"),
+]  # fmt: skip
 PLANTED_AUC_NA = (
     "not applicable: the planted suite labels positives only (no scored negative cases), so a "
     "ROC curve is undefined"
 )
+
+
+def answer_key_counts() -> dict[str, int] | None:
+    """Counts from the answer key itself, so the explanation cannot drift from the benchmark."""
+    path = PROJECT_ROOT / "tests" / "fixtures" / "repos" / "planted_expected.json"
+    try:
+        issues = json.loads(path.read_text(encoding="utf-8"))["issues"]
+    except (OSError, ValueError, KeyError):
+        return None
+    defect = {str(getattr(c, "value", c)) for c in DEFECT_CATEGORIES}
+    return {
+        "total": len(issues),
+        "defect": sum(1 for i in issues if i.get("category") in defect),
+        "other": sum(1 for i in issues if i.get("category") not in defect),
+        "static": sum(1 for i in issues if i.get("detectable_by") == "static"),
+        "semantic": sum(1 for i in issues if i.get("detectable_by") == "llm"),
+    }
+
+
+def _stability(planted: list[SavedRun], chosen: dict[str, list[SavedRun]]) -> list[str]:
+    """Complete repeats of the same configuration and model. The table shows only the latest."""
+    out = []
+    for key in ORDER:
+        sel = chosen[key]
+        if not sel or not sel[0].model:
+            continue
+        same = [
+            r
+            for r in planted
+            if r.configuration is not None and r.configuration.key == key
+            and r.model == sel[0].model and planted_complete(r) and "detection" in r.metrics
+        ]  # fmt: skip
+        if len(same) < 2:
+            continue
+        scores = [
+            f"{r.metrics['detection']['matched']}/{r.metrics['detection']['expected']}"
+            for r in same
+        ]
+        label = sel[0].configuration.label  # type: ignore[union-attr]
+        detail = ", ".join(f"{r.stamp[:8]}: {s}" for r, s in zip(same, scores, strict=True))
+        if len(set(scores)) > 1:
+            out.append(
+                f"{label} on {sel[0].model} varies between complete runs ({detail}). The table "
+                "shows the latest, so 1.000 is not a stable result."
+            )
+        else:
+            out.append(f"{label} on {sel[0].model} gave the same recall in {len(same)} runs.")
+    return out
 
 
 def planted_complete(run: SavedRun) -> bool:
@@ -75,6 +132,7 @@ def planted_values(m: dict[str, Any]) -> dict[str, float | int | None]:
         "recall": recall,
         "f1": f1,
         "roc_auc": None,
+        "issues_found": int(d["matched"]),
         "tp": tp,
         "fp": fp,
         "fn": fn,
@@ -131,12 +189,29 @@ def planted_table(runs: list[SavedRun]) -> ComparisonTable:
         if len(fingerprints) <= 1
         else "answer key changed between runs",
     )
+    key_counts = answer_key_counts() or {}
+    selected = [r for rs in chosen.values() for r in rs]
+    badge = provider_badge(selected)
+    n_issues = key_counts.get("total", 17)
+    gap = (
+        f"Why 14 correct findings can sit beside 17 issues found: the answer key has "
+        f"{key_counts.get('defect')} defect-class issues and {key_counts.get('other')} others "
+        "(quality, maintainability, standards). Found counts issues of every category. Correct "
+        "counts findings of the defect classes only. They are separate counts, so Correct + "
+        "Missed need not equal the number of issues."
+        if key_counts
+        else "Found counts issues of every category. Correct counts defect-class findings only."
+    )
     return ComparisonTable(
         id="planted",
         section="1. Planted issues",
         title="Planted-issue benchmark: detection by configuration",
         about="17 hand-labelled issues in a fixture repository (16 detectable by a rule, 1 "
         "needing semantic reasoning) plus a clean negative-control file.",
+        badges=["Complete", f"Small benchmark (n = {n_issues})", *([badge] if badge else [])],
+        warning=f"Small benchmark: {n_issues} issues written by the project team. It is a "
+        "regression check, and a score of 1.000 is not evidence of 100% bug detection in real "
+        "code.",
         columns=PLANTED_COLUMNS,
         rows=rows,
         conditions={
@@ -146,10 +221,13 @@ def planted_table(runs: list[SavedRun]) -> ComparisonTable:
             "precision counts": "defect findings only (bug, security, error handling, edge case)",
         },
         fairness=fairness_checks(chosen, same),
-        observations=_planted_observations(rows),
+        observations=[*_planted_observations(rows), *_stability(planted, chosen)],
         notes=[
-            "Precision TP = defect findings that match a planted issue; recall TP = planted "
-            "issues detected (the project's existing definitions).",
+            gap,
+            f"Rule-detectable recall covers {key_counts.get('static', 16)} issues. Semantic recall "
+            f"covers {key_counts.get('semantic', 1)}, so it can only be 0 or 1 in a run.",
+            "F1 here mixes defect precision and issue recall, which have different denominators. "
+            "Treat it as a summary of this benchmark, not a standard F1.",
             "Precision is N/A, not 1.0, when a configuration reports no defect findings at all.",
             f"Run all four together: {CMD} ablation --benchmark planted --configurations "
             f"{ALL_CONFIGS} {LLM_CONFIG}",
@@ -328,15 +406,41 @@ def codereviewer_tables(runs: list[SavedRun], task: str) -> list[ComparisonTable
                 f"restricted to the {len(ref_ids)} reference samples (the run covers {covers})"
             )
         rows.append(row)
+    if len(common) < MIN_PAIRED_N:
+        for row in rows:
+            for metric in ("roc_auc", "adj_roc_auc"):
+                if metric in row.values:
+                    row.values[metric] = None
+                    row.na[metric] = (
+                        f"not reported: {len(common)} paired samples are too few for ROC-AUC "
+                        f"(minimum {MIN_PAIRED_N})"
+                    )
+    scored = [r for r in rows if r.status == "ok"]
+    missing = [r for r in rows if r.status != "ok"]
+    evaluated = []
+    for row in rows:
+        letter = row.configuration.letter if row.configuration else "?"
+        if row.status == "ok":
+            evaluated.append(f"{letter} {len(preds[row.run_ids[0]])}/{len(ref_ids)}")
+        else:
+            evaluated.append(f"{letter} {'not run' if row.status == 'not_run' else 0}")
     same = FairnessCheck(
         name="Same samples",
-        ok=True,
-        detail=f"{len(common)} samples evaluated by every configuration "
-        f"({len(ref_ids)} requested; reference run {ref_run.name})",
+        ok=not missing,
+        detail=(
+            f"{len(common)} of {len(ref_ids)} requested samples evaluated by "
+            f"{_names(scored)}; no scored samples for {_names(missing)} "
+            f"(reference run {ref_run.name})"
+            if missing
+            else f"{len(common)} samples evaluated by every configuration "
+            f"({len(ref_ids)} requested; reference run {ref_run.name})"
+        ),
     )
     exp = ref_run.experiment
     conditions = {
         "dataset": "CodeReviewer, test split, Python only",
+        "paired samples": f"{len(common)} of {len(ref_ids)} requested",
+        "evaluated per configuration": ", ".join(evaluated),
         "requested samples": len(ref_ids),
         "samples in every row": len(common),
         "sampling seed": exp.get("sampling_seed", ref_run.meta.get("seed")),
@@ -358,22 +462,47 @@ def codereviewer_tables(runs: list[SavedRun], task: str) -> list[ComparisonTable
         notes.insert(0, "RAW counts every finding. ADJUSTED drops the rules that cannot be judged "
                      "from one hunk (imports/names defined in the commit's other hunks); both are "
                      "always reported, neither replaces the other.")  # fmt: skip
-    if len(common) < 30:
+    if len(common) < MIN_PAIRED_N:
         notes.append(f"n = {len(common)}: far too few samples for any conclusion; this table only "
-                     "shows that the pipeline runs end to end.")  # fmt: skip
+                     "shows that the pipeline runs end to end. ROC-AUC is not reported. Each run's "
+                     "saved scores are unchanged in its predictions.jsonl.")  # fmt: skip
     elif len(common) < 100:
         notes.append(f"n = {len(common)}: differences of a few points are within sampling noise "
                      "(see the bootstrap CIs in each run's summary).")  # fmt: skip
+    for row in rows:
+        if row.n_failed and row.run_ids:
+            run = next((r for r in [*cand, *all_failed] if r.name == row.run_ids[0]), None)
+            reasons = (run.metrics.get("failure_reasons") or {}) if run else {}
+            why = ", ".join(f"{k}: {v}" for k, v in reasons.items()) or "see errors.jsonl"
+            notes.append(f"{row.label}: {row.n_failed} of {len(ref_ids)} samples failed ({why}).")
+    checks = fairness_checks(chosen, same)
+    badge = provider_badge(r for rs in chosen.values() for r in rs)
+    warning, badges = _cr_warning(rows, checks, len(common), len(ref_ids), task)
+    if task == "msg" and not (_scored(rows, "static_llm") and _scored(rows, "static_llm_rag")):
+        notes.append("The effect of RAG on comment quality cannot be judged here: it needs "
+                     "Static + LLM and Static + LLM + RAG on the same samples. Static Only vs "
+                     "Static + LLM + RAG changes two things at once.")  # fmt: skip
+    limit = ref_limit or len(ref_ids)
+    notes.append(f"Gemini: set GEMINI_MODEL=gemini-3.6-flash first. Three LLM configurations on "
+                 f"{limit} samples need at least {3 * limit} requests. The free tier allows 20 per "
+                 "day per model and `eval ablation` has no resume, so a larger run cannot finish "
+                 "on the free tier as it stands.")  # fmt: skip
+    if task == "cls":
+        notes.append("That command reads the CodeReviewer cls test split, which contains the "
+                     "CodeBERT classifier's held-out samples. It does not run the classifier, but "
+                     "use --split valid for new work so that test set is not reused.")  # fmt: skip
     tables = [
         ComparisonTable(
             id=tid,
             section=section,
             title=title,
             about="Paired comparison: every row is scored on the same samples.",
+            badges=[*badges, *([badge] if badge else [])],
+            warning=warning,
             columns=columns,
             rows=rows,
             conditions=conditions,
-            fairness=fairness_checks(chosen, same),
+            fairness=checks,
             observations=_cr_observations(rows, task),
             notes=notes,
         )
@@ -382,6 +511,39 @@ def codereviewer_tables(runs: list[SavedRun], task: str) -> list[ComparisonTable
     if full is not None:
         tables.append(full)
     return tables
+
+
+def _names(rows: list[Row]) -> str:
+    return ", ".join(r.label for r in rows) or "none"
+
+
+def _scored(rows: list[Row], key: str) -> bool:
+    return any(r.configuration and r.configuration.key == key and r.status == "ok" for r in rows)
+
+
+def _cr_warning(
+    rows: list[Row], checks: list[FairnessCheck], n: int, requested: int, task: str
+) -> tuple[str | None, list[str]]:
+    missing = [r for r in rows if r.status != "ok"]
+    if n < MIN_PAIRED_N:
+        return (
+            f"Preliminary: only {n} of {requested} requested samples are paired. No conclusion "
+            "about any configuration can be drawn from this table, and ROC-AUC is not reported.",
+            ["Preliminary"],
+        )
+    separate = any(c.name.startswith("Run together") and not c.ok for c in checks)
+    prompts = any(c.name == "Same prompt versions" and c.ok is None for c in checks)
+    reasons = []
+    if missing:
+        reasons.append(f"{_names(missing)} have no results")
+    if separate:
+        reasons.append("the rows were run separately")
+    if prompts:
+        reasons.append("prompt versions were not fully recorded")
+    if not reasons:
+        return None, ["Complete"]
+    claim = " This table does not show that RAG improves comment quality." if task == "msg" else ""
+    return f"Incomplete comparison: {'; '.join(reasons)}.{claim}", ["Incomplete"]
 
 
 def _failed_or_not_run(command: str, key: str, all_failed: list[SavedRun]) -> Row:
@@ -439,7 +601,9 @@ def _full_static_table(
         section=section,
         title=f"Static Only on the full Python test split (n = {row.n})",
         about="Static analysis is cheap enough to run on every sample; LLM configurations are "
-        "limited by API quota, so they are compared on the subset above.",
+        "limited by API quota, so they are compared on the subset above. These samples are not "
+        "paired with that subset, so do not compare this row with the table above.",
+        badges=["Complete", "Static only, full test split", "Not paired"],
         columns=columns,
         rows=[row],
         conditions={"dataset": "CodeReviewer, test split, Python only (all samples)"},

@@ -80,3 +80,29 @@ Header: LLM status (provider/model ready, or why not), theme (system/light/dark)
 
 `pytest tests/integration/test_api.py tests/integration/test_api_changes.py` (API: every route, rejections, persistence, SPA hosting) and
 `cd frontend; npm test` (components and pages with a mocked API). `npm run typecheck` checks types.
+
+## Evaluation page layout
+
+`/evaluation` is the summary: overview tiles, the status card, then seven numbered sections. Each card
+keeps its table, status badges, warnings and a failed-or-missing line on screen. Fairness checks, source
+runs, reproduction commands and failure details open from panels below it, and historical Groq timing
+and the metric definitions open on request. The LLM judge is last, labelled supplementary.
+
+`/evaluation/runs` is the complete history of saved runs, including runs that stopped before saving
+metrics. A run that scored no samples shows Unavailable, and ROC-AUC is not shown below 30 samples. The
+saved numbers stay in each run. "Unavailable" means not measured, and "N/A" means not applicable.
+
+## Reading the Evaluation page
+
+The status card at the top is worked out from the saved runs each time the page loads, so a new run
+changes it without editing anything. A benchmark counts as complete only from its own `results.csv`.
+
+- **Planted issues:** *Found* counts labelled issues of every category. *Correct* counts defect-class
+  findings only. They are separate counts, so 17 found beside 14 correct is expected.
+- **Paired comparisons:** below 30 paired samples a comparison is labelled preliminary and ROC-AUC is
+  not reported. Saved scores stay in each run's `predictions.jsonl`.
+- **Efficiency:** Gemini, static-only and historical Groq results are separate sections. Times use
+  complete runs only.
+- **Stopped runs:** runs that never saved metrics cannot appear in the tables, so they are listed at the
+  bottom of the status card.
+

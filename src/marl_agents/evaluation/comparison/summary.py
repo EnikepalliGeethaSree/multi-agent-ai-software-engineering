@@ -9,10 +9,11 @@ from marl_agents.evaluation.comparison.baselines import (
     planted_timing_table,
     retrieval_table,
     risk_table,
+    runtime_tables,
     timing_tables,
     usefulness_table,
 )
-from marl_agents.evaluation.comparison.common import config_row, is_mock
+from marl_agents.evaluation.comparison.common import MIN_PAIRED_N, config_row, is_mock
 from marl_agents.evaluation.comparison.detection import codereviewer_tables, planted_table
 from marl_agents.evaluation.comparison.models import (
     DEFINITIONS,
@@ -20,6 +21,7 @@ from marl_agents.evaluation.comparison.models import (
     ComparisonTable,
     EvaluationSummary,
 )
+from marl_agents.evaluation.comparison.status import build_status
 from marl_agents.evaluation.configurations import ORDER
 from marl_agents.evaluation.runs import SavedRun, load_runs
 
@@ -34,10 +36,12 @@ SCOPE = [
     "with the offline mock LLM test the pipeline and are never shown as results.",
 ]
 
+PLANTED_GROUP = "Planted issues (n = 17)"
 MASTER_COLUMNS = [
-    Column(key="planted_precision", label="Precision", metric="precision", group="Planted issues"),
-    Column(key="planted_recall", label="Recall", metric="recall", group="Planted issues"),
-    Column(key="planted_f1", label="F1", metric="f1", group="Planted issues"),
+    Column(key="planted_recall", label="Issue recall", metric="issue_recall", group=PLANTED_GROUP),
+    Column(key="planted_precision", label="Defect precision", metric="defect_precision",
+           group=PLANTED_GROUP),
+    Column(key="planted_f1", label="F1 (mixed basis)", metric="mixed_f1", group=PLANTED_GROUP),
     Column(key="cls_precision", label="Precision", metric="precision",
            group="CodeReviewer classification (raw)"),
     Column(key="cls_recall", label="Recall", metric="recall",
@@ -46,11 +50,6 @@ MASTER_COLUMNS = [
     Column(key="cls_roc_auc", label="ROC-AUC", metric="roc_auc",
            group="CodeReviewer classification (raw)"),
 ]  # fmt: skip
-
-
-# A headline needs a paired sample large enough to mean something; smaller comparisons stay
-# visible (with their warning) in their own section only.
-MIN_PAIRED_N = 30
 
 
 def master_table(planted: ComparisonTable, cls: ComparisonTable) -> ComparisonTable:
@@ -99,6 +98,8 @@ def master_table(planted: ComparisonTable, cls: ComparisonTable) -> ComparisonTa
         about="Detection quality of each configuration. Planted issues: ROC-AUC is not applicable "
         "(positives only). CodeReviewer: raw metrics on the paired sample set; adjusted metrics "
         "are in section 2.",
+        badges=[b for b in planted.badges if b.startswith(("Historical", "Gemini"))],
+        warning=planted.warning,
         columns=MASTER_COLUMNS,
         rows=rows,
         show_counts=False,
@@ -125,6 +126,7 @@ def build_summary(results_dir: Path) -> EvaluationSummary:
         *msg_tables,
         retrieval_table(runs),
         risk_table(runs),
+        *runtime_tables(runs),
         *timing_tables(runs),
         planted_timing_table(runs),
     ]
@@ -141,6 +143,7 @@ def build_summary(results_dir: Path) -> EvaluationSummary:
         tables=tables,
         definitions=list(DEFINITIONS.values()),
         scope=SCOPE,
+        status=build_status(runs, results_dir, tables),
     )
 
 

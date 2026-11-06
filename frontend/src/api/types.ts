@@ -364,6 +364,25 @@ export interface ComparisonTable {
   notes: string[];
   supplementary: boolean;
   show_counts: boolean;
+  badges?: string[];
+  warning?: string | null;
+}
+
+export type EvaluationState = "complete" | "preliminary" | "incomplete" | "pending";
+
+export interface EvaluationStatusItem {
+  name: string;
+  status: EvaluationState;
+  detail: string;
+  run_ids: string[];
+  command: string | null;
+}
+
+export interface EvaluationStatus {
+  items: EvaluationStatusItem[];
+  limitations: string[];
+  findings: string[];
+  unfinished_runs: string[];
 }
 
 export interface EvaluationSummary {
@@ -372,6 +391,7 @@ export interface EvaluationSummary {
   tables: ComparisonTable[];
   definitions: MetricDefinition[];
   scope: string[];
+  status?: EvaluationStatus | null;
 }
 
 export interface ExperimentDetail {

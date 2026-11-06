@@ -140,6 +140,21 @@ It reads `dev.jsonl` only, and the classifier test set still has exactly one run
   lost in a skipped unit, and that count must be 0.
 - Dev chose the threshold, so dev results will flatter the classifier.
 
+## Evaluation dashboard audit (6 November 2026)
+
+The Evaluation page was checked against the saved runs. No saved result was changed. The corrections
+are in how results are labelled and grouped:
+
+- Planted issues: correct defect findings and issues found are separate columns, which explains 14
+  beside 17. One complete run of the same configuration found 16 of 17, and the page now says so.
+- Paired comparisons: "same samples" is no longer claimed when a configuration has none, and ROC-AUC is
+  not reported below 30 paired samples.
+- Efficiency: Gemini, static-only and historical Groq results are separate, and completion is counted
+  from `results.csv`.
+- A status card lists completed, preliminary, incomplete and pending work, computed from saved runs.
+
+Details of how to read the page are in [dashboard.md](dashboard.md).
+
 ## What already existed
 
 The Code Review Agent was complete before this work: ingestion, AST parsing and call graph, static

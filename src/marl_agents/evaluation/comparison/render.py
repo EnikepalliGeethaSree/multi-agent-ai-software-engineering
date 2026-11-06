@@ -56,6 +56,10 @@ def table_md(t: ComparisonTable) -> str:
     head += ["n", "failed", "runs"] if t.show_counts else []
     head += ["model"] if has_config else []
     lines = [f"### {t.title}", ""]
+    if t.badges:
+        lines += ["Status: " + " | ".join(t.badges), ""]
+    if t.warning:
+        lines += [f"> **{t.warning}**", ""]
     if t.about:
         lines += [t.about, ""]
     if t.conditions:
@@ -116,6 +120,9 @@ def definitions_md() -> str:
 def summary_md(summary: EvaluationSummary) -> str:
     lines = ["# Code Review Agent: baseline comparison", ""]
     lines += [f"- {s}" for s in summary.scope] + [""]
+    if summary.status is not None:
+        lines += ["## Evaluation status", ""]
+        lines += [f"- **{i.status}**: {i.name}. {i.detail}" for i in summary.status.items] + [""]
     if summary.master is not None:
         lines += [table_md(summary.master)]
     section = None

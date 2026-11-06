@@ -18,7 +18,7 @@ newer than it is.
 | Section | Status | Note |
 |---|---|---|
 | 1. Planted issues | Current | Static-only baseline |
-| 2. RAG retrieval | Current | Hashing embedder only |
+| 2. RAG retrieval | **Superseded in part** | Table below is the first of 4 runs; the latest is noted there |
 | 3. CodeReviewer `cls` | Current | Static-only. Re-run 2026-10-12: identical (see 6a) |
 | 4. CodeReviewer comments | Current | Static-only. Re-run 2026-10-12: identical (see 6a) |
 | Next runs | Historical | Plan written during the Groq phase |
@@ -49,6 +49,12 @@ negative-control file. Ground truth is stored outside the analyzed folder.
 Caveat: a small benchmark written by the same team that wrote the rules. It is a regression gate
 and a sanity check, not evidence of general accuracy.
 
+**Reading the counts.** Recall counts labelled issues of every category (16 of 17 here). Defect
+precision counts findings of the defect classes only (13 of 13). The answer key has 14 defect-class
+issues and 3 others (quality, maintainability, standards), so a run can find 17 of 17 issues with 14
+correct defect findings. Those are separate counts, and the F1 built from them has mixed denominators.
+Rule-detectable recall covers 16 issues. Semantic recall covers 1, so it is 0 or 1 in any run.
+
 ## 2. RAG retrieval (call-graph relevance)
 
 Run `20260929T193008Z_retrieval_src`. Repository = this project's `src/` (315 code chunks,
@@ -64,6 +70,12 @@ Reading: lexical dense retrieval is far better than random, but still misses ~46
 direct dependencies in the top 10. This motivated design decision CR5: structural call-graph context
 is added before dense retrieval. Neural embeddings (sentence-transformers) were not run yet
 (`--embedders hashing,sentence-transformers/all-MiniLM-L6-v2` after installing the `rag` extra).
+
+> **Superseded in part.** The table above is the first of 4 saved runs. The repository grew between them
+> (138, 277, 316, then 381 queries), so they are not comparable. The latest,
+> `20261012T163120Z_retrieval_src` (665 chunks, 381 queries, hashing embedder), gives Recall@10 0.365 and
+> MRR 0.312, against random 0.012 and 0.020. The dashboard shows the latest. All of these measure
+> retrieval quality, not final review accuracy.
 
 ## 3. CodeReviewer: diff quality estimation ("does this hunk need a review comment?")
 
@@ -147,6 +159,8 @@ prompts v1.0, Groq API, default rate limits (30 req/min, 6000 tokens/min).
   list) and confirmed all static findings (triage verdicts: 100% "confirm").
 - gpt-oss-20b's one false positive: it labelled `discount == None` (a style issue, E711) as a bug.
 - **Chosen default: `openai/gpt-oss-120b`** (best precision and localization, 3-4x faster).
+- **Recall is not stable between runs.** `20261012T090444Z_planted_full` is a complete run of the same
+  configuration and model, and it found 16 of 17, missing P13. Do not quote 1.000 as a stable result.
 - Caveat: 17 issues is far too small to rank models statistically; speed and token cost differences
   are the robust part of this comparison. The CodeReviewer runs in full mode are the real test.
 
@@ -205,8 +219,8 @@ token quota mid-run and was aborted unscored (see the `ABORTED.txt` file in its 
 D22).
 
 **Failures.** 36 samples were evaluated and 4 failed, all because the LLM did not review them:
-- 3 × request too large for the free-tier per-request limit. That limit is now handled by retrying
-  without project context (D21), but this run predates the fix.
+- 3 × request size (one 413, two 429 responses after 6 attempts). The 413 path is now handled by
+  retrying without project context (D21), but this run predates the fix.
 - 1 × daily quota.
 
 These failures are counted (D22), not scored as static-only.
