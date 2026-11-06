@@ -1,0 +1,142 @@
+{
+  "n": 1771,
+  "note": "descriptive; computed after the model and threshold were frozen; largest_changes breaks size ties at random (seed 42)",
+  "size_bands": [
+    {
+      "changed_lines": "1-2",
+      "n": 576,
+      "positive_share": 0.4271,
+      "classifier_auc": 0.6627864005912787,
+      "size_auc": 0.5250184774575019
+    },
+    {
+      "changed_lines": "3-5",
+      "n": 424,
+      "positive_share": 0.533,
+      "classifier_auc": 0.6751363189416286,
+      "size_auc": 0.5019442209707696
+    },
+    {
+      "changed_lines": "6-10",
+      "n": 304,
+      "positive_share": 0.5329,
+      "classifier_auc": 0.7005738132498696,
+      "size_auc": 0.5076291079812206
+    },
+    {
+      "changed_lines": "11-20",
+      "n": 267,
+      "positive_share": 0.6929,
+      "classifier_auc": 0.716479894528675,
+      "size_auc": 0.5022083058668424
+    },
+    {
+      "changed_lines": "21-50",
+      "n": 188,
+      "positive_share": 0.7872,
+      "classifier_auc": 0.7814189189189189,
+      "size_auc": 0.5699324324324324
+    },
+    {
+      "changed_lines": "51+",
+      "n": 12,
+      "positive_share": 1.0,
+      "classifier_auc": null,
+      "size_auc": null
+    }
+  ],
+  "within_band_auc_weighted": 0.6931,
+  "projects": [
+    {
+      "project": "Blazemeter-taurus",
+      "n": 77,
+      "classifier_auc": 0.7673469387755102,
+      "size_auc": 0.6663265306122449
+    },
+    {
+      "project": "Kinto-kinto",
+      "n": 112,
+      "classifier_auc": 0.8291517323775388,
+      "size_auc": 0.7041019514137794
+    },
+    {
+      "project": "PyCQA-pylint",
+      "n": 228,
+      "classifier_auc": 0.7394095998747161,
+      "size_auc": 0.6918800407172501
+    },
+    {
+      "project": "SeleniumHQ-selenium",
+      "n": 148,
+      "classifier_auc": 0.6789473684210526,
+      "size_auc": 0.5930622009569378
+    },
+    {
+      "project": "dagster-io-dagster",
+      "n": 166,
+      "classifier_auc": 0.76996336996337,
+      "size_auc": 0.7344322344322345
+    },
+    {
+      "project": "holoviz-holoviews",
+      "n": 173,
+      "classifier_auc": 0.6538775510204081,
+      "size_auc": 0.5919727891156462
+    },
+    {
+      "project": "localstack-localstack",
+      "n": 112,
+      "classifier_auc": 0.7216796875,
+      "size_auc": 0.6598307291666666
+    },
+    {
+      "project": "materialsproject-pymatgen",
+      "n": 42,
+      "classifier_auc": 0.4574780058651026,
+      "size_auc": 0.5366568914956011
+    },
+    {
+      "project": "numenta-nupic",
+      "n": 164,
+      "classifier_auc": 0.664733006098468,
+      "size_auc": 0.5606128216569983
+    },
+    {
+      "project": "qutebrowser-qutebrowser",
+      "n": 295,
+      "classifier_auc": 0.7365110565110565,
+      "size_auc": 0.6576658476658477
+    },
+    {
+      "project": "secdev-scapy",
+      "n": 191,
+      "classifier_auc": 0.7192219679633868,
+      "size_auc": 0.5875858123569794
+    },
+    {
+      "project": "spesmilo-electrum",
+      "n": 47,
+      "classifier_auc": 0.6538461538461539,
+      "size_auc": 0.6217948717948718
+    }
+  ],
+  "projects_where_classifier_beats_size": 11,
+  "precision_at_top_share": {
+    "0.1": {
+      "classifier": 0.9379,
+      "largest_changes": 0.8079
+    },
+    "0.2": {
+      "classifier": 0.8475,
+      "largest_changes": 0.7571
+    },
+    "0.3": {
+      "classifier": 0.7985,
+      "largest_changes": 0.7137
+    },
+    "0.5": {
+      "classifier": 0.7122,
+      "largest_changes": 0.6433
+    }
+  }
+}

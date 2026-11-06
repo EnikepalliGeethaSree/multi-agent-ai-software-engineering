@@ -1,0 +1,45 @@
+{
+  "note": "patch key ignores whitespace and hunk positions; nothing was scored",
+  "train_records": 16000,
+  "unmapped_train_records": 0,
+  "python_named": {
+    "records": 3916,
+    "positive": 0,
+    "shared_patches_dev": 0,
+    "shared_patches_held_out_test": 0,
+    "shared_patches_official_test": 3,
+    "in_dev_projects": 0,
+    "in_test_projects": 0
+  },
+  "python_no_project_name": {
+    "records": 3383,
+    "positive": 3383,
+    "shared_patches_dev": 0,
+    "shared_patches_held_out_test": 0,
+    "shared_patches_official_test": 0
+  },
+  "non_python_from_valid": {
+    "records": 8701,
+    "positive": 4617,
+    "shared_patches_dev": 0,
+    "shared_patches_held_out_test": 0,
+    "shared_patches_official_test": 0,
+    "projects": 185,
+    "without_project_name": 0,
+    "in_dev_projects": 0,
+    "in_test_projects": 0,
+    "in_official_test_projects": 0
+  },
+  "python_records_shared_with_official_test_by_label": {
+    "0": 3
+  },
+  "dev_vs_held_out": {
+    "shared_projects": 0,
+    "shared_patches": 0
+  },
+  "official_test": {
+    "records_outside_held_out_group": 2142,
+    "projects_outside_held_out_group": 14,
+    "of_those_in_dev_group": 14
+  }
+}

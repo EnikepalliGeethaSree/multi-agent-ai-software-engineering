@@ -151,7 +151,7 @@
       "original_run": null,
       "improved_run": null,
       "n": null,
-      "note": "improved run missing: python -m marl_agents.cli eval codereviewer --task msg --limit 40 --seed 42 --configuration static_llm_rag --classifier data/models/change_cls --classifier-mode gate --workers 1 --config configs/gemini.yaml",
+      "note": "improved run missing: python -m marl_agents.cli eval classifier-ablation --model-dir data/models/change_cls --limit 15 --max-llm-calls 45 --config configs/gemini.yaml",
       "higher_is_better": false
     },
     {
@@ -162,7 +162,7 @@
       "original_run": null,
       "improved_run": null,
       "n": null,
-      "note": "improved run missing: python -m marl_agents.cli eval codereviewer --task msg --limit 40 --seed 42 --configuration static_llm_rag --classifier data/models/change_cls --classifier-mode gate --workers 1 --config configs/gemini.yaml",
+      "note": "improved run missing: python -m marl_agents.cli eval classifier-ablation --model-dir data/models/change_cls --limit 15 --max-llm-calls 45 --config configs/gemini.yaml",
       "higher_is_better": false
     },
     {
@@ -173,7 +173,7 @@
       "original_run": null,
       "improved_run": null,
       "n": null,
-      "note": "improved run missing: python -m marl_agents.cli eval codereviewer --task msg --limit 40 --seed 42 --configuration static_llm_rag --classifier data/models/change_cls --classifier-mode gate --workers 1 --config configs/gemini.yaml",
+      "note": "improved run missing: python -m marl_agents.cli eval classifier-ablation --model-dir data/models/change_cls --limit 15 --max-llm-calls 45 --config configs/gemini.yaml",
       "higher_is_better": false
     },
     {
@@ -184,7 +184,7 @@
       "original_run": null,
       "improved_run": null,
       "n": null,
-      "note": "improved run missing: python -m marl_agents.cli eval codereviewer --task msg --limit 40 --seed 42 --configuration static_llm_rag --classifier data/models/change_cls --classifier-mode gate --workers 1 --config configs/gemini.yaml",
+      "note": "improved run missing: python -m marl_agents.cli eval classifier-ablation --model-dir data/models/change_cls --limit 15 --max-llm-calls 45 --config configs/gemini.yaml",
       "higher_is_better": false
     }
   ],

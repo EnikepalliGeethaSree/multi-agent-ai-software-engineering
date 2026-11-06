@@ -1,0 +1,62 @@
+{
+  "n": 36,
+  "sample_ids": [
+    "msg-test-10054-3555",
+    "msg-test-10263-2436",
+    "msg-test-10302-3044",
+    "msg-test-10597-6141",
+    "msg-test-10642-9202",
+    "msg-test-11964-8578",
+    "msg-test-12558-985",
+    "msg-test-12636-1249",
+    "msg-test-13511-3386",
+    "msg-test-13985-5670",
+    "msg-test-15350-2376",
+    "msg-test-15956-6229",
+    "msg-test-16163-5499",
+    "msg-test-16862-2695",
+    "msg-test-16951-6846",
+    "msg-test-16964-5079",
+    "msg-test-18309-3075",
+    "msg-test-18849-2059",
+    "msg-test-19247-4033",
+    "msg-test-19419-6376",
+    "msg-test-19468-8301",
+    "msg-test-19865-4125",
+    "msg-test-19970-3645",
+    "msg-test-20154-3701",
+    "msg-test-21274-5314",
+    "msg-test-22830-1114",
+    "msg-test-23207-6706",
+    "msg-test-24070-599",
+    "msg-test-31586-4211",
+    "msg-test-32462-3568",
+    "msg-test-34135-596",
+    "msg-test-7567-2087",
+    "msg-test-8228-2025",
+    "msg-test-8643-8001",
+    "msg-test-8914-4355",
+    "msg-test-9950-4481"
+  ],
+  "note": "same samples, title+fix comment, metrics from evaluation.metrics",
+  "static_only": {
+    "coverage": 0.4722222222222222,
+    "bleu4": 1.979,
+    "rouge_l": 5.449,
+    "chrf": 8.731,
+    "bleu4_ci95": [
+      1.1343475051771663,
+      2.8965648129041446
+    ]
+  },
+  "full_llm_qwen3.8-27b": {
+    "coverage": 0.7777777777777778,
+    "bleu4": 2.136,
+    "rouge_l": 6.909,
+    "chrf": 13.595,
+    "bleu4_ci95": [
+      1.5193300848270068,
+      2.739957240024201
+    ]
+  }
+}

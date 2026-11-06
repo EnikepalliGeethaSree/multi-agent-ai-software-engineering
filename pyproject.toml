@@ -23,7 +23,7 @@ rag = ["chromadb>=0.5", "sentence-transformers>=3.0"]
 # LLM providers + LangChain/LangGraph
 llm = ["langchain-core>=0.3", "langgraph>=0.2", "openai>=1.40", "google-genai>=0.3"]
 api = ["fastapi>=0.111", "uvicorn[standard]>=0.30", "python-multipart>=0.0.9"]
-reports = ["jinja2>=3.1", "markdown>=3.6", "reportlab>=4.2"]
+reports = ["jinja2>=3.1", "reportlab>=4.2"]
 eval = ["datasets>=2.20", "nltk>=3.8", "rouge-score>=0.1.2", "scikit-learn>=1.4", "coverage>=7.5"]
 # Fine-tuning the change classifier (never needed to run a review without one)
 train = ["torch>=2.2", "transformers>=4.40", "peft>=0.11", "accelerate>=0.30", "scikit-learn>=1.4"]

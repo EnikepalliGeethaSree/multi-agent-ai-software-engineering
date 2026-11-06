@@ -1,0 +1,67 @@
+{
+  "source_run": "20261005T111337Z_hunkrisk_cls_valid_n4220",
+  "n": 4219,
+  "base_rate": 0.48660820099549656,
+  "l2": 1.0,
+  "intercept": -0.3703161980339163,
+  "coefficients": {
+    "finding_high": -0.34915963232692526,
+    "finding_medium": -1.0009411492764824,
+    "finding_low": 0.06313589664632813,
+    "sensitive_api": 0.4175108344549219,
+    "error_handling": 0.7583044436152434,
+    "signature_change": 0.3995140551205262,
+    "removes_function": -0.6575843616182675,
+    "has_dependents": -0.43115696556889754,
+    "log2_size": 0.13796935845970265
+  },
+  "thresholds": {
+    "high_p90": 62.4288163406403,
+    "medium_p65": 51.089624392370844
+  },
+  "valid_auc_in_sample": 0.6356262416237481,
+  "refit_nonnegative": {
+    "features": [
+      "sensitive_api",
+      "error_handling",
+      "signature_change",
+      "log2_size",
+      "finding_low"
+    ],
+    "intercept": -0.31863138112577305,
+    "coefficients": {
+      "sensitive_api": 0.45394409846125794,
+      "error_handling": 0.6487823210743956,
+      "signature_change": 0.2354487737930246,
+      "log2_size": 0.05596280894747613,
+      "finding_low": -0.010164809503575862
+    },
+    "thresholds": {
+      "high_p90": 59.79700714870584,
+      "medium_p65": 47.36342023603647
+    },
+    "valid_auc_in_sample": 0.6203906721195791,
+    "rule": "negative-weight binary signals dropped (a signal must never lower risk), refit on valid"
+  },
+  "final": {
+    "features": [
+      "sensitive_api",
+      "error_handling",
+      "signature_change",
+      "log2_size"
+    ],
+    "intercept": -0.31805094130973033,
+    "coefficients": {
+      "sensitive_api": 0.45354675316249216,
+      "error_handling": 0.6482877342300981,
+      "signature_change": 0.2339274923259111,
+      "log2_size": 0.055076389467542314
+    },
+    "thresholds": {
+      "high_p90": 59.73364229844497,
+      "medium_p65": 47.43042790875045
+    },
+    "valid_auc_in_sample": 0.6210535086145131,
+    "rule": "binary signals with weight <= 0 dropped (finding_*, removes_function, has_dependents); refit on valid"
+  }
+}

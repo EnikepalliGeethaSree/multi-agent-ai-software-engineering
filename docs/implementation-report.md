@@ -238,8 +238,8 @@ No paid API or paid hosting was added. Cerebras is not used.
 
 | Check | Result |
 |---|---|
-| Backend tests (`pytest`) | 531 passed, 2 deselected (tests that call a real API or need the datasets) |
-| Frontend tests (`npm test`) | 53 passed |
+| Backend tests (`pytest`) | 561 passed, 2 deselected (tests that call a real API or need the datasets) |
+| Frontend tests (`npm test`) | 62 passed |
 | Types (`mypy src`) | Clean |
 | Lint and format (`ruff`) | Clean |
 | Frontend build | Succeeded |

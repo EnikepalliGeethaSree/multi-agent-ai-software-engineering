@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-11-06T14:57:56.347507+00:00",
+  "generated_at": "2026-11-06T17:53:15.753213+00:00",
   "master": {
     "id": "master",
     "section": "Summary",
@@ -7,24 +7,24 @@
     "about": "Detection quality of each configuration. Planted issues: ROC-AUC is not applicable (positives only). CodeReviewer: raw metrics on the paired sample set; adjusted metrics are in section 2.",
     "columns": [
       {
-        "key": "planted_precision",
-        "label": "Precision",
-        "metric": "precision",
-        "group": "Planted issues",
+        "key": "planted_recall",
+        "label": "Issue recall",
+        "metric": "issue_recall",
+        "group": "Planted issues (n = 17)",
         "digits": 3
       },
       {
-        "key": "planted_recall",
-        "label": "Recall",
-        "metric": "recall",
-        "group": "Planted issues",
+        "key": "planted_precision",
+        "label": "Defect precision",
+        "metric": "defect_precision",
+        "group": "Planted issues (n = 17)",
         "digits": 3
       },
       {
         "key": "planted_f1",
-        "label": "F1",
-        "metric": "f1",
-        "group": "Planted issues",
+        "label": "F1 (mixed basis)",
+        "metric": "mixed_f1",
+        "group": "Planted issues (n = 17)",
         "digits": 3
       },
       {
@@ -229,7 +229,11 @@
       "Model, sample counts, failures and the exact runs behind every cell are in the benchmark sections below."
     ],
     "supplementary": false,
-    "show_counts": false
+    "show_counts": false,
+    "badges": [
+      "Historical: Groq (openai/gpt-oss-120b)"
+    ],
+    "warning": "Small benchmark: 17 issues written by the project team. It is a regression check, and a score of 1.000 is not evidence of 100% bug detection in real code."
   },
   "tables": [
     {
@@ -239,80 +243,87 @@
       "about": "17 hand-labelled issues in a fixture repository (16 detectable by a rule, 1 needing semantic reasoning) plus a clean negative-control file.",
       "columns": [
         {
-          "key": "precision",
-          "label": "Precision",
-          "metric": "precision",
-          "group": null,
+          "key": "recall",
+          "label": "Issue recall",
+          "metric": "issue_recall",
+          "group": "Labelled issues",
           "digits": 3
         },
         {
-          "key": "recall",
-          "label": "Recall",
-          "metric": "recall",
-          "group": null,
+          "key": "issues_found",
+          "label": "Found",
+          "metric": null,
+          "group": "Labelled issues",
+          "digits": 0
+        },
+        {
+          "key": "fn",
+          "label": "Missed",
+          "metric": null,
+          "group": "Labelled issues",
+          "digits": 0
+        },
+        {
+          "key": "recall_static",
+          "label": "Rule-detectable recall",
+          "metric": "issue_recall",
+          "group": "Labelled issues",
           "digits": 3
+        },
+        {
+          "key": "recall_llm",
+          "label": "Semantic recall",
+          "metric": "issue_recall",
+          "group": "Labelled issues",
+          "digits": 3
+        },
+        {
+          "key": "precision",
+          "label": "Precision",
+          "metric": "defect_precision",
+          "group": "Defect findings",
+          "digits": 3
+        },
+        {
+          "key": "tp",
+          "label": "Correct",
+          "metric": null,
+          "group": "Defect findings",
+          "digits": 0
+        },
+        {
+          "key": "fp",
+          "label": "False positives",
+          "metric": null,
+          "group": "Defect findings",
+          "digits": 0
+        },
+        {
+          "key": "clean_fp",
+          "label": "FP in clean file",
+          "metric": null,
+          "group": "Defect findings",
+          "digits": 0
         },
         {
           "key": "f1",
-          "label": "F1",
-          "metric": "f1",
-          "group": null,
+          "label": "F1 (mixed basis)",
+          "metric": "mixed_f1",
+          "group": "Other",
           "digits": 3
         },
         {
           "key": "roc_auc",
           "label": "ROC-AUC",
           "metric": "roc_auc",
-          "group": null,
+          "group": "Other",
           "digits": 3
-        },
-        {
-          "key": "tp",
-          "label": "TP",
-          "metric": null,
-          "group": null,
-          "digits": 0
-        },
-        {
-          "key": "fp",
-          "label": "FP",
-          "metric": null,
-          "group": null,
-          "digits": 0
-        },
-        {
-          "key": "fn",
-          "label": "FN",
-          "metric": null,
-          "group": null,
-          "digits": 0
-        },
-        {
-          "key": "recall_static",
-          "label": "Recall (static-detectable)",
-          "metric": "recall",
-          "group": null,
-          "digits": 3
-        },
-        {
-          "key": "recall_llm",
-          "label": "Recall (semantic / LLM-only)",
-          "metric": "recall",
-          "group": null,
-          "digits": 3
-        },
-        {
-          "key": "clean_fp",
-          "label": "FP in clean file",
-          "metric": null,
-          "group": null,
-          "digits": 0
         },
         {
           "key": "line_error",
           "label": "Mean line error",
           "metric": null,
-          "group": null,
+          "group": "Other",
           "digits": 2
         }
       ],
@@ -331,16 +342,17 @@
           },
           "status": "ok",
           "values": {
-            "precision": 1.0,
             "recall": 0.9411764705882353,
-            "f1": 0.9696969696969697,
-            "roc_auc": null,
-            "tp": 13,
-            "fp": 0,
+            "issues_found": 16,
             "fn": 1,
             "recall_static": 1.0,
             "recall_llm": 0.0,
+            "precision": 1.0,
+            "tp": 13,
+            "fp": 0,
             "clean_fp": 0,
+            "f1": 0.9696969696969697,
+            "roc_auc": null,
             "line_error": 0.0
           },
           "sd": {},
@@ -372,16 +384,17 @@
           },
           "status": "ok",
           "values": {
-            "precision": 1.0,
             "recall": 0.5882352941176471,
-            "f1": 0.7407407407407407,
-            "roc_auc": null,
-            "tp": 10,
-            "fp": 0,
+            "issues_found": 10,
             "fn": 7,
             "recall_static": 0.5625,
             "recall_llm": 1.0,
+            "precision": 1.0,
+            "tp": 10,
+            "fp": 0,
             "clean_fp": 0,
+            "f1": 0.7407407407407407,
+            "roc_auc": null,
             "line_error": 0.9
           },
           "sd": {},
@@ -413,16 +426,17 @@
           },
           "status": "ok",
           "values": {
-            "precision": 1.0,
             "recall": 1.0,
-            "f1": 1.0,
-            "roc_auc": null,
-            "tp": 14,
-            "fp": 0,
+            "issues_found": 17,
             "fn": 0,
             "recall_static": 1.0,
             "recall_llm": 1.0,
+            "precision": 1.0,
+            "tp": 14,
+            "fp": 0,
             "clean_fp": 0,
+            "f1": 1.0,
+            "roc_auc": null,
             "line_error": 0.0
           },
           "sd": {},
@@ -454,16 +468,17 @@
           },
           "status": "ok",
           "values": {
-            "precision": 1.0,
             "recall": 1.0,
-            "f1": 1.0,
-            "roc_auc": null,
-            "tp": 14,
-            "fp": 0,
+            "issues_found": 17,
             "fn": 0,
             "recall_static": 1.0,
             "recall_llm": 1.0,
+            "precision": 1.0,
+            "tp": 14,
+            "fp": 0,
             "clean_fp": 0,
+            "f1": 1.0,
+            "roc_auc": null,
             "line_error": 0.058823529411764705
           },
           "sd": {},
@@ -535,15 +550,24 @@
         "Static Only: semantic (LLM-only) issue recall 0.000 (the suite has a single such issue, so this is 0 or 1 per run).",
         "LLM Only: semantic (LLM-only) issue recall 1.000 (the suite has a single such issue, so this is 0 or 1 per run).",
         "Static + LLM: semantic (LLM-only) issue recall 1.000 (the suite has a single such issue, so this is 0 or 1 per run).",
-        "Static + LLM + RAG: semantic (LLM-only) issue recall 1.000 (the suite has a single such issue, so this is 0 or 1 per run)."
+        "Static + LLM + RAG: semantic (LLM-only) issue recall 1.000 (the suite has a single such issue, so this is 0 or 1 per run).",
+        "Static + LLM + RAG on openai/gpt-oss-120b varies between complete runs (20260929: 17/17, 20261012: 16/17, 20261012: 17/17). The table shows the latest, so 1.000 is not a stable result."
       ],
       "notes": [
-        "Precision TP = defect findings that match a planted issue; recall TP = planted issues detected (the project's existing definitions).",
+        "Why 14 correct findings can sit beside 17 issues found: the answer key has 14 defect-class issues and 3 others (quality, maintainability, standards). Found counts issues of every category. Correct counts findings of the defect classes only. They are separate counts, so Correct + Missed need not equal the number of issues.",
+        "Rule-detectable recall covers 16 issues. Semantic recall covers 1, so it can only be 0 or 1 in a run.",
+        "F1 here mixes defect precision and issue recall, which have different denominators. Treat it as a summary of this benchmark, not a standard F1.",
         "Precision is N/A, not 1.0, when a configuration reports no defect findings at all.",
         "Run all four together: python -m marl_agents.cli eval ablation --benchmark planted --configurations static_only,llm_only,static_llm,static_llm_rag --config configs/gemini.yaml"
       ],
       "supplementary": false,
-      "show_counts": true
+      "show_counts": true,
+      "badges": [
+        "Complete",
+        "Small benchmark (n = 17)",
+        "Historical: Groq (openai/gpt-oss-120b)"
+      ],
+      "warning": "Small benchmark: 17 issues written by the project team. It is a regression check, and a score of 1.000 is not evidence of 100% bug detection in real code."
     },
     {
       "id": "codereviewer_cls",
@@ -626,17 +650,19 @@
             "precision": 0.0,
             "recall": 0.0,
             "f1": 0.0,
-            "roc_auc": 0.0,
+            "roc_auc": null,
             "adj_precision": null,
             "adj_recall": 0.0,
             "adj_f1": null,
-            "adj_roc_auc": 0.5
+            "adj_roc_auc": null
           },
           "sd": {},
           "spread": {},
           "na": {
             "adj_precision": "undefined on these samples (zero denominator or one class only)",
-            "adj_f1": "undefined on these samples (zero denominator or one class only)"
+            "adj_f1": "undefined on these samples (zero denominator or one class only)",
+            "roc_auc": "not reported: 3 paired samples are too few for ROC-AUC (minimum 30)",
+            "adj_roc_auc": "not reported: 3 paired samples are too few for ROC-AUC (minimum 30)"
           },
           "n": 3,
           "n_failed": 0,
@@ -665,15 +691,18 @@
             "precision": 0.6666666666666666,
             "recall": 1.0,
             "f1": 0.8,
-            "roc_auc": 0.5,
+            "roc_auc": null,
             "adj_precision": 0.6666666666666666,
             "adj_recall": 1.0,
             "adj_f1": 0.8,
-            "adj_roc_auc": 0.5
+            "adj_roc_auc": null
           },
           "sd": {},
           "spread": {},
-          "na": {},
+          "na": {
+            "roc_auc": "not reported: 3 paired samples are too few for ROC-AUC (minimum 30)",
+            "adj_roc_auc": "not reported: 3 paired samples are too few for ROC-AUC (minimum 30)"
+          },
           "n": 3,
           "n_failed": 0,
           "n_runs": 1,
@@ -701,15 +730,18 @@
             "precision": 0.6666666666666666,
             "recall": 1.0,
             "f1": 0.8,
-            "roc_auc": 1.0,
+            "roc_auc": null,
             "adj_precision": 1.0,
             "adj_recall": 1.0,
             "adj_f1": 1.0,
-            "adj_roc_auc": 1.0
+            "adj_roc_auc": null
           },
           "sd": {},
           "spread": {},
-          "na": {},
+          "na": {
+            "roc_auc": "not reported: 3 paired samples are too few for ROC-AUC (minimum 30)",
+            "adj_roc_auc": "not reported: 3 paired samples are too few for ROC-AUC (minimum 30)"
+          },
           "n": 3,
           "n_failed": 7,
           "n_runs": 1,
@@ -752,6 +784,8 @@
       ],
       "conditions": {
         "dataset": "CodeReviewer, test split, Python only",
+        "paired samples": "3 of 10 requested",
+        "evaluated per configuration": "A 10/10, B 10/10, C 3/10, D 0",
         "requested samples": 10,
         "samples in every row": 3,
         "sampling seed": 42,
@@ -763,8 +797,8 @@
       "fairness": [
         {
           "name": "Same samples",
-          "ok": true,
-          "detail": "3 samples evaluated by every configuration (10 requested; reference run 20261012T162634Z_codereviewer_cls_test_static_llm_n10)"
+          "ok": false,
+          "detail": "3 of 10 requested samples evaluated by Static Only, LLM Only, Static + LLM; no scored samples for Static + LLM + RAG (reference run 20261012T162634Z_codereviewer_cls_test_static_llm_n10)"
         },
         {
           "name": "Same LLM model",
@@ -801,16 +835,25 @@
       "notes": [
         "RAW counts every finding. ADJUSTED drops the rules that cannot be judged from one hunk (imports/names defined in the commit's other hunks); both are always reported, neither replaces the other.",
         "Run all four on one sample set: python -m marl_agents.cli eval ablation --benchmark codereviewer --task cls --limit 10 --seed 42 --configurations static_only,llm_only,static_llm,static_llm_rag --config configs/gemini.yaml",
-        "n = 3: far too few samples for any conclusion; this table only shows that the pipeline runs end to end."
+        "n = 3: far too few samples for any conclusion; this table only shows that the pipeline runs end to end. ROC-AUC is not reported. Each run's saved scores are unchanged in its predictions.jsonl.",
+        "Static + LLM: 7 of 10 samples failed (llm: 7).",
+        "Static + LLM + RAG: 10 of 10 samples failed (llm: 10).",
+        "Gemini: set GEMINI_MODEL=gemini-3.6-flash first. Three LLM configurations on 10 samples need at least 30 requests. The free tier allows 20 per day per model and `eval ablation` has no resume, so a larger run cannot finish on the free tier as it stands.",
+        "That command reads the CodeReviewer cls test split, which contains the CodeBERT classifier's held-out samples. It does not run the classifier, but use --split valid for new work so that test set is not reused."
       ],
       "supplementary": false,
-      "show_counts": true
+      "show_counts": true,
+      "badges": [
+        "Preliminary",
+        "Historical: Groq (openai/gpt-oss-120b)"
+      ],
+      "warning": "Preliminary: only 3 of 10 requested samples are paired. No conclusion about any configuration can be drawn from this table, and ROC-AUC is not reported."
     },
     {
       "id": "codereviewer_cls_full",
       "section": "2. CodeReviewer classification",
       "title": "Static Only on the full Python test split (n = 4195)",
-      "about": "Static analysis is cheap enough to run on every sample; LLM configurations are limited by API quota, so they are compared on the subset above.",
+      "about": "Static analysis is cheap enough to run on every sample; LLM configurations are limited by API quota, so they are compared on the subset above. These samples are not paired with that subset, so do not compare this row with the table above.",
       "columns": [
         {
           "key": "precision",
@@ -914,7 +957,13 @@
       "observations": [],
       "notes": [],
       "supplementary": false,
-      "show_counts": true
+      "show_counts": true,
+      "badges": [
+        "Complete",
+        "Static only, full test split",
+        "Not paired"
+      ],
+      "warning": null
     },
     {
       "id": "codereviewer_msg",
@@ -1075,6 +1124,8 @@
       ],
       "conditions": {
         "dataset": "CodeReviewer, test split, Python only",
+        "paired samples": "36 of 40 requested",
+        "evaluated per configuration": "A 40/40, B not run, C not run, D 36/40",
         "requested samples": 40,
         "samples in every row": 36,
         "sampling seed": 42,
@@ -1085,8 +1136,8 @@
       "fairness": [
         {
           "name": "Same samples",
-          "ok": true,
-          "detail": "36 samples evaluated by every configuration (40 requested; reference run 20261005T120433Z_codereviewer_msg_test_full_n40)"
+          "ok": false,
+          "detail": "36 of 40 requested samples evaluated by Static Only, Static + LLM + RAG; no scored samples for LLM Only, Static + LLM (reference run 20261005T120433Z_codereviewer_msg_test_full_n40)"
         },
         {
           "name": "Same LLM model",
@@ -1122,16 +1173,24 @@
       "observations": [],
       "notes": [
         "Run all four on one sample set: python -m marl_agents.cli eval ablation --benchmark codereviewer --task msg --limit 40 --seed 42 --configurations static_only,llm_only,static_llm,static_llm_rag --config configs/gemini.yaml",
-        "n = 36: differences of a few points are within sampling noise (see the bootstrap CIs in each run's summary)."
+        "n = 36: differences of a few points are within sampling noise (see the bootstrap CIs in each run's summary).",
+        "Static + LLM + RAG: 4 of 40 samples failed (llm: 4).",
+        "The effect of RAG on comment quality cannot be judged here: it needs Static + LLM and Static + LLM + RAG on the same samples. Static Only vs Static + LLM + RAG changes two things at once.",
+        "Gemini: set GEMINI_MODEL=gemini-3.6-flash first. Three LLM configurations on 40 samples need at least 120 requests. The free tier allows 20 per day per model and `eval ablation` has no resume, so a larger run cannot finish on the free tier as it stands."
       ],
       "supplementary": false,
-      "show_counts": true
+      "show_counts": true,
+      "badges": [
+        "Incomplete",
+        "Historical: Groq (qwen/qwen3.8-27b)"
+      ],
+      "warning": "Incomplete comparison: LLM Only, Static + LLM have no results; the rows were run separately; prompt versions were not fully recorded. This table does not show that RAG improves comment quality."
     },
     {
       "id": "codereviewer_msg_full",
       "section": "3. Review comment generation",
       "title": "Static Only on the full Python test split (n = 1403)",
-      "about": "Static analysis is cheap enough to run on every sample; LLM configurations are limited by API quota, so they are compared on the subset above.",
+      "about": "Static analysis is cheap enough to run on every sample; LLM configurations are limited by API quota, so they are compared on the subset above. These samples are not paired with that subset, so do not compare this row with the table above.",
       "columns": [
         {
           "key": "bleu4",
@@ -1203,7 +1262,13 @@
       "observations": [],
       "notes": [],
       "supplementary": false,
-      "show_counts": true
+      "show_counts": true,
+      "badges": [
+        "Complete",
+        "Static only, full test split",
+        "Not paired"
+      ],
+      "warning": null
     },
     {
       "id": "retrieval",
@@ -1212,6 +1277,20 @@
       "about": "Self-supervised from the AST call graph: for each function, the relevant chunks are those containing the functions it calls; the query is the function's own chunk.",
       "columns": [
         {
+          "key": "recall_at_1",
+          "label": "Recall@1",
+          "metric": null,
+          "group": null,
+          "digits": 3
+        },
+        {
+          "key": "recall_at_5",
+          "label": "Recall@5",
+          "metric": null,
+          "group": null,
+          "digits": 3
+        },
+        {
           "key": "recall_at_10",
           "label": "Recall@10",
           "metric": "recall_at_10",
@@ -1219,9 +1298,23 @@
           "digits": 3
         },
         {
+          "key": "hit_at_10",
+          "label": "Hit@10",
+          "metric": null,
+          "group": null,
+          "digits": 3
+        },
+        {
           "key": "mrr",
           "label": "MRR",
           "metric": "mrr",
+          "group": null,
+          "digits": 3
+        },
+        {
+          "key": "ndcg_at_10",
+          "label": "nDCG@10",
+          "metric": null,
           "group": null,
           "digits": 3
         }
@@ -1232,8 +1325,12 @@
           "configuration": null,
           "status": "ok",
           "values": {
+            "recall_at_1": 0.0009,
+            "recall_at_5": 0.005,
             "recall_at_10": 0.0118,
-            "mrr": 0.0198
+            "hit_at_10": 0.0315,
+            "mrr": 0.0198,
+            "ndcg_at_10": 0.0067
           },
           "sd": {},
           "spread": {},
@@ -1253,8 +1350,12 @@
           "configuration": null,
           "status": "ok",
           "values": {
+            "recall_at_1": 0.0899,
+            "recall_at_5": 0.2642,
             "recall_at_10": 0.3648,
-            "mrr": 0.3121
+            "hit_at_10": 0.6063,
+            "mrr": 0.3121,
+            "ndcg_at_10": 0.2662
           },
           "sd": {},
           "spread": {},
@@ -1289,11 +1390,18 @@
         "RAG (hashing) has a higher Recall@10 than random (0.365 vs 0.012)."
       ],
       "notes": [
-        "Retrieval is measured on its own; its effect on review quality is configuration C vs D in the detection tables.",
-        "Other cut-offs (Recall@1/3/5, Hit@k, nDCG@10) are in run 20261012T163120Z_retrieval_src."
+        "This measures whether retrieval finds a function's call-graph neighbours. It does not measure final review accuracy, and its effect on reviews needs Static + LLM vs Static + LLM + RAG on identical samples.",
+        "4 retrieval runs are saved, on 138, 277, 316, 381 queries. The repository grew between them, so they are not comparable. This table shows the latest.",
+        "Recall@3 and the other Hit@k cut-offs are in run 20261012T163120Z_retrieval_src."
       ],
       "supplementary": false,
-      "show_counts": true
+      "show_counts": true,
+      "badges": [
+        "Complete",
+        "Embedder: hashing",
+        "Retrieval quality only"
+      ],
+      "warning": null
     },
     {
       "id": "risk",
@@ -1309,9 +1417,23 @@
           "digits": 3
         },
         {
+          "key": "precision_at_top5",
+          "label": "Precision@Top5%",
+          "metric": null,
+          "group": null,
+          "digits": 3
+        },
+        {
           "key": "precision_at_top10",
           "label": "Precision@Top10%",
           "metric": "precision_at_top10",
+          "group": null,
+          "digits": 3
+        },
+        {
+          "key": "precision_at_top25",
+          "label": "Precision@Top25%",
+          "metric": null,
           "group": null,
           "digits": 3
         }
@@ -1346,7 +1468,9 @@
           "status": "ok",
           "values": {
             "roc_auc": 0.6510378349734498,
-            "precision_at_top10": 0.7923627684964201
+            "precision_at_top5": 0.8229665071770335,
+            "precision_at_top10": 0.7923627684964201,
+            "precision_at_top25": 0.6774809160305344
           },
           "sd": {},
           "spread": {},
@@ -1367,7 +1491,9 @@
           "status": "ok",
           "values": {
             "roc_auc": 0.4073945002075943,
-            "precision_at_top10": 0.2243436754176611
+            "precision_at_top5": 0.2822966507177033,
+            "precision_at_top10": 0.2243436754176611,
+            "precision_at_top25": 0.32061068702290074
           },
           "sd": {},
           "spread": {},
@@ -1388,7 +1514,9 @@
           "status": "ok",
           "values": {
             "roc_auc": 0.43123006002024955,
-            "precision_at_top10": 0.3054892601431981
+            "precision_at_top5": 0.22966507177033493,
+            "precision_at_top10": 0.3054892601431981,
+            "precision_at_top25": 0.3530534351145038
           },
           "sd": {},
           "spread": {},
@@ -1409,7 +1537,9 @@
           "status": "ok",
           "values": {
             "roc_auc": 0.6439879367675017,
-            "precision_at_top10": 0.7326968973747017
+            "precision_at_top5": 0.7607655502392344,
+            "precision_at_top10": 0.7326968973747017,
+            "precision_at_top25": 0.6622137404580153
           },
           "sd": {},
           "spread": {},
@@ -1439,14 +1569,610 @@
         "Size only has a higher Precision@Top10% than Risk model v2 (0.792 vs 0.733)."
       ],
       "notes": [
-        "v2 weights were fitted on the validation split; the test split was used once."
+        "v2 weights were fitted on the validation split. The test split appears in 4 saved runs, and the weights were not changed after seeing test results.",
+        "That validation fit predates the line-ending fix, so it used inflated sizes for some samples. Re-fitting on a corrected validation run has not been done."
       ],
       "supplementary": false,
-      "show_counts": true
+      "show_counts": true,
+      "badges": [
+        "Complete",
+        "Baseline not beaten"
+      ],
+      "warning": "Size-only ranking outperforms Risk model v2 on the current test set, on ROC-AUC and on precision at every cut-off. Do not describe risk ranking as beating the baseline."
+    },
+    {
+      "id": "runtime_20261106T162014Z",
+      "section": "6a. Efficiency: Gemini",
+      "title": "File-size benchmark: gemini-3.6-flash",
+      "about": "Times are means over complete runs only. Partial, failed and skipped runs are counted and never enter a time. Status comes from results.csv.",
+      "columns": [
+        {
+          "key": "complete",
+          "label": "Complete",
+          "metric": null,
+          "group": "Runs",
+          "digits": 0
+        },
+        {
+          "key": "partial",
+          "label": "Partial",
+          "metric": null,
+          "group": "Runs",
+          "digits": 0
+        },
+        {
+          "key": "failed",
+          "label": "Failed",
+          "metric": null,
+          "group": "Runs",
+          "digits": 0
+        },
+        {
+          "key": "skipped",
+          "label": "Skipped",
+          "metric": null,
+          "group": "Runs",
+          "digits": 0
+        },
+        {
+          "key": "total_sec",
+          "label": "Total",
+          "metric": "seconds",
+          "group": null,
+          "digits": 2
+        },
+        {
+          "key": "static_analysis_sec",
+          "label": "Static",
+          "metric": "seconds",
+          "group": null,
+          "digits": 2
+        },
+        {
+          "key": "rag_retrieval_sec",
+          "label": "RAG",
+          "metric": "seconds",
+          "group": null,
+          "digits": 3
+        },
+        {
+          "key": "llm_inference_sec",
+          "label": "LLM",
+          "metric": "seconds",
+          "group": null,
+          "digits": 2
+        },
+        {
+          "key": "llm_quota_wait_sec",
+          "label": "Quota wait",
+          "metric": "seconds",
+          "group": null,
+          "digits": 2
+        },
+        {
+          "key": "input_tokens",
+          "label": "Tokens in",
+          "metric": null,
+          "group": null,
+          "digits": 0
+        },
+        {
+          "key": "output_tokens",
+          "label": "Tokens out",
+          "metric": null,
+          "group": null,
+          "digits": 0
+        },
+        {
+          "key": "thinking_tokens",
+          "label": "Reasoning tokens",
+          "metric": null,
+          "group": null,
+          "digits": 0
+        },
+        {
+          "key": "cache_hit_rate",
+          "label": "Cache hit rate",
+          "metric": null,
+          "group": null,
+          "digits": 2
+        }
+      ],
+      "rows": [
+        {
+          "label": "Small, cold",
+          "configuration": null,
+          "status": "ok",
+          "values": {
+            "complete": 3,
+            "partial": 0,
+            "failed": 0,
+            "skipped": 12,
+            "total_sec": 20.8248,
+            "static_analysis_sec": 2.2843666666666667,
+            "rag_retrieval_sec": 0.012966666666666668,
+            "llm_inference_sec": 17.41593333333333,
+            "llm_quota_wait_sec": 0.0,
+            "input_tokens": 2238.0,
+            "output_tokens": 909.0,
+            "thinking_tokens": null,
+            "cache_hit_rate": 0.0
+          },
+          "sd": {},
+          "spread": {},
+          "na": {
+            "thinking_tokens": "not recorded for this run"
+          },
+          "n": 3,
+          "n_failed": null,
+          "n_runs": 15,
+          "model": null,
+          "run_ids": [
+            "20261106T162014Z_runtime_full_r5"
+          ],
+          "notes": [],
+          "how_to_run": null
+        },
+        {
+          "label": "Small, warm",
+          "configuration": null,
+          "status": "ok",
+          "values": {
+            "complete": 3,
+            "partial": 0,
+            "failed": 0,
+            "skipped": 12,
+            "total_sec": 0.11903333333333334,
+            "static_analysis_sec": 0.020266666666666665,
+            "rag_retrieval_sec": 0.0118,
+            "llm_inference_sec": 0.0,
+            "llm_quota_wait_sec": 0.0,
+            "input_tokens": null,
+            "output_tokens": null,
+            "thinking_tokens": null,
+            "cache_hit_rate": 1.0
+          },
+          "sd": {},
+          "spread": {},
+          "na": {
+            "input_tokens": "no LLM call: answered from the cache",
+            "output_tokens": "no LLM call: answered from the cache",
+            "thinking_tokens": "no LLM call: answered from the cache"
+          },
+          "n": 3,
+          "n_failed": null,
+          "n_runs": 15,
+          "model": null,
+          "run_ids": [
+            "20261106T162014Z_runtime_full_r5"
+          ],
+          "notes": [],
+          "how_to_run": null
+        },
+        {
+          "label": "Medium, cold",
+          "configuration": null,
+          "status": "ok",
+          "values": {
+            "complete": 1,
+            "partial": 2,
+            "failed": 0,
+            "skipped": 12,
+            "total_sec": 23.0831,
+            "static_analysis_sec": 2.3534,
+            "rag_retrieval_sec": 0.013,
+            "llm_inference_sec": 20.4366,
+            "llm_quota_wait_sec": 0.0,
+            "input_tokens": 2689.0,
+            "output_tokens": 192.0,
+            "thinking_tokens": null,
+            "cache_hit_rate": 0.0
+          },
+          "sd": {},
+          "spread": {},
+          "na": {
+            "thinking_tokens": "not recorded for this run"
+          },
+          "n": 1,
+          "n_failed": null,
+          "n_runs": 15,
+          "model": null,
+          "run_ids": [
+            "20261106T162014Z_runtime_full_r5"
+          ],
+          "notes": [],
+          "how_to_run": null
+        },
+        {
+          "label": "Medium, warm",
+          "configuration": null,
+          "status": "ok",
+          "values": {
+            "complete": 1,
+            "partial": 1,
+            "failed": 0,
+            "skipped": 13,
+            "total_sec": 0.0934,
+            "static_analysis_sec": 0.019,
+            "rag_retrieval_sec": 0.0126,
+            "llm_inference_sec": 0.0,
+            "llm_quota_wait_sec": 0.0,
+            "input_tokens": null,
+            "output_tokens": null,
+            "thinking_tokens": null,
+            "cache_hit_rate": 1.0
+          },
+          "sd": {},
+          "spread": {},
+          "na": {
+            "input_tokens": "no LLM call: answered from the cache",
+            "output_tokens": "no LLM call: answered from the cache",
+            "thinking_tokens": "no LLM call: answered from the cache"
+          },
+          "n": 1,
+          "n_failed": null,
+          "n_runs": 15,
+          "model": null,
+          "run_ids": [
+            "20261106T162014Z_runtime_full_r5"
+          ],
+          "notes": [],
+          "how_to_run": null
+        },
+        {
+          "label": "Large, cold",
+          "configuration": null,
+          "status": "ok",
+          "values": {
+            "complete": 0,
+            "partial": 0,
+            "failed": 0,
+            "skipped": 15,
+            "total_sec": null,
+            "static_analysis_sec": null,
+            "rag_retrieval_sec": null,
+            "llm_inference_sec": null,
+            "llm_quota_wait_sec": null,
+            "input_tokens": null,
+            "output_tokens": null,
+            "thinking_tokens": null,
+            "cache_hit_rate": null
+          },
+          "sd": {},
+          "spread": {},
+          "na": {
+            "total_sec": "no complete run",
+            "static_analysis_sec": "no complete run",
+            "rag_retrieval_sec": "no complete run",
+            "llm_inference_sec": "no complete run",
+            "llm_quota_wait_sec": "no complete run",
+            "input_tokens": "no complete run",
+            "output_tokens": "no complete run",
+            "thinking_tokens": "no complete run",
+            "cache_hit_rate": "no complete run"
+          },
+          "n": 0,
+          "n_failed": null,
+          "n_runs": 15,
+          "model": null,
+          "run_ids": [
+            "20261106T162014Z_runtime_full_r5"
+          ],
+          "notes": [],
+          "how_to_run": null
+        },
+        {
+          "label": "Large, warm",
+          "configuration": null,
+          "status": "ok",
+          "values": {
+            "complete": 0,
+            "partial": 0,
+            "failed": 0,
+            "skipped": 15,
+            "total_sec": null,
+            "static_analysis_sec": null,
+            "rag_retrieval_sec": null,
+            "llm_inference_sec": null,
+            "llm_quota_wait_sec": null,
+            "input_tokens": null,
+            "output_tokens": null,
+            "thinking_tokens": null,
+            "cache_hit_rate": null
+          },
+          "sd": {},
+          "spread": {},
+          "na": {
+            "total_sec": "no complete run",
+            "static_analysis_sec": "no complete run",
+            "rag_retrieval_sec": "no complete run",
+            "llm_inference_sec": "no complete run",
+            "llm_quota_wait_sec": "no complete run",
+            "input_tokens": "no complete run",
+            "output_tokens": "no complete run",
+            "thinking_tokens": "no complete run",
+            "cache_hit_rate": "no complete run"
+          },
+          "n": 0,
+          "n_failed": null,
+          "n_runs": 15,
+          "model": null,
+          "run_ids": [
+            "20261106T162014Z_runtime_full_r5"
+          ],
+          "notes": [],
+          "how_to_run": null
+        }
+      ],
+      "conditions": {
+        "run": "20261106T162014Z_runtime_full_r5",
+        "planned": "9 files x 5 rounds x cold and warm = 90 runs",
+        "run status": "8 complete, 3 partial, 0 failed, 79 skipped",
+        "files measured": "6 of 9 (4 with a complete run)",
+        "rounds": "1 reached, 0 of 5 finished",
+        "llm.max_tokens": 4096
+      },
+      "fairness": [],
+      "observations": [],
+      "notes": [
+        "These runs used llm.max_tokens = 4096, since raised to 16,384 after replies were cut off on larger units. Rerun before quoting any time."
+      ],
+      "supplementary": false,
+      "show_counts": false,
+      "badges": [
+        "Incomplete",
+        "Gemini: gemini-3.6-flash"
+      ],
+      "warning": "Incomplete: 8 of 90 planned runs finished, and 0 of 5 rounds. No complete run for: large. This is not the file-size benchmark result."
+    },
+    {
+      "id": "runtime_20261106T122017Z",
+      "section": "6b. Efficiency: static analysis only",
+      "title": "File-size benchmark: no LLM",
+      "about": "Times are means over complete runs only. Partial, failed and skipped runs are counted and never enter a time. Status comes from results.csv.",
+      "columns": [
+        {
+          "key": "complete",
+          "label": "Complete",
+          "metric": null,
+          "group": "Runs",
+          "digits": 0
+        },
+        {
+          "key": "partial",
+          "label": "Partial",
+          "metric": null,
+          "group": "Runs",
+          "digits": 0
+        },
+        {
+          "key": "failed",
+          "label": "Failed",
+          "metric": null,
+          "group": "Runs",
+          "digits": 0
+        },
+        {
+          "key": "skipped",
+          "label": "Skipped",
+          "metric": null,
+          "group": "Runs",
+          "digits": 0
+        },
+        {
+          "key": "total_sec",
+          "label": "Total",
+          "metric": "seconds",
+          "group": null,
+          "digits": 2
+        },
+        {
+          "key": "static_analysis_sec",
+          "label": "Static",
+          "metric": "seconds",
+          "group": null,
+          "digits": 2
+        },
+        {
+          "key": "rag_retrieval_sec",
+          "label": "RAG",
+          "metric": "seconds",
+          "group": null,
+          "digits": 3
+        }
+      ],
+      "rows": [
+        {
+          "label": "Small, cold",
+          "configuration": null,
+          "status": "ok",
+          "values": {
+            "complete": 15,
+            "partial": 0,
+            "failed": 0,
+            "skipped": 0,
+            "total_sec": 2.4171733333333334,
+            "static_analysis_sec": 2.352546666666667,
+            "rag_retrieval_sec": null
+          },
+          "sd": {},
+          "spread": {},
+          "na": {
+            "rag_retrieval_sec": "not recorded for this run"
+          },
+          "n": 15,
+          "n_failed": null,
+          "n_runs": 15,
+          "model": null,
+          "run_ids": [
+            "20261106T122017Z_runtime_static_only_r5"
+          ],
+          "notes": [],
+          "how_to_run": null
+        },
+        {
+          "label": "Small, warm",
+          "configuration": null,
+          "status": "ok",
+          "values": {
+            "complete": 15,
+            "partial": 0,
+            "failed": 0,
+            "skipped": 0,
+            "total_sec": 0.06932,
+            "static_analysis_sec": 0.015873333333333333,
+            "rag_retrieval_sec": null
+          },
+          "sd": {},
+          "spread": {},
+          "na": {
+            "rag_retrieval_sec": "not recorded for this run"
+          },
+          "n": 15,
+          "n_failed": null,
+          "n_runs": 15,
+          "model": null,
+          "run_ids": [
+            "20261106T122017Z_runtime_static_only_r5"
+          ],
+          "notes": [],
+          "how_to_run": null
+        },
+        {
+          "label": "Medium, cold",
+          "configuration": null,
+          "status": "ok",
+          "values": {
+            "complete": 15,
+            "partial": 0,
+            "failed": 0,
+            "skipped": 0,
+            "total_sec": 2.555426666666667,
+            "static_analysis_sec": 2.4473133333333332,
+            "rag_retrieval_sec": null
+          },
+          "sd": {},
+          "spread": {},
+          "na": {
+            "rag_retrieval_sec": "not recorded for this run"
+          },
+          "n": 15,
+          "n_failed": null,
+          "n_runs": 15,
+          "model": null,
+          "run_ids": [
+            "20261106T122017Z_runtime_static_only_r5"
+          ],
+          "notes": [],
+          "how_to_run": null
+        },
+        {
+          "label": "Medium, warm",
+          "configuration": null,
+          "status": "ok",
+          "values": {
+            "complete": 15,
+            "partial": 0,
+            "failed": 0,
+            "skipped": 0,
+            "total_sec": 0.11880666666666667,
+            "static_analysis_sec": 0.025993333333333334,
+            "rag_retrieval_sec": null
+          },
+          "sd": {},
+          "spread": {},
+          "na": {
+            "rag_retrieval_sec": "not recorded for this run"
+          },
+          "n": 15,
+          "n_failed": null,
+          "n_runs": 15,
+          "model": null,
+          "run_ids": [
+            "20261106T122017Z_runtime_static_only_r5"
+          ],
+          "notes": [],
+          "how_to_run": null
+        },
+        {
+          "label": "Large, cold",
+          "configuration": null,
+          "status": "ok",
+          "values": {
+            "complete": 15,
+            "partial": 0,
+            "failed": 0,
+            "skipped": 0,
+            "total_sec": 4.688306666666667,
+            "static_analysis_sec": 4.35084,
+            "rag_retrieval_sec": null
+          },
+          "sd": {},
+          "spread": {},
+          "na": {
+            "rag_retrieval_sec": "not recorded for this run"
+          },
+          "n": 15,
+          "n_failed": null,
+          "n_runs": 15,
+          "model": null,
+          "run_ids": [
+            "20261106T122017Z_runtime_static_only_r5"
+          ],
+          "notes": [],
+          "how_to_run": null
+        },
+        {
+          "label": "Large, warm",
+          "configuration": null,
+          "status": "ok",
+          "values": {
+            "complete": 15,
+            "partial": 0,
+            "failed": 0,
+            "skipped": 0,
+            "total_sec": 0.38753999999999994,
+            "static_analysis_sec": 0.06555333333333334,
+            "rag_retrieval_sec": null
+          },
+          "sd": {},
+          "spread": {},
+          "na": {
+            "rag_retrieval_sec": "not recorded for this run"
+          },
+          "n": 15,
+          "n_failed": null,
+          "n_runs": 15,
+          "model": null,
+          "run_ids": [
+            "20261106T122017Z_runtime_static_only_r5"
+          ],
+          "notes": [],
+          "how_to_run": null
+        }
+      ],
+      "conditions": {
+        "run": "20261106T122017Z_runtime_static_only_r5",
+        "planned": "9 files x 5 rounds x cold and warm = 90 runs",
+        "run status": "90 complete, 0 partial, 0 failed, 0 skipped",
+        "files measured": "9 of 9 (9 with a complete run)",
+        "rounds": "5 reached, 5 of 5 finished",
+        "llm.max_tokens": null
+      },
+      "fairness": [],
+      "observations": [],
+      "notes": [],
+      "supplementary": false,
+      "show_counts": false,
+      "badges": [
+        "Complete",
+        "No LLM"
+      ],
+      "warning": null
     },
     {
       "id": "timing_planted_repo",
-      "section": "6. Efficiency",
+      "section": "6c. Efficiency: historical timing (not Gemini)",
       "title": "Time per review: planted_repo (median of 3 runs, seconds)",
       "about": "Fixed input, interleaved repeats, concurrency 1, fresh vector store per run, one untimed warm-up; incomplete runs excluded.",
       "columns": [
@@ -1760,11 +2486,15 @@
         "Timing statistics (mean, median, min, max) per component are in run 20261012T090910Z_timing_r3; the table shows the median, ranges on hover."
       ],
       "supplementary": false,
-      "show_counts": true
+      "show_counts": true,
+      "badges": [
+        "Historical: Groq (openai/gpt-oss-120b)"
+      ],
+      "warning": null
     },
     {
       "id": "timing_order_service_file",
-      "section": "6. Efficiency",
+      "section": "6c. Efficiency: historical timing (not Gemini)",
       "title": "Time per review: order_service_file (median of 3 runs, seconds)",
       "about": "Fixed input, interleaved repeats, concurrency 1, fresh vector store per run, one untimed warm-up; incomplete runs excluded.",
       "columns": [
@@ -2079,11 +2809,15 @@
         "Timing statistics (mean, median, min, max) per component are in run 20261012T090910Z_timing_r3; the table shows the median, ranges on hover."
       ],
       "supplementary": false,
-      "show_counts": true
+      "show_counts": true,
+      "badges": [
+        "Historical: Groq (openai/gpt-oss-120b)"
+      ],
+      "warning": null
     },
     {
       "id": "timing_planted_runs",
-      "section": "6. Efficiency",
+      "section": "6c. Efficiency: historical timing (not Gemini)",
       "title": "Time per review in the planted-benchmark runs (seconds)",
       "about": "The same repository reviewed under each configuration (the runs in section 1). One measurement per run; repeated runs show the mean.",
       "columns": [
@@ -2314,7 +3048,11 @@
       ],
       "notes": [],
       "supplementary": false,
-      "show_counts": true
+      "show_counts": true,
+      "badges": [
+        "Historical: Groq (openai/gpt-oss-120b)"
+      ],
+      "warning": null
     },
     {
       "id": "usefulness",
@@ -2349,7 +3087,7 @@
           "sd": {},
           "spread": {},
           "na": {},
-          "n": 64,
+          "n": 28,
           "n_failed": null,
           "n_runs": 1,
           "model": null,
@@ -2370,7 +3108,7 @@
           "sd": {},
           "spread": {},
           "na": {},
-          "n": 64,
+          "n": 36,
           "n_failed": null,
           "n_runs": 1,
           "model": null,
@@ -2385,7 +3123,8 @@
         "judge model": "openai/gpt-oss-20b",
         "reviewer model": "qwen/qwen3.8-27b",
         "source run": "20261005T120433Z_codereviewer_msg_test_full_n40",
-        "comments judged": 64
+        "comments judged": 64,
+        "diffs where the agent wrote no comment": 8
       },
       "fairness": [],
       "observations": [],
@@ -2393,7 +3132,12 @@
         "Limitations: a single LLM judge (possible self-preference and verbosity bias); small sample; the agent's comments are longer than human ones, which judges tend to reward; judge-human agreement must be measured with the human rating kit before citing."
       ],
       "supplementary": true,
-      "show_counts": true
+      "show_counts": true,
+      "badges": [
+        "Preliminary",
+        "Historical: Groq (reviewer and judge)"
+      ],
+      "warning": null
     }
   ],
   "definitions": [
@@ -2415,6 +3159,27 @@
       "key": "f1",
       "name": "F1",
       "definition": "2 x Precision x Recall / (Precision + Recall)",
+      "scale": "0-1",
+      "higher_is_better": true
+    },
+    {
+      "key": "issue_recall",
+      "name": "Issue recall",
+      "definition": "Labelled issues found / all labelled issues (any category).",
+      "scale": "0-1",
+      "higher_is_better": true
+    },
+    {
+      "key": "defect_precision",
+      "name": "Defect precision",
+      "definition": "Correct defect findings / all defect findings. Style and documentation findings are not in the answer key, so they are not counted.",
+      "scale": "0-1",
+      "higher_is_better": true
+    },
+    {
+      "key": "mixed_f1",
+      "name": "F1 (mixed basis)",
+      "definition": "Harmonic mean of defect precision and issue recall. The two have different denominators, so this is not a standard F1.",
       "scale": "0-1",
       "higher_is_better": true
     },
@@ -2500,5 +3265,178 @@
     "Agent-level benchmark evaluation of the Code Review Agent on its own. These numbers are not system-level results of the five-agent platform (SWE-bench Lite resolve rate), which is not built yet.",
     "Configuration D (Static + LLM + RAG) is the shipped Code Review Agent; A-C are ablations that switch one component off.",
     "Every value comes from a saved run in experiments/results/ (run ids are listed per row). A configuration without a valid run is N/A with the command that produces it. Runs made with the offline mock LLM test the pipeline and are never shown as results."
-  ]
+  ],
+  "status": {
+    "items": [
+      {
+        "name": "Planted-issue benchmark",
+        "status": "complete",
+        "detail": "4 of 4 configurations on 17 issues, run with openai/gpt-oss-120b. Small benchmark.",
+        "run_ids": [
+          "20261012T161020Z_planted_static_only",
+          "20261012T161026Z_planted_llm_only",
+          "20261012T161133Z_planted_static_llm",
+          "20261012T161434Z_planted_static_llm_rag"
+        ],
+        "command": null
+      },
+      {
+        "name": "CodeReviewer classification, paired",
+        "status": "preliminary",
+        "detail": "3 of 10 requested samples paired; no scored samples for Static + LLM + RAG.",
+        "run_ids": [
+          "20261012T161828Z_codereviewer_cls_test_static_only_n10",
+          "20261012T161832Z_codereviewer_cls_test_llm_only_n10",
+          "20261012T162634Z_codereviewer_cls_test_static_llm_n10",
+          "20261012T163034Z_codereviewer_cls_test_static_llm_rag_n10"
+        ],
+        "command": null
+      },
+      {
+        "name": "Review comment generation, paired",
+        "status": "incomplete",
+        "detail": "36 of 40 requested samples paired; no scored samples for LLM Only, Static + LLM.",
+        "run_ids": [
+          "20261005T120433Z_codereviewer_msg_test_full_n40",
+          "20261012T163624Z_codereviewer_msg_test_static_only_n1403"
+        ],
+        "command": null
+      },
+      {
+        "name": "CodeReviewer classification, static only",
+        "status": "complete",
+        "detail": "Full Python test split, n = 4195. Not paired with the LLM runs.",
+        "run_ids": [
+          "20261012T163153Z_codereviewer_cls_test_static_only_n4196"
+        ],
+        "command": null
+      },
+      {
+        "name": "Comment generation, static only",
+        "status": "complete",
+        "detail": "Full Python test split, n = 1403. Not paired with the LLM runs.",
+        "run_ids": [
+          "20261012T163624Z_codereviewer_msg_test_static_only_n1403"
+        ],
+        "command": null
+      },
+      {
+        "name": "RAG retrieval",
+        "status": "complete",
+        "detail": "Retrieval quality on this repository, hashing embedder. It does not measure final review accuracy.",
+        "run_ids": [
+          "20261012T163120Z_retrieval_src"
+        ],
+        "command": null
+      },
+      {
+        "name": "Risk ranking",
+        "status": "complete",
+        "detail": "4194 hunks. Size-only is the better ranker.",
+        "run_ids": [
+          "20261012T163944Z_hunkrisk_cls_test_n4196"
+        ],
+        "command": null
+      },
+      {
+        "name": "Timing, historical Groq",
+        "status": "complete",
+        "detail": "Separate provider. Not an estimate for Gemini.",
+        "run_ids": [
+          "20261012T090910Z_timing_r3",
+          "20261012T161020Z_planted_static_only",
+          "20261012T161026Z_planted_llm_only",
+          "20261012T161133Z_planted_static_llm",
+          "20261012T161434Z_planted_static_llm_rag"
+        ],
+        "command": null
+      },
+      {
+        "name": "File-size benchmark, static only",
+        "status": "complete",
+        "detail": "90 of 90 planned runs complete (0 partial, 0 failed, 0 skipped); 5 of 5 rounds finished.",
+        "run_ids": [
+          "20261106T122017Z_runtime_static_only_r5"
+        ],
+        "command": null
+      },
+      {
+        "name": "File-size benchmark, gemini-3.6-flash",
+        "status": "incomplete",
+        "detail": "8 of 90 planned runs complete (3 partial, 0 failed, 79 skipped); 0 of 5 rounds finished.",
+        "run_ids": [
+          "20261106T162014Z_runtime_full_r5"
+        ],
+        "command": "python -m marl_agents.evaluation.benchmark_runtime --config configs/gemini.yaml --repeats 5 --per-category 1 --max-llm-calls 65"
+      },
+      {
+        "name": "Fine-tuned change classifier",
+        "status": "complete",
+        "detail": "Held-out test, n = 1771, used once. Predicts human comments, not review quality.",
+        "run_ids": [
+          "20261106T144800Z_classifier_cls_test_n1771"
+        ],
+        "command": null
+      },
+      {
+        "name": "Gemini smoke test",
+        "status": "complete",
+        "detail": "Live checks on gemini-3.6-flash. Failed on: gemini-3.8-flash",
+        "run_ids": [
+          "20261106T161252Z_gemini_smoke",
+          "20261106T161948Z_gemini_smoke"
+        ],
+        "command": null
+      },
+      {
+        "name": "Comment usefulness (LLM judge)",
+        "status": "preliminary",
+        "detail": "Supplementary. One judge model, not yet checked against human ratings.",
+        "run_ids": [
+          "20261005T154602Z_usefulness_codereviewer_msg_test_full_n40"
+        ],
+        "command": null
+      },
+      {
+        "name": "Planted issues on Gemini",
+        "status": "pending",
+        "detail": "All four configurations in one group; set GEMINI_MODEL=gemini-3.6-flash first.",
+        "run_ids": [],
+        "command": "python -m marl_agents.cli eval ablation --benchmark planted --configurations static_only,llm_only,static_llm,static_llm_rag --config configs/gemini.yaml"
+      },
+      {
+        "name": "Comment generation on Gemini",
+        "status": "pending",
+        "detail": "All four configurations on identical samples. About 120 requests or more, so it needs a higher quota or a resume option.",
+        "run_ids": [],
+        "command": "python -m marl_agents.cli eval ablation --benchmark codereviewer --task msg --limit 40 --seed 42 --configurations static_only,llm_only,static_llm,static_llm_rag --config configs/gemini.yaml"
+      },
+      {
+        "name": "Classifier off, prioritize and gate",
+        "status": "pending",
+        "detail": "Development samples only. The classifier test split is not read.",
+        "run_ids": [],
+        "command": "python -m marl_agents.cli eval classifier-ablation --model-dir data/models/change_cls --limit 15 --max-llm-calls 45 --config configs/gemini.yaml"
+      }
+    ],
+    "limitations": [
+      "Planted benchmark: 17 issues written by the project team, and only one needs semantic reasoning. It is a regression check, not evidence of real-world accuracy.",
+      "CodeReviewer labels record whether a human commented, which is a proxy for 'needs attention', not a defect label.",
+      "Every LLM comparison so far uses Groq-hosted models. No Gemini result exists for detection or comment quality, and results from different models must not be combined.",
+      "The Gemini free tier allows 20 requests per day per model, and `eval ablation` has no resume, so a 40-sample comparison cannot finish on the free tier as it stands.",
+      "All runs come from an uncommitted working tree, so none can be traced to a commit.",
+      "This evaluates the Code Review Agent alone, not the five-agent platform."
+    ],
+    "findings": [
+      "Static analysis alone barely predicts where humans comment: ROC-AUC 0.539 with cross-hunk rules removed, 0.417 raw (n = 4195).",
+      "The fine-tuned classifier ranks human-commented changes better than its baselines: ROC-AUC 0.723 (95% CI 0.699-0.748), against TF-IDF 0.645 and size 0.635 (n = 1771). This is a proxy label, and review quality was not measured.",
+      "Risk model v2 does not beat the size baseline: ROC-AUC 0.644 against 0.651.",
+      "Retrieval finds call-graph neighbours far better than random: Recall@10 0.365 against 0.012. That is retrieval quality, not review accuracy."
+    ],
+    "unfinished_runs": [
+      "20261005T110441Z_codereviewer_msg_test_full_n40: aborted (see ABORTED.txt)",
+      "20261012T084016Z_timing_r2: stopped before metrics were saved",
+      "20261012T084034Z_timing_r2: stopped before metrics were saved"
+    ]
+  }
 }

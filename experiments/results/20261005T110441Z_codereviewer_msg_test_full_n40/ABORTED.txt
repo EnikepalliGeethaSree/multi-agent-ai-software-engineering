@@ -1,0 +1,2 @@
+ABORTED 2026-10-05 12:05 UTC: Groq tokens-per-day limit (200,000) for openai/gpt-oss-120b was exhausted mid-run;
+LLM calls failed and the old runner did not exclude those samples. No metrics were computed. Do not use.

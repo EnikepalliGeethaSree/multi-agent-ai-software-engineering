@@ -11,6 +11,18 @@ experiments/results/*/*
 !experiments/results/*/config.yaml
 !experiments/results/*/results.csv
 !experiments/results/*/summary.csv
+# Small evidence cited by the docs. Each was checked for sensitive content before tracking.
+!experiments/results/*/separation_audit.json
+!experiments/results/*/confound_check.json
+!experiments/results/*/calibration.json
+!experiments/results/*/paired_static_baseline.json
+!experiments/results/*/results.json
+!experiments/results/*/ABORTED.txt
+!experiments/results/*/human_kit/
+experiments/results/*/human_kit/*
+!experiments/results/*/human_kit/rating_sheet.csv
+# key.csv reveals which comment came from the agent, so it must never be tracked.
+**/key.csv
 
 # Secrets
 .env
@@ -29,6 +41,9 @@ secrets.yml
 credentials.json
 service-account*.json
 client_secret*.json
+
+# TypeScript incremental build cache
+*.tsbuildinfo
 
 # Python
 __pycache__/

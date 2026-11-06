@@ -15,10 +15,10 @@
 | Needs-review classification | F1-score | 0.289 | 0.689 | 1771 |  |
 | Needs-review classification | False positive rate | 0.110 | 0.345 | 1771 |  |
 | Needs-review classification | ROC-AUC | 0.541 | 0.723 | 1771 |  |
-| LLM work per sample (Gemini, without vs with classifier) | Average LLM calls | N/A | N/A | - | improved run missing: python -m marl_agents.cli eval codereviewer --task msg --limit 40 --seed 42 --configuration static_llm_rag --classifier data/models/change_cls --classifier-mode gate --workers 1 --config configs/gemini.yaml |
-| LLM work per sample (Gemini, without vs with classifier) | Average input tokens | N/A | N/A | - | improved run missing: python -m marl_agents.cli eval codereviewer --task msg --limit 40 --seed 42 --configuration static_llm_rag --classifier data/models/change_cls --classifier-mode gate --workers 1 --config configs/gemini.yaml |
-| LLM work per sample (Gemini, without vs with classifier) | Average output tokens | N/A | N/A | - | improved run missing: python -m marl_agents.cli eval codereviewer --task msg --limit 40 --seed 42 --configuration static_llm_rag --classifier data/models/change_cls --classifier-mode gate --workers 1 --config configs/gemini.yaml |
-| LLM work per sample (Gemini, without vs with classifier) | Average execution time (s) | N/A | N/A | - | improved run missing: python -m marl_agents.cli eval codereviewer --task msg --limit 40 --seed 42 --configuration static_llm_rag --classifier data/models/change_cls --classifier-mode gate --workers 1 --config configs/gemini.yaml |
+| LLM work per sample (Gemini, without vs with classifier) | Average LLM calls | N/A | N/A | - | improved run missing: python -m marl_agents.cli eval classifier-ablation --model-dir data/models/change_cls --limit 15 --max-llm-calls 45 --config configs/gemini.yaml |
+| LLM work per sample (Gemini, without vs with classifier) | Average input tokens | N/A | N/A | - | improved run missing: python -m marl_agents.cli eval classifier-ablation --model-dir data/models/change_cls --limit 15 --max-llm-calls 45 --config configs/gemini.yaml |
+| LLM work per sample (Gemini, without vs with classifier) | Average output tokens | N/A | N/A | - | improved run missing: python -m marl_agents.cli eval classifier-ablation --model-dir data/models/change_cls --limit 15 --max-llm-calls 45 --config configs/gemini.yaml |
+| LLM work per sample (Gemini, without vs with classifier) | Average execution time (s) | N/A | N/A | - | improved run missing: python -m marl_agents.cli eval classifier-ablation --model-dir data/models/change_cls --limit 15 --max-llm-calls 45 --config configs/gemini.yaml |
 
 - Classification rows compare the original static analysis with the fine-tuned classifier on the same repository-disjoint test samples. They do not depend on the LLM provider.
 - Original = the agent on Groq; improved = the agent on Gemini. Both are the full configuration (static + LLM + RAG).
