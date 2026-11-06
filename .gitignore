@@ -16,6 +16,19 @@ experiments/results/*/*
 .env
 .env.*
 !.env.example
+*.pem
+*.key
+*.p12
+*.pfx
+*.keystore
+id_rsa*
+id_ed25519*
+secrets.json
+secrets.yaml
+secrets.yml
+credentials.json
+service-account*.json
+client_secret*.json
 
 # Python
 __pycache__/
