@@ -1,0 +1,73 @@
+llm:
+  provider: groq
+  model: openai/gpt-oss-120b
+  temperature: 0.0
+  max_tokens: 2048
+  seed: 42
+  base_url: null
+  api_key_env: null
+  requests_per_minute: 30
+  tokens_per_minute: 6000
+  max_retries: 5
+  timeout_s: 120.0
+  json_mode: true
+  extra_params: {}
+ingestion:
+  max_zip_bytes: 104857600
+  max_uncompressed_bytes: 524288000
+  max_files: 20000
+  max_file_bytes: 2097152
+  include_extensions:
+  - .py
+  - .md
+  - .rst
+  - .txt
+  - .yaml
+  - .yml
+  - .json
+  - .toml
+  - .cfg
+  - .ini
+  ignore_dirs:
+  - .git
+  - .venv
+  - venv
+  - env
+  - __pycache__
+  - node_modules
+  - .idea
+  - .vscode
+  - dist
+  - build
+  - .mypy_cache
+  - .pytest_cache
+  - .ruff_cache
+  workspace_dir: data/workspaces
+rag:
+  enabled: false
+  vector_store: memory
+  persist_dir: data/chroma
+  embedding_model: hashing
+  top_k: 6
+  guideline_k: 2
+  structural_context: true
+  max_context_chars: 8000
+review:
+  mode: full
+  min_confidence: 0.3
+  require_llm_evidence: true
+  max_unit_lines: 200
+  max_units: 200
+  include_info: true
+  llm_triage_static: true
+  scope_slack: 3
+  include_tests: false
+  concurrency: 1
+  type_check: true
+  drop_vague: true
+  suggest_fixes: false
+  max_llm_fixes: 8
+  max_impact_checks: 15
+datasets:
+  root: capstone-datasets
+  cache_dir: data/cache

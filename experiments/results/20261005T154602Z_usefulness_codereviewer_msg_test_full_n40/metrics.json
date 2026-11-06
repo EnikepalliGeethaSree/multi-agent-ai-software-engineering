@@ -1,0 +1,99 @@
+{
+  "agent": {
+    "relevance": {
+      "n": 28,
+      "mean": 4.714,
+      "ci95": [
+        4.285714285714286,
+        5.0
+      ],
+      "distribution": {
+        "1": 2,
+        "5": 26
+      },
+      "share_ge4": 0.929
+    },
+    "informativeness": {
+      "n": 28,
+      "mean": 4.643,
+      "ci95": [
+        4.214285714285714,
+        4.964285714285714
+      ],
+      "distribution": {
+        "1": 2,
+        "4": 2,
+        "5": 24
+      },
+      "share_ge4": 0.929
+    }
+  },
+  "human": {
+    "relevance": {
+      "n": 36,
+      "mean": 3.667,
+      "ci95": [
+        3.2222222222222223,
+        4.083333333333333
+      ],
+      "distribution": {
+        "1": 5,
+        "2": 2,
+        "3": 5,
+        "4": 12,
+        "5": 12
+      },
+      "share_ge4": 0.667
+    },
+    "informativeness": {
+      "n": 36,
+      "mean": 3.0,
+      "ci95": [
+        2.611111111111111,
+        3.4166666666666665
+      ],
+      "distribution": {
+        "1": 6,
+        "2": 7,
+        "3": 9,
+        "4": 9,
+        "5": 5
+      },
+      "share_ge4": 0.389
+    }
+  },
+  "paired": {
+    "n": 28,
+    "relevance": {
+      "mean_diff_agent_minus_human": 0.964,
+      "ci95": [
+        0.25,
+        1.6071428571428572
+      ],
+      "agent_better": 16,
+      "tie": 10,
+      "human_better": 2
+    },
+    "informativeness": {
+      "mean_diff_agent_minus_human": 1.571,
+      "ci95": [
+        0.8928571428571429,
+        2.1785714285714284
+      ],
+      "agent_better": 22,
+      "tie": 2,
+      "human_better": 4
+    }
+  },
+  "n_items": 64,
+  "n_judged": 64,
+  "failures": {},
+  "prompt_version": "1.0",
+  "agent_no_comment": 8,
+  "judge_usage": {
+    "calls": 64,
+    "input_tokens": 45551,
+    "output_tokens": 8065,
+    "parse_retries": 0
+  }
+}

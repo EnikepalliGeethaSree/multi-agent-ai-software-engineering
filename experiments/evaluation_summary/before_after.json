@@ -1,0 +1,197 @@
+{
+  "rows": [
+    {
+      "benchmark": "Planted issues",
+      "metric": "Precision",
+      "original": 1.0,
+      "improved": null,
+      "original_run": "20261012T161434Z_planted_static_llm_rag",
+      "improved_run": null,
+      "n": null,
+      "note": "improved run missing: python -m marl_agents.cli eval planted --configuration static_llm_rag --config configs/gemini.yaml",
+      "higher_is_better": true
+    },
+    {
+      "benchmark": "Planted issues",
+      "metric": "Recall",
+      "original": 1.0,
+      "improved": null,
+      "original_run": "20261012T161434Z_planted_static_llm_rag",
+      "improved_run": null,
+      "n": null,
+      "note": "improved run missing: python -m marl_agents.cli eval planted --configuration static_llm_rag --config configs/gemini.yaml",
+      "higher_is_better": true
+    },
+    {
+      "benchmark": "Planted issues",
+      "metric": "False positives in the clean file",
+      "original": 0.0,
+      "improved": null,
+      "original_run": "20261012T161434Z_planted_static_llm_rag",
+      "improved_run": null,
+      "n": null,
+      "note": "improved run missing: python -m marl_agents.cli eval planted --configuration static_llm_rag --config configs/gemini.yaml",
+      "higher_is_better": false
+    },
+    {
+      "benchmark": "CodeReviewer comments",
+      "metric": "Comment coverage",
+      "original": 0.7777777777777778,
+      "improved": null,
+      "original_run": "20261005T120433Z_codereviewer_msg_test_full_n40",
+      "improved_run": null,
+      "n": 36,
+      "note": "improved run missing: python -m marl_agents.cli eval codereviewer --task msg --limit 40 --seed 42 --configuration static_llm_rag --workers 1 --config configs/gemini.yaml",
+      "higher_is_better": true
+    },
+    {
+      "benchmark": "CodeReviewer comments",
+      "metric": "BLEU-4",
+      "original": 2.136,
+      "improved": null,
+      "original_run": "20261005T120433Z_codereviewer_msg_test_full_n40",
+      "improved_run": null,
+      "n": 36,
+      "note": "improved run missing: python -m marl_agents.cli eval codereviewer --task msg --limit 40 --seed 42 --configuration static_llm_rag --workers 1 --config configs/gemini.yaml",
+      "higher_is_better": true
+    },
+    {
+      "benchmark": "CodeReviewer comments",
+      "metric": "ROUGE-L",
+      "original": 6.909,
+      "improved": null,
+      "original_run": "20261005T120433Z_codereviewer_msg_test_full_n40",
+      "improved_run": null,
+      "n": 36,
+      "note": "improved run missing: python -m marl_agents.cli eval codereviewer --task msg --limit 40 --seed 42 --configuration static_llm_rag --workers 1 --config configs/gemini.yaml",
+      "higher_is_better": true
+    },
+    {
+      "benchmark": "CodeReviewer comments",
+      "metric": "chrF",
+      "original": 13.595,
+      "improved": null,
+      "original_run": "20261005T120433Z_codereviewer_msg_test_full_n40",
+      "improved_run": null,
+      "n": 36,
+      "note": "improved run missing: python -m marl_agents.cli eval codereviewer --task msg --limit 40 --seed 42 --configuration static_llm_rag --workers 1 --config configs/gemini.yaml",
+      "higher_is_better": true
+    },
+    {
+      "benchmark": "Needs-review classification",
+      "metric": "Accuracy",
+      "original": 0.4997,
+      "improved": 0.6646,
+      "original_run": "20261012T163153Z_codereviewer_cls_test_static_only_n4196",
+      "improved_run": "20261106T144800Z_classifier_cls_test_n1771",
+      "n": 1771,
+      "note": null,
+      "higher_is_better": true
+    },
+    {
+      "benchmark": "Needs-review classification",
+      "metric": "Precision",
+      "original": 0.6742,
+      "improved": 0.7068,
+      "original_run": "20261012T163153Z_codereviewer_cls_test_static_only_n4196",
+      "improved_run": "20261106T144800Z_classifier_cls_test_n1771",
+      "n": 1771,
+      "note": null,
+      "higher_is_better": true
+    },
+    {
+      "benchmark": "Needs-review classification",
+      "metric": "Recall",
+      "original": 0.1839,
+      "improved": 0.6721,
+      "original_run": "20261012T163153Z_codereviewer_cls_test_static_only_n4196",
+      "improved_run": "20261106T144800Z_classifier_cls_test_n1771",
+      "n": 1771,
+      "note": null,
+      "higher_is_better": true
+    },
+    {
+      "benchmark": "Needs-review classification",
+      "metric": "F1-score",
+      "original": 0.2889,
+      "improved": 0.689,
+      "original_run": "20261012T163153Z_codereviewer_cls_test_static_only_n4196",
+      "improved_run": "20261106T144800Z_classifier_cls_test_n1771",
+      "n": 1771,
+      "note": null,
+      "higher_is_better": true
+    },
+    {
+      "benchmark": "Needs-review classification",
+      "metric": "False positive rate",
+      "original": 0.1098,
+      "improved": 0.3447,
+      "original_run": "20261012T163153Z_codereviewer_cls_test_static_only_n4196",
+      "improved_run": "20261106T144800Z_classifier_cls_test_n1771",
+      "n": 1771,
+      "note": null,
+      "higher_is_better": false
+    },
+    {
+      "benchmark": "Needs-review classification",
+      "metric": "ROC-AUC",
+      "original": 0.5415,
+      "improved": 0.723,
+      "original_run": "20261012T163153Z_codereviewer_cls_test_static_only_n4196",
+      "improved_run": "20261106T144800Z_classifier_cls_test_n1771",
+      "n": 1771,
+      "note": null,
+      "higher_is_better": true
+    },
+    {
+      "benchmark": "LLM work per sample (Gemini, without vs with classifier)",
+      "metric": "Average LLM calls",
+      "original": null,
+      "improved": null,
+      "original_run": null,
+      "improved_run": null,
+      "n": null,
+      "note": "improved run missing: python -m marl_agents.cli eval codereviewer --task msg --limit 40 --seed 42 --configuration static_llm_rag --classifier data/models/change_cls --classifier-mode gate --workers 1 --config configs/gemini.yaml",
+      "higher_is_better": false
+    },
+    {
+      "benchmark": "LLM work per sample (Gemini, without vs with classifier)",
+      "metric": "Average input tokens",
+      "original": null,
+      "improved": null,
+      "original_run": null,
+      "improved_run": null,
+      "n": null,
+      "note": "improved run missing: python -m marl_agents.cli eval codereviewer --task msg --limit 40 --seed 42 --configuration static_llm_rag --classifier data/models/change_cls --classifier-mode gate --workers 1 --config configs/gemini.yaml",
+      "higher_is_better": false
+    },
+    {
+      "benchmark": "LLM work per sample (Gemini, without vs with classifier)",
+      "metric": "Average output tokens",
+      "original": null,
+      "improved": null,
+      "original_run": null,
+      "improved_run": null,
+      "n": null,
+      "note": "improved run missing: python -m marl_agents.cli eval codereviewer --task msg --limit 40 --seed 42 --configuration static_llm_rag --classifier data/models/change_cls --classifier-mode gate --workers 1 --config configs/gemini.yaml",
+      "higher_is_better": false
+    },
+    {
+      "benchmark": "LLM work per sample (Gemini, without vs with classifier)",
+      "metric": "Average execution time (s)",
+      "original": null,
+      "improved": null,
+      "original_run": null,
+      "improved_run": null,
+      "n": null,
+      "note": "improved run missing: python -m marl_agents.cli eval codereviewer --task msg --limit 40 --seed 42 --configuration static_llm_rag --classifier data/models/change_cls --classifier-mode gate --workers 1 --config configs/gemini.yaml",
+      "higher_is_better": false
+    }
+  ],
+  "notes": [
+    "Classification rows compare the original static analysis with the fine-tuned classifier on the same repository-disjoint test samples. They do not depend on the LLM provider.",
+    "Original = the agent on Groq; improved = the agent on Gemini. Both are the full configuration (static + LLM + RAG).",
+    "Execution time, LLM calls and token use by file size are in the file-size benchmark.",
+    "The classifier has its own evaluation run, because it scores changes, not findings."
+  ]
+}

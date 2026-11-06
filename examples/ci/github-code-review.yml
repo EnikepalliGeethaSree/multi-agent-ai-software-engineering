@@ -1,0 +1,59 @@
+# Example GitHub Actions workflow: review every pull request with the Code Review Agent.
+# Copy to .github/workflows/code-review.yml in the repository you want reviewed.
+#
+# - Reviews only the PR's changes (base branch -> PR head), including impact on unchanged callers.
+# - Uploads SARIF so findings appear as annotations on the PR's "Files changed" tab.
+# - Fails the check when a high/critical finding exists (change --fail-on to tune).
+# - Without the GROQ_API_KEY secret it runs in static_only mode (free, deterministic).
+
+name: code-review
+on:
+  pull_request:
+    paths: ["**.py"]
+
+permissions:
+  contents: read
+  security-events: write   # needed to upload SARIF
+
+jobs:
+  review:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0   # the base branch must be available for the diff
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install the reviewer
+        # Replace with the location of marl-agents (git URL, wheel, or a checkout).
+        run: pip install "marl-agents[analysis,llm,reports] @ git+https://github.com/<you>/marl-agents"
+
+      - name: Review the pull request
+        env:
+          GROQ_API_KEY: ${{ secrets.GROQ_API_KEY }}
+        run: |
+          MODE=static_only
+          if [ -n "$GROQ_API_KEY" ]; then
+            MODE=full
+            export MARL_LLM__PROVIDER=groq MARL_LLM__MODEL=openai/gpt-oss-120b
+          fi
+          python -m marl_agents.cli review-change . \
+            --base "origin/${{ github.base_ref }}" --head HEAD \
+            --mode "$MODE" --formats sarif,md --out review --fail-on high
+
+      - name: Upload SARIF
+        if: always()
+        uses: github/codeql-action/upload-sarif@v3
+        with:
+          sarif_file: review/review.sarif
+          category: marl-code-review
+
+      - name: Keep the Markdown report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: code-review-report
+          path: review/review.md

@@ -1,0 +1,31 @@
+{
+  "repo": "src",
+  "n_chunks": 510,
+  "n_queries": 277,
+  "relevance": "chunks containing the query function's repo-defined callees (AST call graph)",
+  "random_baseline": {
+    "recall@1": 0.0056,
+    "recall@3": 0.0077,
+    "recall@5": 0.0102,
+    "recall@10": 0.0301,
+    "hit@1": 0.0108,
+    "hit@3": 0.0217,
+    "hit@5": 0.0361,
+    "hit@10": 0.0758,
+    "mrr": 0.0369,
+    "ndcg@10": 0.0181
+  },
+  "hashing": {
+    "recall@1": 0.0991,
+    "recall@3": 0.2168,
+    "recall@5": 0.2942,
+    "recall@10": 0.4381,
+    "hit@1": 0.2022,
+    "hit@3": 0.4043,
+    "hit@5": 0.5271,
+    "hit@10": 0.6895,
+    "mrr": 0.3537,
+    "ndcg@10": 0.3112,
+    "seconds": 15.08
+  }
+}

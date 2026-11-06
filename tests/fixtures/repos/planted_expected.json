@@ -1,0 +1,23 @@
+{
+  "description": "Ground truth for the planted-issue fixture. `detectable_by`: static = a rule-based analyzer should find it; llm = needs semantic reasoning. `negative_files` must produce no defect findings (bug/security/error_handling/edge_case).",
+  "negative_files": ["shop/utils.py"],
+  "issues": [
+    {"id": "P01", "file": "shop/db.py", "line": 3, "category": "quality", "detectable_by": "static", "issue": "unused import os"},
+    {"id": "P02", "file": "shop/db.py", "line": 6, "category": "security", "detectable_by": "static", "issue": "hard-coded password", "cwe": "CWE-798"},
+    {"id": "P03", "file": "shop/db.py", "line": 15, "category": "security", "detectable_by": "static", "issue": "SQL injection via f-string", "cwe": "CWE-89"},
+    {"id": "P04", "file": "shop/db.py", "line": 20, "category": "bug", "detectable_by": "static", "issue": "mutable default argument"},
+    {"id": "P05", "file": "shop/db.py", "line": 26, "category": "bug", "detectable_by": "static", "issue": "file opened without context manager"},
+    {"id": "P06", "file": "shop/db.py", "line": 35, "category": "error_handling", "detectable_by": "static", "issue": "bare except swallows errors"},
+    {"id": "P07", "file": "shop/auth.py", "line": 11, "category": "security", "detectable_by": "static", "issue": "MD5 password hashing", "cwe": "CWE-327"},
+    {"id": "P08", "file": "shop/auth.py", "line": 15, "category": "security", "detectable_by": "static", "issue": "pickle.loads on untrusted data", "cwe": "CWE-502"},
+    {"id": "P09", "file": "shop/auth.py", "line": 19, "category": "security", "detectable_by": "static", "issue": "eval on input", "cwe": "CWE-95"},
+    {"id": "P10", "file": "shop/auth.py", "line": 23, "category": "security", "detectable_by": "static", "issue": "shell=True command injection", "cwe": "CWE-78"},
+    {"id": "P11", "file": "shop/auth.py", "line": 27, "category": "security", "detectable_by": "static", "issue": "HTTP request without timeout", "cwe": "CWE-400"},
+    {"id": "P12", "file": "shop/pricing.py", "line": 4, "category": "maintainability", "detectable_by": "static", "issue": "high cyclomatic complexity / deep nesting / too many parameters"},
+    {"id": "P13", "file": "shop/pricing.py", "line": 42, "category": "edge_case", "detectable_by": "llm", "issue": "ZeroDivisionError on empty list"},
+    {"id": "P14", "file": "shop/pricing.py", "line": 46, "category": "standards", "detectable_by": "static", "issue": "comparison to None with =="},
+    {"id": "P15", "file": "shop/pricing.py", "line": 54, "category": "error_handling", "detectable_by": "static", "issue": "broad except returning None"},
+    {"id": "P16", "file": "shop/pricing.py", "line": 59, "category": "bug", "detectable_by": "static", "issue": "undefined name TAX_RATE"},
+    {"id": "P17", "file": "config/settings.yaml", "line": 6, "category": "security", "detectable_by": "static", "issue": "AWS access key committed", "cwe": "CWE-798"}
+  ]
+}

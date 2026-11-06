@@ -1,0 +1,21 @@
+{
+  "name": "gemini_smoke",
+  "started_at": "2026-11-06T16:19:48.349252+00:00",
+  "git_commit": "uncommitted",
+  "python": "3.11.7",
+  "platform": "Windows-10-10.0.26300-SP0",
+  "packages": {
+    "marl-agents": "0.1.0",
+    "pydantic": "2.13.5",
+    "ruff": "0.16.9",
+    "radon": "6.0.1",
+    "chromadb": "1.5.9",
+    "openai": "3.21.0",
+    "sentence-transformers": "6.1.0"
+  },
+  "benchmark": "gemini_smoke",
+  "llm_provider": "gemini",
+  "llm_model": "gemini-3.6-flash",
+  "finished_at": "2026-11-06T16:19:48.447151+00:00",
+  "errors": 0
+}

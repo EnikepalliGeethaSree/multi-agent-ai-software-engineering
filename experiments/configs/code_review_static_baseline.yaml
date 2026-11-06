@@ -1,0 +1,24 @@
+# Code Review Agent - static-only baseline (no LLM). Reproduce with the commands below.
+# Every run writes config/meta/predictions/metrics/summary to experiments/results/<timestamp>_<name>/.
+name: code_review_static_baseline
+agent: code_review
+review:
+  mode: static_only          # Ruff + Radon + custom AST checks + secret scanning (test-gap off for CodeReviewer)
+  min_confidence: 0.3
+llm: null                    # no LLM key on the machine that produced the first results
+rag: {enabled: false}        # irrelevant without an LLM
+runs:
+  planted:
+    command: python -m marl_agents.cli eval planted --mode static_only
+    data: tests/fixtures/repos/planted (+ planted_expected.json ground truth, outside the analyzed repo)
+  retrieval:
+    command: python -m marl_agents.cli eval retrieval --path src --embedders hashing
+    relevance: chunks containing the query function's repo-defined callees (AST call graph)
+  codereviewer_cls:
+    command: python -m marl_agents.cli eval codereviewer --task cls --split test --mode static_only --workers 8
+    data: CodeReviewer Diff_Quality_Estimation cls-test.jsonl, lang == py, all samples (seed 42 unused)
+    prediction: needs_review = any in-scope finding with severity >= threshold (default low); score = best priority / 5
+  codereviewer_msg:
+    command: python -m marl_agents.cli eval codereviewer --task msg --split test --mode static_only --workers 8
+    data: CodeReviewer Comment_Generation msg-test.jsonl, lang == py, all samples
+    comment: top-ranked in-scope finding rendered as title | title + fix | description

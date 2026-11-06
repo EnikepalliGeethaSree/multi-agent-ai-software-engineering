@@ -1,0 +1,81 @@
+{
+  "detection": {
+    "expected": 17,
+    "matched": 17,
+    "recall": 1.0,
+    "recall_static": 1.0,
+    "recall_llm": 1.0,
+    "defect_findings": 15,
+    "defect_true_positives": 14,
+    "defect_precision": 0.9333333333333333,
+    "negative_file_false_positives": 0,
+    "mean_line_error": 0.5294117647058824,
+    "missed": [],
+    "false_positive_titles": [
+      "apply_discount comparison to None"
+    ]
+  },
+  "pipeline": {
+    "mode": "full",
+    "rag_enabled": true,
+    "files_total": 8,
+    "python_files": 6,
+    "files_reviewed": 5,
+    "lines_reviewed": 146,
+    "syntax_errors": 0,
+    "has_tests": true,
+    "static_findings_raw": {
+      "ruff": 14,
+      "radon": 1,
+      "ast": 6,
+      "secrets": 1,
+      "test_gap": 5
+    },
+    "rag_index": {
+      "chunks": 31,
+      "by_source_type": {
+        "doc": 3,
+        "config": 1,
+        "code": 23,
+        "test": 4
+      }
+    },
+    "units_total": 4,
+    "llm_repaired": 0,
+    "units_failed": 0,
+    "llm_findings_raw": 16,
+    "llm_findings_valid": 16,
+    "llm_rejected_by_reason": {},
+    "llm_rejection_rate": 0.0,
+    "static_assessments": {
+      "confirm": 21,
+      "uncertain": 2,
+      "false_positive": 1
+    },
+    "context_items_by_reason": {
+      "readme": 4,
+      "similar": 14,
+      "guideline": 8,
+      "test": 3
+    },
+    "avg_context_items_per_unit": 7.25,
+    "llm_usage": {
+      "calls": 8,
+      "input_tokens": 16949,
+      "output_tokens": 12392,
+      "parse_retries": 4
+    },
+    "static_rejected": 0,
+    "dedup_merged": 19,
+    "filtered_low_confidence": 1,
+    "final_findings": 23,
+    "timings_s": {
+      "ingest_parse": 0.014,
+      "static_analysis": 0.093,
+      "rag_index": 1.833,
+      "llm_review": 269.94,
+      "postprocess": 0.004
+    }
+  },
+  "final_findings": 23
+}

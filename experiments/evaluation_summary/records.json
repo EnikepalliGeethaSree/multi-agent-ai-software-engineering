@@ -1,0 +1,1024 @@
+[
+  {
+    "component": "detection",
+    "benchmark": "Planted issues",
+    "configuration": "LLM only (openai/gpt-oss-120b)",
+    "status": "ok",
+    "run_id": "20261012T161026Z_planted_llm_only",
+    "n": 17,
+    "quality_metrics": {
+      "precision": 1.0,
+      "recall": 0.588,
+      "f1": 0.741
+    },
+    "counts": {
+      "tp": 10,
+      "fp": 0,
+      "fn": 7,
+      "expected_issues": 17
+    },
+    "timing": {
+      "total_sec": 67.6124,
+      "static_analysis_sec": 0.0,
+      "static_tools_sec": {},
+      "rag_index_sec": 0.0,
+      "rag_retrieval_sec": 0.0,
+      "rag_queries": 0,
+      "llm_inference_sec": 15.9796,
+      "llm_calls": 4,
+      "llm_rate_limit_wait_sec": 51.609,
+      "validation_sec": 0.003,
+      "report_generation_sec": null,
+      "ingestion_parsing_sec": 0.0119,
+      "other_sec": 51.6298,
+      "concurrency": 1
+    },
+    "conditions": {},
+    "notes": [
+      "precision over defect findings (bug, security, error handling, edge case)"
+    ],
+    "how_to_run": null
+  },
+  {
+    "component": "detection",
+    "benchmark": "Planted issues",
+    "configuration": "static + LLM (openai/gpt-oss-120b), no RAG",
+    "status": "ok",
+    "run_id": "20261012T161133Z_planted_static_llm",
+    "n": 17,
+    "quality_metrics": {
+      "precision": 1.0,
+      "recall": 1.0,
+      "f1": 1.0
+    },
+    "counts": {
+      "tp": 14,
+      "fp": 0,
+      "fn": 0,
+      "expected_issues": 17
+    },
+    "timing": {
+      "total_sec": 180.8798,
+      "static_analysis_sec": 5.8751,
+      "static_tools_sec": {
+        "ruff": 0.0508,
+        "radon": 0.0128,
+        "ast": 0.0057,
+        "secrets": 0.0012,
+        "test_gap": 0.0002,
+        "mypy": 5.8044
+      },
+      "rag_index_sec": 0.0,
+      "rag_retrieval_sec": 0.0,
+      "rag_queries": 0,
+      "llm_inference_sec": 16.7972,
+      "llm_calls": 4,
+      "llm_rate_limit_wait_sec": 158.186,
+      "validation_sec": 0.0031,
+      "report_generation_sec": null,
+      "ingestion_parsing_sec": 0.0137,
+      "other_sec": 158.2044,
+      "concurrency": 1
+    },
+    "conditions": {},
+    "notes": [
+      "precision over defect findings (bug, security, error handling, edge case)"
+    ],
+    "how_to_run": null
+  },
+  {
+    "component": "detection",
+    "benchmark": "Planted issues",
+    "configuration": "static + LLM + RAG (openai/gpt-oss-120b)",
+    "status": "ok",
+    "run_id": "20261012T161434Z_planted_static_llm_rag",
+    "n": 17,
+    "quality_metrics": {
+      "precision": 1.0,
+      "recall": 1.0,
+      "f1": 1.0
+    },
+    "counts": {
+      "tp": 14,
+      "fp": 0,
+      "fn": 0,
+      "expected_issues": 17
+    },
+    "timing": {
+      "total_sec": 190.3066,
+      "static_analysis_sec": 5.2722,
+      "static_tools_sec": {
+        "ruff": 0.0506,
+        "radon": 0.0137,
+        "ast": 0.0056,
+        "secrets": 0.001,
+        "test_gap": 0.0002,
+        "mypy": 5.2011
+      },
+      "rag_index_sec": 0.1197,
+      "rag_retrieval_sec": 0.0559,
+      "rag_queries": 8,
+      "llm_inference_sec": 19.5181,
+      "llm_calls": 4,
+      "llm_rate_limit_wait_sec": 163.78,
+      "validation_sec": 0.0045,
+      "report_generation_sec": null,
+      "ingestion_parsing_sec": 0.0121,
+      "other_sec": 165.3363,
+      "concurrency": 1
+    },
+    "conditions": {},
+    "notes": [
+      "precision over defect findings (bug, security, error handling, edge case)",
+      "earlier run 20260929T194203Z_planted_full: precision 1.0, recall 1.0, f1 1.0",
+      "earlier run 20261012T090444Z_planted_full: precision 1.0, recall 0.941, f1 0.97"
+    ],
+    "how_to_run": null
+  },
+  {
+    "component": "detection",
+    "benchmark": "Planted issues",
+    "configuration": "static + LLM + RAG (openai/gpt-oss-20b)",
+    "status": "ok",
+    "run_id": "20260929T194356Z_planted_full",
+    "n": 17,
+    "quality_metrics": {
+      "precision": 0.933,
+      "recall": 1.0,
+      "f1": 0.966
+    },
+    "counts": {
+      "tp": 14,
+      "fp": 1,
+      "fn": 0,
+      "expected_issues": 17
+    },
+    "timing": null,
+    "conditions": {},
+    "notes": [
+      "precision over defect findings (bug, security, error handling, edge case)"
+    ],
+    "how_to_run": null
+  },
+  {
+    "component": "detection",
+    "benchmark": "Planted issues",
+    "configuration": "static + LLM + RAG (qwen/qwen3.8-27b)",
+    "status": "ok",
+    "run_id": "20260929T194832Z_planted_full",
+    "n": 17,
+    "quality_metrics": {
+      "precision": 1.0,
+      "recall": 1.0,
+      "f1": 1.0
+    },
+    "counts": {
+      "tp": 14,
+      "fp": 0,
+      "fn": 0,
+      "expected_issues": 17
+    },
+    "timing": null,
+    "conditions": {},
+    "notes": [
+      "precision over defect findings (bug, security, error handling, edge case)"
+    ],
+    "how_to_run": null
+  },
+  {
+    "component": "detection",
+    "benchmark": "Planted issues",
+    "configuration": "static only",
+    "status": "ok",
+    "run_id": "20261012T161020Z_planted_static_only",
+    "n": 17,
+    "quality_metrics": {
+      "precision": 1.0,
+      "recall": 0.941,
+      "f1": 0.97
+    },
+    "counts": {
+      "tp": 13,
+      "fp": 0,
+      "fn": 1,
+      "expected_issues": 17
+    },
+    "timing": {
+      "total_sec": 5.6201,
+      "static_analysis_sec": 5.6026,
+      "static_tools_sec": {
+        "ruff": 0.0543,
+        "radon": 0.0221,
+        "ast": 0.006,
+        "secrets": 0.0011,
+        "test_gap": 0.0003,
+        "mypy": 5.5187
+      },
+      "rag_index_sec": 0.0,
+      "rag_retrieval_sec": 0.0,
+      "rag_queries": 0,
+      "llm_inference_sec": 0.0,
+      "llm_calls": 0,
+      "llm_rate_limit_wait_sec": null,
+      "validation_sec": 0.0014,
+      "report_generation_sec": null,
+      "ingestion_parsing_sec": 0.015,
+      "other_sec": 0.0161,
+      "concurrency": 1
+    },
+    "conditions": {},
+    "notes": [
+      "precision over defect findings (bug, security, error handling, edge case)",
+      "earlier run 20260929T193007Z_planted_static_only: precision 1.0, recall 0.941, f1 0.97",
+      "earlier run 20261005T115337Z_planted_static_only: precision 1.0, recall 0.941, f1 0.97",
+      "earlier run 20261012T084950Z_planted_static_only: precision 1.0, recall 0.941, f1 0.97"
+    ],
+    "how_to_run": null
+  },
+  {
+    "component": "codereviewer",
+    "benchmark": "CodeReviewer cls (test, Python)",
+    "configuration": "LLM only (openai/gpt-oss-120b)",
+    "status": "ok",
+    "run_id": "20261012T161832Z_codereviewer_cls_test_llm_only_n10",
+    "n": 10,
+    "quality_metrics": {
+      "precision": 0.625,
+      "auc": 0.56,
+      "precision_cross_hunk_rules_excluded": 0.625,
+      "auc_cross_hunk_rules_excluded": 0.56
+    },
+    "counts": {
+      "failed": 0
+    },
+    "timing": {
+      "total_sec": {
+        "n": 10,
+        "mean": 48.2741,
+        "median": 59.013,
+        "min": 1.8009,
+        "max": 62.2604
+      },
+      "static_analysis_sec": {
+        "n": 10,
+        "mean": 0.0,
+        "median": 0.0,
+        "min": 0.0,
+        "max": 0.0
+      },
+      "rag_sec": {
+        "n": 10,
+        "mean": 0.0,
+        "median": 0.0,
+        "min": 0.0,
+        "max": 0.0
+      },
+      "llm_inference_sec": {
+        "n": 10,
+        "mean": 2.927,
+        "median": 2.6865,
+        "min": 1.7922,
+        "max": 4.9247
+      },
+      "validation_sec": {
+        "n": 10,
+        "mean": 0.0046,
+        "median": 0.0026,
+        "min": 0.0001,
+        "max": 0.0154
+      },
+      "other_sec": {
+        "n": 10,
+        "mean": 45.3424,
+        "median": 56.352,
+        "min": 0.0082,
+        "max": 57.9953
+      },
+      "llm_rate_limit_wait_sec": {
+        "n": 10,
+        "mean": 45.2827,
+        "median": 56.2655,
+        "min": 0.0,
+        "max": 57.812
+      },
+      "conditions": {
+        "samples": 10,
+        "workers": 1,
+        "note": "per-sample review time; samples ran concurrently on `workers` workers"
+      }
+    },
+    "conditions": {},
+    "notes": [
+      "random subset: n=10 (seed 42), 0 failed"
+    ],
+    "how_to_run": null
+  },
+  {
+    "component": "codereviewer",
+    "benchmark": "CodeReviewer cls (test, Python)",
+    "configuration": "static + LLM (openai/gpt-oss-120b), no RAG",
+    "status": "ok",
+    "run_id": "20261012T162634Z_codereviewer_cls_test_static_llm_n10",
+    "n": 3,
+    "quality_metrics": {
+      "precision": 0.667,
+      "auc": 1.0,
+      "precision_cross_hunk_rules_excluded": 1.0,
+      "auc_cross_hunk_rules_excluded": 1.0
+    },
+    "counts": {
+      "failed": 7
+    },
+    "timing": {
+      "total_sec": {
+        "n": 3,
+        "mean": 60.9411,
+        "median": 60.8833,
+        "min": 59.7317,
+        "max": 62.2082
+      },
+      "static_analysis_sec": {
+        "n": 3,
+        "mean": 0.0811,
+        "median": 0.0757,
+        "min": 0.0552,
+        "max": 0.1123
+      },
+      "rag_sec": {
+        "n": 3,
+        "mean": 0.0,
+        "median": 0.0,
+        "min": 0.0,
+        "max": 0.0
+      },
+      "llm_inference_sec": {
+        "n": 3,
+        "mean": 4.3597,
+        "median": 3.8093,
+        "min": 3.5234,
+        "max": 5.7463
+      },
+      "validation_sec": {
+        "n": 3,
+        "mean": 0.0034,
+        "median": 0.0008,
+        "min": 0.0005,
+        "max": 0.0089
+      },
+      "other_sec": {
+        "n": 3,
+        "mean": 56.497,
+        "median": 56.4058,
+        "min": 56.0872,
+        "max": 56.9979
+      },
+      "llm_rate_limit_wait_sec": {
+        "n": 3,
+        "mean": 56.469,
+        "median": 56.391,
+        "min": 56.031,
+        "max": 56.985
+      },
+      "conditions": {
+        "samples": 3,
+        "workers": 1,
+        "note": "per-sample review time; samples ran concurrently on `workers` workers"
+      }
+    },
+    "conditions": {},
+    "notes": [
+      "random subset: n=10 (seed 42), 7 failed"
+    ],
+    "how_to_run": null
+  },
+  {
+    "component": "codereviewer",
+    "benchmark": "CodeReviewer cls (test, Python)",
+    "configuration": "static + LLM + RAG (openai/gpt-oss-120b)",
+    "status": "ok",
+    "run_id": "20261012T163034Z_codereviewer_cls_test_static_llm_rag_n10",
+    "n": 0,
+    "quality_metrics": {
+      "precision": 0.0,
+      "auc": null,
+      "precision_cross_hunk_rules_excluded": 0.0,
+      "auc_cross_hunk_rules_excluded": null
+    },
+    "counts": {
+      "failed": 10
+    },
+    "timing": {
+      "total_sec": {
+        "n": 0,
+        "mean": null,
+        "median": null,
+        "min": null,
+        "max": null
+      },
+      "static_analysis_sec": {
+        "n": 0,
+        "mean": null,
+        "median": null,
+        "min": null,
+        "max": null
+      },
+      "rag_sec": {
+        "n": 0,
+        "mean": null,
+        "median": null,
+        "min": null,
+        "max": null
+      },
+      "llm_inference_sec": {
+        "n": 0,
+        "mean": null,
+        "median": null,
+        "min": null,
+        "max": null
+      },
+      "validation_sec": {
+        "n": 0,
+        "mean": null,
+        "median": null,
+        "min": null,
+        "max": null
+      },
+      "other_sec": {
+        "n": 0,
+        "mean": null,
+        "median": null,
+        "min": null,
+        "max": null
+      },
+      "llm_rate_limit_wait_sec": {
+        "n": 0,
+        "mean": null,
+        "median": null,
+        "min": null,
+        "max": null
+      },
+      "conditions": {
+        "samples": 0,
+        "workers": 1,
+        "note": "per-sample review time; samples ran concurrently on `workers` workers"
+      }
+    },
+    "conditions": {},
+    "notes": [
+      "random subset: n=10 (seed 42), 10 failed"
+    ],
+    "how_to_run": null
+  },
+  {
+    "component": "codereviewer",
+    "benchmark": "CodeReviewer cls (test, Python)",
+    "configuration": "static only",
+    "status": "ok",
+    "run_id": "20261012T163153Z_codereviewer_cls_test_static_only_n4196",
+    "n": 4195,
+    "quality_metrics": {
+      "precision": 0.384,
+      "auc": 0.417,
+      "precision_cross_hunk_rules_excluded": 0.592,
+      "auc_cross_hunk_rules_excluded": 0.539
+    },
+    "counts": {
+      "failed": 1
+    },
+    "timing": {
+      "total_sec": {
+        "n": 4195,
+        "mean": 0.4476,
+        "median": 0.2705,
+        "min": 0.0611,
+        "max": 20.1623
+      },
+      "static_analysis_sec": {
+        "n": 4195,
+        "mean": 0.341,
+        "median": 0.1953,
+        "min": 0.0506,
+        "max": 19.9606
+      },
+      "rag_sec": {
+        "n": 4195,
+        "mean": 0.0,
+        "median": 0.0,
+        "min": 0.0,
+        "max": 0.0
+      },
+      "llm_inference_sec": {
+        "n": 4195,
+        "mean": 0.0,
+        "median": 0.0,
+        "min": 0.0,
+        "max": 0.0
+      },
+      "validation_sec": {
+        "n": 4195,
+        "mean": 0.0138,
+        "median": 0.0008,
+        "min": 0.0,
+        "max": 0.5941
+      },
+      "other_sec": {
+        "n": 4195,
+        "mean": 0.0927,
+        "median": 0.0711,
+        "min": 0.0065,
+        "max": 0.7689
+      },
+      "llm_rate_limit_wait_sec": {
+        "n": 0,
+        "mean": null,
+        "median": null,
+        "min": null,
+        "max": null
+      },
+      "conditions": {
+        "samples": 4195,
+        "workers": 8,
+        "note": "per-sample review time; samples ran concurrently on `workers` workers"
+      }
+    },
+    "conditions": {},
+    "notes": [
+      "earlier run 20260929T192259Z_codereviewer_cls_test_static_only_n4196: precision 0.384, auc 0.417, precision_cross_hunk_rules_excluded 0.592, auc_cross_hunk_rules_excluded 0.539",
+      "earlier run 20261005T115401Z_codereviewer_cls_test_static_only_n4196: precision 0.384, auc 0.417, precision_cross_hunk_rules_excluded 0.592, auc_cross_hunk_rules_excluded 0.539",
+      "earlier run 20261012T085023Z_codereviewer_cls_test_static_only_n4196: precision 0.384, auc 0.417, precision_cross_hunk_rules_excluded 0.592, auc_cross_hunk_rules_excluded 0.539",
+      "earlier run 20261012T161828Z_codereviewer_cls_test_static_only_n10: precision 0.25, auc 0.28, precision_cross_hunk_rules_excluded 0.5, auc_cross_hunk_rules_excluded 0.52"
+    ],
+    "how_to_run": null
+  },
+  {
+    "component": "codereviewer",
+    "benchmark": "CodeReviewer msg (test, Python)",
+    "configuration": "static + LLM + RAG (qwen/qwen3.8-27b)",
+    "status": "ok",
+    "run_id": "20261005T120433Z_codereviewer_msg_test_full_n40",
+    "n": 36,
+    "quality_metrics": {
+      "coverage": 0.778,
+      "chrf": 13.595
+    },
+    "counts": {
+      "failed": 4
+    },
+    "timing": null,
+    "conditions": {},
+    "notes": [
+      "random subset: n=40 (seed 42), 4 failed",
+      "BLEU-4 (approved-deck metric, still computed): 2.136"
+    ],
+    "how_to_run": null
+  },
+  {
+    "component": "codereviewer",
+    "benchmark": "CodeReviewer msg (test, Python)",
+    "configuration": "static only",
+    "status": "ok",
+    "run_id": "20261012T163624Z_codereviewer_msg_test_static_only_n1403",
+    "n": 1403,
+    "quality_metrics": {
+      "coverage": 0.281,
+      "chrf": 4.832
+    },
+    "counts": {
+      "failed": 0
+    },
+    "timing": {
+      "total_sec": {
+        "n": 1403,
+        "mean": 0.3734,
+        "median": 0.2011,
+        "min": 0.0685,
+        "max": 18.8009
+      },
+      "static_analysis_sec": {
+        "n": 1403,
+        "mean": 0.2941,
+        "median": 0.1401,
+        "min": 0.0422,
+        "max": 18.6547
+      },
+      "rag_sec": {
+        "n": 1403,
+        "mean": 0.0,
+        "median": 0.0,
+        "min": 0.0,
+        "max": 0.0
+      },
+      "llm_inference_sec": {
+        "n": 1403,
+        "mean": 0.0,
+        "median": 0.0,
+        "min": 0.0,
+        "max": 0.0
+      },
+      "validation_sec": {
+        "n": 1403,
+        "mean": 0.0069,
+        "median": 0.0005,
+        "min": 0.0,
+        "max": 0.5727
+      },
+      "other_sec": {
+        "n": 1403,
+        "mean": 0.0725,
+        "median": 0.0568,
+        "min": 0.0238,
+        "max": 0.5795
+      },
+      "llm_rate_limit_wait_sec": {
+        "n": 0,
+        "mean": null,
+        "median": null,
+        "min": null,
+        "max": null
+      },
+      "conditions": {
+        "samples": 1403,
+        "workers": 8,
+        "note": "per-sample review time; samples ran concurrently on `workers` workers"
+      }
+    },
+    "conditions": {},
+    "notes": [
+      "BLEU-4 (approved-deck metric, still computed): 1.177",
+      "earlier run 20260929T192630Z_codereviewer_msg_test_static_only_n1403: coverage 0.281, chrf 4.832",
+      "earlier run 20261005T115807Z_codereviewer_msg_test_static_only_n1403: coverage 0.281, chrf 4.832",
+      "earlier run 20261012T085436Z_codereviewer_msg_test_static_only_n1403: coverage 0.281, chrf 4.832"
+    ],
+    "how_to_run": null
+  },
+  {
+    "component": "rag",
+    "benchmark": "Call-graph retrieval (src)",
+    "configuration": "hashing embedder",
+    "status": "ok",
+    "run_id": "20261012T163120Z_retrieval_src",
+    "n": 381,
+    "quality_metrics": {
+      "recall@10 (hashing)": 0.365,
+      "recall@10 (random baseline)": 0.012
+    },
+    "counts": {
+      "chunks": 665
+    },
+    "timing": null,
+    "conditions": {},
+    "notes": [],
+    "how_to_run": null
+  },
+  {
+    "component": "risk_ranking",
+    "benchmark": "CodeReviewer cls hunks (test)",
+    "configuration": "risk v2 vs baselines",
+    "status": "ok",
+    "run_id": "20261012T163944Z_hunkrisk_cls_test_n4196",
+    "n": 4194,
+    "quality_metrics": {
+      "precision@top10% risk v2 (calibrated)": 0.733,
+      "auc risk v2 (calibrated)": 0.644,
+      "precision@top10% risk v1 (hand-set)": 0.305,
+      "auc risk v1 (hand-set)": 0.431,
+      "precision@top10% size only": 0.792,
+      "auc size only": 0.651,
+      "precision@top10% random (expected)": 0.484,
+      "auc random (expected)": 0.5
+    },
+    "counts": {},
+    "timing": null,
+    "conditions": {},
+    "notes": [],
+    "how_to_run": null
+  },
+  {
+    "component": "efficiency",
+    "benchmark": "Timing: order_service_file",
+    "configuration": "llm_no_rag",
+    "status": "ok",
+    "run_id": "20261012T090910Z_timing_r3",
+    "n": 2,
+    "quality_metrics": {},
+    "counts": {},
+    "timing": {
+      "total_sec": 60.6484,
+      "static_analysis_sec": 5.3679,
+      "rag_sec": 0.0,
+      "llm_inference_sec": 5.9235,
+      "validation_sec": 0.0019,
+      "report_generation_sec": 0.0615,
+      "other_sec": 49.2935,
+      "llm_rate_limit_wait_sec": 49.2815,
+      "active_sec": 11.3668,
+      "llm_calls": 1.0,
+      "llm_retries": 0.0,
+      "statistic": "median over repeats"
+    },
+    "conditions": {
+      "files": 1,
+      "python_files": 1,
+      "files_reviewed": 1,
+      "lines_reviewed": 114,
+      "review_units": 1,
+      "llm_calls": 1,
+      "findings": 13,
+      "provider": "groq",
+      "model": "openai/gpt-oss-120b",
+      "concurrency": 1,
+      "suggested_fixes": false,
+      "vector_store": "chroma (fresh per run)",
+      "warm_up": "one untimed static-only run per input",
+      "order": "interleaved: round -> input -> configuration",
+      "report_formats": [
+        "json",
+        "md",
+        "pdf",
+        "sarif"
+      ],
+      "hardware": {
+        "platform": "Windows-10-10.0.26200-SP0",
+        "processor": "AMD64 Family 25 Model 80 Stepping 0, AuthenticAMD",
+        "cpu_count": 12,
+        "python": "3.11.7"
+      }
+    },
+    "notes": [],
+    "how_to_run": null
+  },
+  {
+    "component": "efficiency",
+    "benchmark": "Timing: order_service_file",
+    "configuration": "llm_rag",
+    "status": "ok",
+    "run_id": "20261012T090910Z_timing_r3",
+    "n": 3,
+    "quality_metrics": {},
+    "counts": {},
+    "timing": {
+      "total_sec": 121.3538,
+      "static_analysis_sec": 5.2239,
+      "rag_sec": 0.1636,
+      "llm_inference_sec": 9.8899,
+      "validation_sec": 0.0017,
+      "report_generation_sec": 0.0582,
+      "other_sec": 105.2523,
+      "llm_rate_limit_wait_sec": 99.484,
+      "active_sec": 21.8698,
+      "llm_calls": 2.0,
+      "llm_retries": 1.0,
+      "statistic": "median over repeats"
+    },
+    "conditions": {
+      "files": 1,
+      "python_files": 1,
+      "files_reviewed": 1,
+      "lines_reviewed": 114,
+      "review_units": 1,
+      "llm_calls": 2,
+      "findings": 15,
+      "provider": "groq",
+      "model": "openai/gpt-oss-120b",
+      "concurrency": 1,
+      "suggested_fixes": false,
+      "vector_store": "chroma (fresh per run)",
+      "warm_up": "one untimed static-only run per input",
+      "order": "interleaved: round -> input -> configuration",
+      "report_formats": [
+        "json",
+        "md",
+        "pdf",
+        "sarif"
+      ],
+      "hardware": {
+        "platform": "Windows-10-10.0.26200-SP0",
+        "processor": "AMD64 Family 25 Model 80 Stepping 0, AuthenticAMD",
+        "cpu_count": 12,
+        "python": "3.11.7"
+      }
+    },
+    "notes": [
+      "order_service_file: RAG latency overhead +92.4% (11.37s -> 21.87s, median active time); RAG itself 0.16s (0.7%); median JSON retries 0.0 without vs 1.0 with RAG"
+    ],
+    "how_to_run": null
+  },
+  {
+    "component": "efficiency",
+    "benchmark": "Timing: order_service_file",
+    "configuration": "static_only",
+    "status": "ok",
+    "run_id": "20261012T090910Z_timing_r3",
+    "n": 3,
+    "quality_metrics": {},
+    "counts": {},
+    "timing": {
+      "total_sec": 5.4901,
+      "static_analysis_sec": 5.4256,
+      "rag_sec": 0.0,
+      "llm_inference_sec": 0.0,
+      "validation_sec": 0.0009,
+      "report_generation_sec": 0.053,
+      "other_sec": 0.0106,
+      "llm_rate_limit_wait_sec": null,
+      "active_sec": 5.4901,
+      "llm_calls": 0.0,
+      "llm_retries": 0.0,
+      "statistic": "median over repeats"
+    },
+    "conditions": {
+      "files": 1,
+      "python_files": 1,
+      "files_reviewed": 1,
+      "lines_reviewed": 114,
+      "review_units": 0,
+      "llm_calls": 0,
+      "findings": 13,
+      "provider": "groq",
+      "model": "openai/gpt-oss-120b",
+      "concurrency": 1,
+      "suggested_fixes": false,
+      "vector_store": "chroma (fresh per run)",
+      "warm_up": "one untimed static-only run per input",
+      "order": "interleaved: round -> input -> configuration",
+      "report_formats": [
+        "json",
+        "md",
+        "pdf",
+        "sarif"
+      ],
+      "hardware": {
+        "platform": "Windows-10-10.0.26200-SP0",
+        "processor": "AMD64 Family 25 Model 80 Stepping 0, AuthenticAMD",
+        "cpu_count": 12,
+        "python": "3.11.7"
+      }
+    },
+    "notes": [],
+    "how_to_run": null
+  },
+  {
+    "component": "efficiency",
+    "benchmark": "Timing: planted_repo",
+    "configuration": "llm_no_rag",
+    "status": "ok",
+    "run_id": "20261012T090910Z_timing_r3",
+    "n": 3,
+    "quality_metrics": {},
+    "counts": {},
+    "timing": {
+      "total_sec": 186.7459,
+      "static_analysis_sec": 5.022,
+      "rag_sec": 0.0,
+      "llm_inference_sec": 18.4973,
+      "validation_sec": 0.004,
+      "report_generation_sec": 0.1084,
+      "other_sec": 164.7978,
+      "llm_rate_limit_wait_sec": 161.827,
+      "active_sec": 24.9189,
+      "llm_calls": 4.0,
+      "llm_retries": 0.0,
+      "statistic": "median over repeats"
+    },
+    "conditions": {
+      "files": 8,
+      "python_files": 6,
+      "files_reviewed": 5,
+      "lines_reviewed": 146,
+      "review_units": 4,
+      "llm_calls": 4,
+      "findings": 24,
+      "provider": "groq",
+      "model": "openai/gpt-oss-120b",
+      "concurrency": 1,
+      "suggested_fixes": false,
+      "vector_store": "chroma (fresh per run)",
+      "warm_up": "one untimed static-only run per input",
+      "order": "interleaved: round -> input -> configuration",
+      "report_formats": [
+        "json",
+        "md",
+        "pdf",
+        "sarif"
+      ],
+      "hardware": {
+        "platform": "Windows-10-10.0.26200-SP0",
+        "processor": "AMD64 Family 25 Model 80 Stepping 0, AuthenticAMD",
+        "cpu_count": 12,
+        "python": "3.11.7"
+      }
+    },
+    "notes": [],
+    "how_to_run": null
+  },
+  {
+    "component": "efficiency",
+    "benchmark": "Timing: planted_repo",
+    "configuration": "llm_rag",
+    "status": "ok",
+    "run_id": "20261012T090910Z_timing_r3",
+    "n": 3,
+    "quality_metrics": {},
+    "counts": {},
+    "timing": {
+      "total_sec": 228.3393,
+      "static_analysis_sec": 5.5277,
+      "rag_sec": 0.3113,
+      "llm_inference_sec": 18.531,
+      "validation_sec": 0.0053,
+      "report_generation_sec": 0.1071,
+      "other_sec": 204.5307,
+      "llm_rate_limit_wait_sec": 204.436,
+      "active_sec": 24.855,
+      "llm_calls": 4.0,
+      "llm_retries": 0.0,
+      "statistic": "median over repeats"
+    },
+    "conditions": {
+      "files": 8,
+      "python_files": 6,
+      "files_reviewed": 5,
+      "lines_reviewed": 146,
+      "review_units": 4,
+      "llm_calls": 4,
+      "findings": 23,
+      "provider": "groq",
+      "model": "openai/gpt-oss-120b",
+      "concurrency": 1,
+      "suggested_fixes": false,
+      "vector_store": "chroma (fresh per run)",
+      "warm_up": "one untimed static-only run per input",
+      "order": "interleaved: round -> input -> configuration",
+      "report_formats": [
+        "json",
+        "md",
+        "pdf",
+        "sarif"
+      ],
+      "hardware": {
+        "platform": "Windows-10-10.0.26200-SP0",
+        "processor": "AMD64 Family 25 Model 80 Stepping 0, AuthenticAMD",
+        "cpu_count": 12,
+        "python": "3.11.7"
+      }
+    },
+    "notes": [
+      "planted_repo: RAG latency overhead -0.3% (24.92s -> 24.86s, median active time); RAG itself 0.31s (1.3%); median JSON retries 0.0 without vs 0.0 with RAG"
+    ],
+    "how_to_run": null
+  },
+  {
+    "component": "efficiency",
+    "benchmark": "Timing: planted_repo",
+    "configuration": "static_only",
+    "status": "ok",
+    "run_id": "20261012T090910Z_timing_r3",
+    "n": 3,
+    "quality_metrics": {},
+    "counts": {},
+    "timing": {
+      "total_sec": 6.1008,
+      "static_analysis_sec": 5.9882,
+      "rag_sec": 0.0,
+      "llm_inference_sec": 0.0,
+      "validation_sec": 0.0015,
+      "report_generation_sec": 0.0952,
+      "other_sec": 0.0159,
+      "llm_rate_limit_wait_sec": null,
+      "active_sec": 6.1008,
+      "llm_calls": 0.0,
+      "llm_retries": 0.0,
+      "statistic": "median over repeats"
+    },
+    "conditions": {
+      "files": 8,
+      "python_files": 6,
+      "files_reviewed": 5,
+      "lines_reviewed": 146,
+      "review_units": 0,
+      "llm_calls": 0,
+      "findings": 22,
+      "provider": "groq",
+      "model": "openai/gpt-oss-120b",
+      "concurrency": 1,
+      "suggested_fixes": false,
+      "vector_store": "chroma (fresh per run)",
+      "warm_up": "one untimed static-only run per input",
+      "order": "interleaved: round -> input -> configuration",
+      "report_formats": [
+        "json",
+        "md",
+        "pdf",
+        "sarif"
+      ],
+      "hardware": {
+        "platform": "Windows-10-10.0.26200-SP0",
+        "processor": "AMD64 Family 25 Model 80 Stepping 0, AuthenticAMD",
+        "cpu_count": 12,
+        "python": "3.11.7"
+      }
+    },
+    "notes": [],
+    "how_to_run": null
+  }
+]

@@ -1,0 +1,136 @@
+@import "tailwindcss";
+
+/* Theme toggle: data-theme on <html> wins over the OS setting in both directions. */
+@custom-variant dark (&:where([data-theme="dark"], [data-theme="dark"] *));
+
+/*
+ * Design tokens (dataviz reference palette). Roles, not raw hex, are used everywhere.
+ * Severity chart = ordinal single-hue ramp, validated with validate_palette.js --ordinal
+ * (light: blue 250 -> 650; dark: blue 600 -> 200). Status colors are reserved for
+ * severity badges and are always paired with an icon + text label.
+ */
+:root {
+  color-scheme: light;
+  --page: #f9f9f7;
+  --surface-1: #fcfcfb;
+  --surface-2: #f3f2ef;
+  --ink-1: #0b0b0b;
+  --ink-2: #52514e;
+  --ink-3: #6f6e69;
+  --grid: #e1e0d9;
+  --baseline: #c3c2b7;
+  --border: rgba(11, 11, 11, 0.1);
+  --accent: #2a78d6;
+  --accent-ink: #1c5cab;
+  --accent-wash: rgba(42, 120, 214, 0.1);
+  --bar: #2a78d6;
+  --sev-info: #86b6ef;
+  --sev-low: #5598e7;
+  --sev-medium: #2a78d6;
+  --sev-high: #1c5cab;
+  --sev-critical: #104281;
+  --status-good: #0ca30c;
+  --status-good-ink: #006300;
+  --status-warning: #fab219;
+  --status-serious: #ec835a;
+  --status-critical: #d03b3b;
+  --code-bg: #f3f2ef;
+  --diff-add: rgba(12, 163, 12, 0.13);
+  --diff-del: rgba(208, 59, 59, 0.13);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:where(:not([data-theme="light"])) {
+    color-scheme: dark;
+    --page: #0d0d0d;
+    --surface-1: #1a1a19;
+    --surface-2: #232322;
+    --ink-1: #ffffff;
+    --ink-2: #c3c2b7;
+    --ink-3: #a3a29a;
+    --grid: #2c2c2a;
+    --baseline: #383835;
+    --border: rgba(255, 255, 255, 0.1);
+    --accent: #3987e5;
+    --accent-ink: #86b6ef;
+    --accent-wash: rgba(57, 135, 229, 0.16);
+    --bar: #3987e5;
+    --sev-info: #184f95;
+    --sev-low: #256abf;
+    --sev-medium: #3987e5;
+    --sev-high: #6da7ec;
+    --sev-critical: #9ec5f4;
+    --status-good-ink: #0ca30c;
+    --code-bg: #111110;
+    --diff-add: rgba(12, 163, 12, 0.22);
+    --diff-del: rgba(208, 59, 59, 0.26);
+  }
+}
+
+:root[data-theme="dark"] {
+  color-scheme: dark;
+  --page: #0d0d0d;
+  --surface-1: #1a1a19;
+  --surface-2: #232322;
+  --ink-1: #ffffff;
+  --ink-2: #c3c2b7;
+  --ink-3: #a3a29a;
+  --grid: #2c2c2a;
+  --baseline: #383835;
+  --border: rgba(255, 255, 255, 0.1);
+  --accent: #3987e5;
+  --accent-ink: #86b6ef;
+  --accent-wash: rgba(57, 135, 229, 0.16);
+  --bar: #3987e5;
+  --sev-info: #184f95;
+  --sev-low: #256abf;
+  --sev-medium: #3987e5;
+  --sev-high: #6da7ec;
+  --sev-critical: #9ec5f4;
+  --status-good-ink: #0ca30c;
+  --code-bg: #111110;
+  --diff-add: rgba(12, 163, 12, 0.22);
+  --diff-del: rgba(208, 59, 59, 0.26);
+}
+
+@theme {
+  --font-sans: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  --font-mono: ui-monospace, "Cascadia Code", "SFMono-Regular", Consolas, monospace;
+  --color-page: var(--page);
+  --color-surface: var(--surface-1);
+  --color-surface-2: var(--surface-2);
+  --color-ink: var(--ink-1);
+  --color-ink-2: var(--ink-2);
+  --color-ink-3: var(--ink-3);
+  --color-grid: var(--grid);
+  --color-line: var(--border);
+  --color-accent: var(--accent);
+  --color-accent-ink: var(--accent-ink);
+  --color-accent-wash: var(--accent-wash);
+  --color-good: var(--status-good-ink);
+  --color-critical: var(--status-critical);
+  --color-code: var(--code-bg);
+}
+
+html,
+body {
+  background: var(--page);
+  color: var(--ink-1);
+  font-family: var(--font-sans);
+}
+
+.tabular {
+  font-variant-numeric: tabular-nums;
+}
+
+:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+@media (forced-colors: active) {
+  .bar-fill {
+    forced-color-adjust: none;
+    background: CanvasText !important;
+  }
+}

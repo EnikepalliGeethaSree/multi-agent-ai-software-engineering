@@ -1,0 +1,2504 @@
+{
+  "generated_at": "2026-11-06T14:57:56.347507+00:00",
+  "master": {
+    "id": "master",
+    "section": "Summary",
+    "title": "Code Review evaluation summary",
+    "about": "Detection quality of each configuration. Planted issues: ROC-AUC is not applicable (positives only). CodeReviewer: raw metrics on the paired sample set; adjusted metrics are in section 2.",
+    "columns": [
+      {
+        "key": "planted_precision",
+        "label": "Precision",
+        "metric": "precision",
+        "group": "Planted issues",
+        "digits": 3
+      },
+      {
+        "key": "planted_recall",
+        "label": "Recall",
+        "metric": "recall",
+        "group": "Planted issues",
+        "digits": 3
+      },
+      {
+        "key": "planted_f1",
+        "label": "F1",
+        "metric": "f1",
+        "group": "Planted issues",
+        "digits": 3
+      },
+      {
+        "key": "cls_precision",
+        "label": "Precision",
+        "metric": "precision",
+        "group": "CodeReviewer classification (raw)",
+        "digits": 3
+      },
+      {
+        "key": "cls_recall",
+        "label": "Recall",
+        "metric": "recall",
+        "group": "CodeReviewer classification (raw)",
+        "digits": 3
+      },
+      {
+        "key": "cls_f1",
+        "label": "F1",
+        "metric": "f1",
+        "group": "CodeReviewer classification (raw)",
+        "digits": 3
+      },
+      {
+        "key": "cls_roc_auc",
+        "label": "ROC-AUC",
+        "metric": "roc_auc",
+        "group": "CodeReviewer classification (raw)",
+        "digits": 3
+      }
+    ],
+    "rows": [
+      {
+        "label": "Static Only",
+        "configuration": {
+          "key": "static_only",
+          "letter": "A",
+          "label": "Static Only",
+          "static": true,
+          "llm": false,
+          "rag": false,
+          "mode": "static_only",
+          "description": "Ruff, Radon, AST checks, secrets, test gaps (and mypy when enabled)."
+        },
+        "status": "ok",
+        "values": {
+          "planted_precision": 1.0,
+          "planted_recall": 0.9411764705882353,
+          "planted_f1": 0.9696969696969697,
+          "cls_precision": null,
+          "cls_recall": null,
+          "cls_f1": null,
+          "cls_roc_auc": null
+        },
+        "sd": {},
+        "spread": {},
+        "na": {
+          "cls_precision": "paired CodeReviewer sample too small for a headline (n = 3 < 30); see section 2",
+          "cls_recall": "paired CodeReviewer sample too small for a headline (n = 3 < 30); see section 2",
+          "cls_f1": "paired CodeReviewer sample too small for a headline (n = 3 < 30); see section 2",
+          "cls_roc_auc": "paired CodeReviewer sample too small for a headline (n = 3 < 30); see section 2"
+        },
+        "n": null,
+        "n_failed": null,
+        "n_runs": 0,
+        "model": null,
+        "run_ids": [
+          "20261012T161020Z_planted_static_only"
+        ],
+        "notes": [],
+        "how_to_run": null
+      },
+      {
+        "label": "LLM Only",
+        "configuration": {
+          "key": "llm_only",
+          "letter": "B",
+          "label": "LLM Only",
+          "static": false,
+          "llm": true,
+          "rag": false,
+          "mode": "llm_only",
+          "description": "The LLM reviews the code alone: no static findings, no project context."
+        },
+        "status": "ok",
+        "values": {
+          "planted_precision": 1.0,
+          "planted_recall": 0.5882352941176471,
+          "planted_f1": 0.7407407407407407,
+          "cls_precision": null,
+          "cls_recall": null,
+          "cls_f1": null,
+          "cls_roc_auc": null
+        },
+        "sd": {},
+        "spread": {},
+        "na": {
+          "cls_precision": "paired CodeReviewer sample too small for a headline (n = 3 < 30); see section 2",
+          "cls_recall": "paired CodeReviewer sample too small for a headline (n = 3 < 30); see section 2",
+          "cls_f1": "paired CodeReviewer sample too small for a headline (n = 3 < 30); see section 2",
+          "cls_roc_auc": "paired CodeReviewer sample too small for a headline (n = 3 < 30); see section 2"
+        },
+        "n": null,
+        "n_failed": null,
+        "n_runs": 0,
+        "model": "openai/gpt-oss-120b",
+        "run_ids": [
+          "20261012T161026Z_planted_llm_only"
+        ],
+        "notes": [],
+        "how_to_run": null
+      },
+      {
+        "label": "Static + LLM",
+        "configuration": {
+          "key": "static_llm",
+          "letter": "C",
+          "label": "Static + LLM",
+          "static": true,
+          "llm": true,
+          "rag": false,
+          "mode": "full",
+          "description": "Static findings plus LLM review and triage, without project context."
+        },
+        "status": "ok",
+        "values": {
+          "planted_precision": 1.0,
+          "planted_recall": 1.0,
+          "planted_f1": 1.0,
+          "cls_precision": null,
+          "cls_recall": null,
+          "cls_f1": null,
+          "cls_roc_auc": null
+        },
+        "sd": {},
+        "spread": {},
+        "na": {
+          "cls_precision": "paired CodeReviewer sample too small for a headline (n = 3 < 30); see section 2",
+          "cls_recall": "paired CodeReviewer sample too small for a headline (n = 3 < 30); see section 2",
+          "cls_f1": "paired CodeReviewer sample too small for a headline (n = 3 < 30); see section 2",
+          "cls_roc_auc": "paired CodeReviewer sample too small for a headline (n = 3 < 30); see section 2"
+        },
+        "n": null,
+        "n_failed": null,
+        "n_runs": 0,
+        "model": "openai/gpt-oss-120b",
+        "run_ids": [
+          "20261012T161133Z_planted_static_llm"
+        ],
+        "notes": [],
+        "how_to_run": null
+      },
+      {
+        "label": "Static + LLM + RAG",
+        "configuration": {
+          "key": "static_llm_rag",
+          "letter": "D",
+          "label": "Static + LLM + RAG",
+          "static": true,
+          "llm": true,
+          "rag": true,
+          "mode": "full",
+          "description": "The full agent: static analysis, LLM review, retrieved project context."
+        },
+        "status": "ok",
+        "values": {
+          "planted_precision": 1.0,
+          "planted_recall": 1.0,
+          "planted_f1": 1.0,
+          "cls_precision": null,
+          "cls_recall": null,
+          "cls_f1": null,
+          "cls_roc_auc": null
+        },
+        "sd": {},
+        "spread": {},
+        "na": {
+          "cls_precision": "incomplete",
+          "cls_recall": "incomplete",
+          "cls_f1": "incomplete",
+          "cls_roc_auc": "incomplete"
+        },
+        "n": null,
+        "n_failed": null,
+        "n_runs": 0,
+        "model": "openai/gpt-oss-120b",
+        "run_ids": [
+          "20261012T161434Z_planted_static_llm_rag"
+        ],
+        "notes": [],
+        "how_to_run": null
+      }
+    ],
+    "conditions": {
+      "planted issues": "17 labelled issues",
+      "CodeReviewer samples (paired)": 3,
+      "minimum paired n for a headline": 30
+    },
+    "fairness": [],
+    "observations": [],
+    "notes": [
+      "Model, sample counts, failures and the exact runs behind every cell are in the benchmark sections below."
+    ],
+    "supplementary": false,
+    "show_counts": false
+  },
+  "tables": [
+    {
+      "id": "planted",
+      "section": "1. Planted issues",
+      "title": "Planted-issue benchmark: detection by configuration",
+      "about": "17 hand-labelled issues in a fixture repository (16 detectable by a rule, 1 needing semantic reasoning) plus a clean negative-control file.",
+      "columns": [
+        {
+          "key": "precision",
+          "label": "Precision",
+          "metric": "precision",
+          "group": null,
+          "digits": 3
+        },
+        {
+          "key": "recall",
+          "label": "Recall",
+          "metric": "recall",
+          "group": null,
+          "digits": 3
+        },
+        {
+          "key": "f1",
+          "label": "F1",
+          "metric": "f1",
+          "group": null,
+          "digits": 3
+        },
+        {
+          "key": "roc_auc",
+          "label": "ROC-AUC",
+          "metric": "roc_auc",
+          "group": null,
+          "digits": 3
+        },
+        {
+          "key": "tp",
+          "label": "TP",
+          "metric": null,
+          "group": null,
+          "digits": 0
+        },
+        {
+          "key": "fp",
+          "label": "FP",
+          "metric": null,
+          "group": null,
+          "digits": 0
+        },
+        {
+          "key": "fn",
+          "label": "FN",
+          "metric": null,
+          "group": null,
+          "digits": 0
+        },
+        {
+          "key": "recall_static",
+          "label": "Recall (static-detectable)",
+          "metric": "recall",
+          "group": null,
+          "digits": 3
+        },
+        {
+          "key": "recall_llm",
+          "label": "Recall (semantic / LLM-only)",
+          "metric": "recall",
+          "group": null,
+          "digits": 3
+        },
+        {
+          "key": "clean_fp",
+          "label": "FP in clean file",
+          "metric": null,
+          "group": null,
+          "digits": 0
+        },
+        {
+          "key": "line_error",
+          "label": "Mean line error",
+          "metric": null,
+          "group": null,
+          "digits": 2
+        }
+      ],
+      "rows": [
+        {
+          "label": "Static Only",
+          "configuration": {
+            "key": "static_only",
+            "letter": "A",
+            "label": "Static Only",
+            "static": true,
+            "llm": false,
+            "rag": false,
+            "mode": "static_only",
+            "description": "Ruff, Radon, AST checks, secrets, test gaps (and mypy when enabled)."
+          },
+          "status": "ok",
+          "values": {
+            "precision": 1.0,
+            "recall": 0.9411764705882353,
+            "f1": 0.9696969696969697,
+            "roc_auc": null,
+            "tp": 13,
+            "fp": 0,
+            "fn": 1,
+            "recall_static": 1.0,
+            "recall_llm": 0.0,
+            "clean_fp": 0,
+            "line_error": 0.0
+          },
+          "sd": {},
+          "spread": {},
+          "na": {
+            "roc_auc": "not applicable: the planted suite labels positives only (no scored negative cases), so a ROC curve is undefined"
+          },
+          "n": 17,
+          "n_failed": 0,
+          "n_runs": 1,
+          "model": null,
+          "run_ids": [
+            "20261012T161020Z_planted_static_only"
+          ],
+          "notes": [],
+          "how_to_run": null
+        },
+        {
+          "label": "LLM Only",
+          "configuration": {
+            "key": "llm_only",
+            "letter": "B",
+            "label": "LLM Only",
+            "static": false,
+            "llm": true,
+            "rag": false,
+            "mode": "llm_only",
+            "description": "The LLM reviews the code alone: no static findings, no project context."
+          },
+          "status": "ok",
+          "values": {
+            "precision": 1.0,
+            "recall": 0.5882352941176471,
+            "f1": 0.7407407407407407,
+            "roc_auc": null,
+            "tp": 10,
+            "fp": 0,
+            "fn": 7,
+            "recall_static": 0.5625,
+            "recall_llm": 1.0,
+            "clean_fp": 0,
+            "line_error": 0.9
+          },
+          "sd": {},
+          "spread": {},
+          "na": {
+            "roc_auc": "not applicable: the planted suite labels positives only (no scored negative cases), so a ROC curve is undefined"
+          },
+          "n": 17,
+          "n_failed": 0,
+          "n_runs": 1,
+          "model": "openai/gpt-oss-120b",
+          "run_ids": [
+            "20261012T161026Z_planted_llm_only"
+          ],
+          "notes": [],
+          "how_to_run": null
+        },
+        {
+          "label": "Static + LLM",
+          "configuration": {
+            "key": "static_llm",
+            "letter": "C",
+            "label": "Static + LLM",
+            "static": true,
+            "llm": true,
+            "rag": false,
+            "mode": "full",
+            "description": "Static findings plus LLM review and triage, without project context."
+          },
+          "status": "ok",
+          "values": {
+            "precision": 1.0,
+            "recall": 1.0,
+            "f1": 1.0,
+            "roc_auc": null,
+            "tp": 14,
+            "fp": 0,
+            "fn": 0,
+            "recall_static": 1.0,
+            "recall_llm": 1.0,
+            "clean_fp": 0,
+            "line_error": 0.0
+          },
+          "sd": {},
+          "spread": {},
+          "na": {
+            "roc_auc": "not applicable: the planted suite labels positives only (no scored negative cases), so a ROC curve is undefined"
+          },
+          "n": 17,
+          "n_failed": 0,
+          "n_runs": 1,
+          "model": "openai/gpt-oss-120b",
+          "run_ids": [
+            "20261012T161133Z_planted_static_llm"
+          ],
+          "notes": [],
+          "how_to_run": null
+        },
+        {
+          "label": "Static + LLM + RAG",
+          "configuration": {
+            "key": "static_llm_rag",
+            "letter": "D",
+            "label": "Static + LLM + RAG",
+            "static": true,
+            "llm": true,
+            "rag": true,
+            "mode": "full",
+            "description": "The full agent: static analysis, LLM review, retrieved project context."
+          },
+          "status": "ok",
+          "values": {
+            "precision": 1.0,
+            "recall": 1.0,
+            "f1": 1.0,
+            "roc_auc": null,
+            "tp": 14,
+            "fp": 0,
+            "fn": 0,
+            "recall_static": 1.0,
+            "recall_llm": 1.0,
+            "clean_fp": 0,
+            "line_error": 0.058823529411764705
+          },
+          "sd": {},
+          "spread": {},
+          "na": {
+            "roc_auc": "not applicable: the planted suite labels positives only (no scored negative cases), so a ROC curve is undefined"
+          },
+          "n": 17,
+          "n_failed": 0,
+          "n_runs": 1,
+          "model": "openai/gpt-oss-120b",
+          "run_ids": [
+            "20261012T161434Z_planted_static_llm_rag"
+          ],
+          "notes": [],
+          "how_to_run": null
+        }
+      ],
+      "conditions": {
+        "answer key": "tests/fixtures/repos/planted_expected.json (17 issues)",
+        "negative control": "shop/utils.py",
+        "matching": "same file, start within +-2 lines, compatible category",
+        "precision counts": "defect findings only (bug, security, error handling, edge case)"
+      },
+      "fairness": [
+        {
+          "name": "Same samples (answer key)",
+          "ok": true,
+          "detail": "one fixture repository and answer key for every configuration"
+        },
+        {
+          "name": "Same LLM model",
+          "ok": true,
+          "detail": "openai/gpt-oss-120b"
+        },
+        {
+          "name": "Same temperature",
+          "ok": true,
+          "detail": "0.0"
+        },
+        {
+          "name": "Same prompt versions",
+          "ok": true,
+          "detail": "{'system': '1.0', 'review': '1.0'}"
+        },
+        {
+          "name": "Same confidence threshold",
+          "ok": true,
+          "detail": "0.3"
+        },
+        {
+          "name": "Same evaluation rules",
+          "ok": true,
+          "detail": "{'line_tolerance': 2, 'match': 'same file, start within +-2 lines, compatible category', 'precision_over': 'defect findings (bug, security, error_handling, edge_case)'}"
+        },
+        {
+          "name": "Run together (one ablation group)",
+          "ok": true,
+          "detail": "abl-20261012T161020Z"
+        }
+      ],
+      "observations": [
+        "Static + LLM has a higher recall than Static Only (1.000 vs 0.941).",
+        "Static + LLM and Static + LLM + RAG have the same recall (1.000).",
+        "Static Only has a higher recall than LLM Only (0.941 vs 0.588).",
+        "Static Only and Static + LLM have the same precision (1.000).",
+        "Static + LLM and Static + LLM + RAG have the same precision (1.000).",
+        "Static Only and LLM Only have the same precision (1.000).",
+        "Static Only: semantic (LLM-only) issue recall 0.000 (the suite has a single such issue, so this is 0 or 1 per run).",
+        "LLM Only: semantic (LLM-only) issue recall 1.000 (the suite has a single such issue, so this is 0 or 1 per run).",
+        "Static + LLM: semantic (LLM-only) issue recall 1.000 (the suite has a single such issue, so this is 0 or 1 per run).",
+        "Static + LLM + RAG: semantic (LLM-only) issue recall 1.000 (the suite has a single such issue, so this is 0 or 1 per run)."
+      ],
+      "notes": [
+        "Precision TP = defect findings that match a planted issue; recall TP = planted issues detected (the project's existing definitions).",
+        "Precision is N/A, not 1.0, when a configuration reports no defect findings at all.",
+        "Run all four together: python -m marl_agents.cli eval ablation --benchmark planted --configurations static_only,llm_only,static_llm,static_llm_rag --config configs/gemini.yaml"
+      ],
+      "supplementary": false,
+      "show_counts": true
+    },
+    {
+      "id": "codereviewer_cls",
+      "section": "2. CodeReviewer classification",
+      "title": "CodeReviewer: does this change need a review comment? (classification)",
+      "about": "Paired comparison: every row is scored on the same samples.",
+      "columns": [
+        {
+          "key": "precision",
+          "label": "Precision",
+          "metric": "precision",
+          "group": "RAW",
+          "digits": 3
+        },
+        {
+          "key": "recall",
+          "label": "Recall",
+          "metric": "recall",
+          "group": "RAW",
+          "digits": 3
+        },
+        {
+          "key": "f1",
+          "label": "F1",
+          "metric": "f1",
+          "group": "RAW",
+          "digits": 3
+        },
+        {
+          "key": "roc_auc",
+          "label": "ROC-AUC",
+          "metric": "roc_auc",
+          "group": "RAW",
+          "digits": 3
+        },
+        {
+          "key": "adj_precision",
+          "label": "Precision",
+          "metric": "precision",
+          "group": "ADJUSTED",
+          "digits": 3
+        },
+        {
+          "key": "adj_recall",
+          "label": "Recall",
+          "metric": "recall",
+          "group": "ADJUSTED",
+          "digits": 3
+        },
+        {
+          "key": "adj_f1",
+          "label": "F1",
+          "metric": "f1",
+          "group": "ADJUSTED",
+          "digits": 3
+        },
+        {
+          "key": "adj_roc_auc",
+          "label": "ROC-AUC",
+          "metric": "roc_auc",
+          "group": "ADJUSTED",
+          "digits": 3
+        }
+      ],
+      "rows": [
+        {
+          "label": "Static Only",
+          "configuration": {
+            "key": "static_only",
+            "letter": "A",
+            "label": "Static Only",
+            "static": true,
+            "llm": false,
+            "rag": false,
+            "mode": "static_only",
+            "description": "Ruff, Radon, AST checks, secrets, test gaps (and mypy when enabled)."
+          },
+          "status": "ok",
+          "values": {
+            "precision": 0.0,
+            "recall": 0.0,
+            "f1": 0.0,
+            "roc_auc": 0.0,
+            "adj_precision": null,
+            "adj_recall": 0.0,
+            "adj_f1": null,
+            "adj_roc_auc": 0.5
+          },
+          "sd": {},
+          "spread": {},
+          "na": {
+            "adj_precision": "undefined on these samples (zero denominator or one class only)",
+            "adj_f1": "undefined on these samples (zero denominator or one class only)"
+          },
+          "n": 3,
+          "n_failed": 0,
+          "n_runs": 1,
+          "model": null,
+          "run_ids": [
+            "20261012T161828Z_codereviewer_cls_test_static_only_n10"
+          ],
+          "notes": [],
+          "how_to_run": null
+        },
+        {
+          "label": "LLM Only",
+          "configuration": {
+            "key": "llm_only",
+            "letter": "B",
+            "label": "LLM Only",
+            "static": false,
+            "llm": true,
+            "rag": false,
+            "mode": "llm_only",
+            "description": "The LLM reviews the code alone: no static findings, no project context."
+          },
+          "status": "ok",
+          "values": {
+            "precision": 0.6666666666666666,
+            "recall": 1.0,
+            "f1": 0.8,
+            "roc_auc": 0.5,
+            "adj_precision": 0.6666666666666666,
+            "adj_recall": 1.0,
+            "adj_f1": 0.8,
+            "adj_roc_auc": 0.5
+          },
+          "sd": {},
+          "spread": {},
+          "na": {},
+          "n": 3,
+          "n_failed": 0,
+          "n_runs": 1,
+          "model": "openai/gpt-oss-120b",
+          "run_ids": [
+            "20261012T161832Z_codereviewer_cls_test_llm_only_n10"
+          ],
+          "notes": [],
+          "how_to_run": null
+        },
+        {
+          "label": "Static + LLM",
+          "configuration": {
+            "key": "static_llm",
+            "letter": "C",
+            "label": "Static + LLM",
+            "static": true,
+            "llm": true,
+            "rag": false,
+            "mode": "full",
+            "description": "Static findings plus LLM review and triage, without project context."
+          },
+          "status": "ok",
+          "values": {
+            "precision": 0.6666666666666666,
+            "recall": 1.0,
+            "f1": 0.8,
+            "roc_auc": 1.0,
+            "adj_precision": 1.0,
+            "adj_recall": 1.0,
+            "adj_f1": 1.0,
+            "adj_roc_auc": 1.0
+          },
+          "sd": {},
+          "spread": {},
+          "na": {},
+          "n": 3,
+          "n_failed": 7,
+          "n_runs": 1,
+          "model": "openai/gpt-oss-120b",
+          "run_ids": [
+            "20261012T162634Z_codereviewer_cls_test_static_llm_n10"
+          ],
+          "notes": [],
+          "how_to_run": null
+        },
+        {
+          "label": "Static + LLM + RAG",
+          "configuration": {
+            "key": "static_llm_rag",
+            "letter": "D",
+            "label": "Static + LLM + RAG",
+            "static": true,
+            "llm": true,
+            "rag": true,
+            "mode": "full",
+            "description": "The full agent: static analysis, LLM review, retrieved project context."
+          },
+          "status": "incomplete",
+          "values": {},
+          "sd": {},
+          "spread": {},
+          "na": {
+            "*": "every sample failed in run 20261012T163034Z_codereviewer_cls_test_static_llm_rag_n10 (llm: 10); nothing to score"
+          },
+          "n": 0,
+          "n_failed": 10,
+          "n_runs": 0,
+          "model": "openai/gpt-oss-120b",
+          "run_ids": [
+            "20261012T163034Z_codereviewer_cls_test_static_llm_rag_n10"
+          ],
+          "notes": [],
+          "how_to_run": "python -m marl_agents.cli eval codereviewer --task cls --limit 10 --seed 42 --configuration static_llm_rag --workers 1 --config configs/gemini.yaml"
+        }
+      ],
+      "conditions": {
+        "dataset": "CodeReviewer, test split, Python only",
+        "requested samples": 10,
+        "samples in every row": 3,
+        "sampling seed": 42,
+        "limit": 10,
+        "flagged": "at least one finding of severity >= low",
+        "score (ROC-AUC)": "highest finding priority / 5",
+        "ADJUSTED": "excludes F401, F403, F405, F811, F821"
+      },
+      "fairness": [
+        {
+          "name": "Same samples",
+          "ok": true,
+          "detail": "3 samples evaluated by every configuration (10 requested; reference run 20261012T162634Z_codereviewer_cls_test_static_llm_n10)"
+        },
+        {
+          "name": "Same LLM model",
+          "ok": true,
+          "detail": "openai/gpt-oss-120b"
+        },
+        {
+          "name": "Same temperature",
+          "ok": true,
+          "detail": "0.0"
+        },
+        {
+          "name": "Same prompt versions",
+          "ok": true,
+          "detail": "{'system': '1.0', 'review': '1.0'}"
+        },
+        {
+          "name": "Same confidence threshold",
+          "ok": true,
+          "detail": "0.3"
+        },
+        {
+          "name": "Same evaluation rules",
+          "ok": true,
+          "detail": "{'flag_threshold': 'at least one finding of severity >= low', 'score': 'highest finding priority (severity rank + confidence) / 5', 'adjusted_excludes_rules': ['F401', 'F403', 'F405', 'F811', 'F821']}"
+        },
+        {
+          "name": "Run together (one ablation group)",
+          "ok": true,
+          "detail": "abl-20261012T161828Z"
+        }
+      ],
+      "observations": [],
+      "notes": [
+        "RAW counts every finding. ADJUSTED drops the rules that cannot be judged from one hunk (imports/names defined in the commit's other hunks); both are always reported, neither replaces the other.",
+        "Run all four on one sample set: python -m marl_agents.cli eval ablation --benchmark codereviewer --task cls --limit 10 --seed 42 --configurations static_only,llm_only,static_llm,static_llm_rag --config configs/gemini.yaml",
+        "n = 3: far too few samples for any conclusion; this table only shows that the pipeline runs end to end."
+      ],
+      "supplementary": false,
+      "show_counts": true
+    },
+    {
+      "id": "codereviewer_cls_full",
+      "section": "2. CodeReviewer classification",
+      "title": "Static Only on the full Python test split (n = 4195)",
+      "about": "Static analysis is cheap enough to run on every sample; LLM configurations are limited by API quota, so they are compared on the subset above.",
+      "columns": [
+        {
+          "key": "precision",
+          "label": "Precision",
+          "metric": "precision",
+          "group": "RAW",
+          "digits": 3
+        },
+        {
+          "key": "recall",
+          "label": "Recall",
+          "metric": "recall",
+          "group": "RAW",
+          "digits": 3
+        },
+        {
+          "key": "f1",
+          "label": "F1",
+          "metric": "f1",
+          "group": "RAW",
+          "digits": 3
+        },
+        {
+          "key": "roc_auc",
+          "label": "ROC-AUC",
+          "metric": "roc_auc",
+          "group": "RAW",
+          "digits": 3
+        },
+        {
+          "key": "adj_precision",
+          "label": "Precision",
+          "metric": "precision",
+          "group": "ADJUSTED",
+          "digits": 3
+        },
+        {
+          "key": "adj_recall",
+          "label": "Recall",
+          "metric": "recall",
+          "group": "ADJUSTED",
+          "digits": 3
+        },
+        {
+          "key": "adj_f1",
+          "label": "F1",
+          "metric": "f1",
+          "group": "ADJUSTED",
+          "digits": 3
+        },
+        {
+          "key": "adj_roc_auc",
+          "label": "ROC-AUC",
+          "metric": "roc_auc",
+          "group": "ADJUSTED",
+          "digits": 3
+        }
+      ],
+      "rows": [
+        {
+          "label": "Static Only",
+          "configuration": {
+            "key": "static_only",
+            "letter": "A",
+            "label": "Static Only",
+            "static": true,
+            "llm": false,
+            "rag": false,
+            "mode": "static_only",
+            "description": "Ruff, Radon, AST checks, secrets, test gaps (and mypy when enabled)."
+          },
+          "status": "ok",
+          "values": {
+            "precision": 0.3835227272727273,
+            "recall": 0.26561731431382196,
+            "f1": 0.31386224934612034,
+            "roc_auc": 0.4166661737210222,
+            "adj_precision": 0.5923344947735192,
+            "adj_recall": 0.16724053123462862,
+            "adj_f1": 0.26083621020329883,
+            "adj_roc_auc": 0.5385273423298188
+          },
+          "sd": {},
+          "spread": {},
+          "na": {},
+          "n": 4195,
+          "n_failed": 1,
+          "n_runs": 1,
+          "model": null,
+          "run_ids": [
+            "20261012T163153Z_codereviewer_cls_test_static_only_n4196"
+          ],
+          "notes": [],
+          "how_to_run": null
+        }
+      ],
+      "conditions": {
+        "dataset": "CodeReviewer, test split, Python only (all samples)"
+      },
+      "fairness": [],
+      "observations": [],
+      "notes": [],
+      "supplementary": false,
+      "show_counts": true
+    },
+    {
+      "id": "codereviewer_msg",
+      "section": "3. Review comment generation",
+      "title": "CodeReviewer: review comment generation",
+      "about": "Paired comparison: every row is scored on the same samples.",
+      "columns": [
+        {
+          "key": "bleu4",
+          "label": "BLEU-4",
+          "metric": "bleu4",
+          "group": null,
+          "digits": 2
+        },
+        {
+          "key": "rouge_l",
+          "label": "ROUGE-L",
+          "metric": "rouge_l",
+          "group": null,
+          "digits": 2
+        },
+        {
+          "key": "chrf",
+          "label": "chrF",
+          "metric": "chrf",
+          "group": null,
+          "digits": 2
+        },
+        {
+          "key": "coverage",
+          "label": "Coverage",
+          "metric": "coverage",
+          "group": null,
+          "digits": 3
+        }
+      ],
+      "rows": [
+        {
+          "label": "Static Only",
+          "configuration": {
+            "key": "static_only",
+            "letter": "A",
+            "label": "Static Only",
+            "static": true,
+            "llm": false,
+            "rag": false,
+            "mode": "static_only",
+            "description": "Ruff, Radon, AST checks, secrets, test gaps (and mypy when enabled)."
+          },
+          "status": "ok",
+          "values": {
+            "bleu4": 1.9792769499350489,
+            "rouge_l": 5.449069980810757,
+            "chrf": 8.730629976903762,
+            "coverage": 0.4722222222222222
+          },
+          "sd": {},
+          "spread": {},
+          "na": {},
+          "n": 36,
+          "n_failed": 0,
+          "n_runs": 1,
+          "model": null,
+          "run_ids": [
+            "20261012T163624Z_codereviewer_msg_test_static_only_n1403"
+          ],
+          "notes": [
+            "restricted to the 40 reference samples (the run covers 1403)"
+          ],
+          "how_to_run": null
+        },
+        {
+          "label": "LLM Only",
+          "configuration": {
+            "key": "llm_only",
+            "letter": "B",
+            "label": "LLM Only",
+            "static": false,
+            "llm": true,
+            "rag": false,
+            "mode": "llm_only",
+            "description": "The LLM reviews the code alone: no static findings, no project context."
+          },
+          "status": "not_run",
+          "values": {},
+          "sd": {},
+          "spread": {},
+          "na": {
+            "*": "no saved run"
+          },
+          "n": null,
+          "n_failed": null,
+          "n_runs": 0,
+          "model": null,
+          "run_ids": [],
+          "notes": [],
+          "how_to_run": "python -m marl_agents.cli eval codereviewer --task msg --limit 40 --seed 42 --configuration llm_only --workers 1 --config configs/gemini.yaml"
+        },
+        {
+          "label": "Static + LLM",
+          "configuration": {
+            "key": "static_llm",
+            "letter": "C",
+            "label": "Static + LLM",
+            "static": true,
+            "llm": true,
+            "rag": false,
+            "mode": "full",
+            "description": "Static findings plus LLM review and triage, without project context."
+          },
+          "status": "not_run",
+          "values": {},
+          "sd": {},
+          "spread": {},
+          "na": {
+            "*": "no saved run"
+          },
+          "n": null,
+          "n_failed": null,
+          "n_runs": 0,
+          "model": null,
+          "run_ids": [],
+          "notes": [],
+          "how_to_run": "python -m marl_agents.cli eval codereviewer --task msg --limit 40 --seed 42 --configuration static_llm --workers 1 --config configs/gemini.yaml"
+        },
+        {
+          "label": "Static + LLM + RAG",
+          "configuration": {
+            "key": "static_llm_rag",
+            "letter": "D",
+            "label": "Static + LLM + RAG",
+            "static": true,
+            "llm": true,
+            "rag": true,
+            "mode": "full",
+            "description": "The full agent: static analysis, LLM review, retrieved project context."
+          },
+          "status": "ok",
+          "values": {
+            "bleu4": 2.136452614092941,
+            "rouge_l": 6.9089881002321425,
+            "chrf": 13.595372077342079,
+            "coverage": 0.7777777777777778
+          },
+          "sd": {},
+          "spread": {},
+          "na": {},
+          "n": 36,
+          "n_failed": 4,
+          "n_runs": 1,
+          "model": "qwen/qwen3.8-27b",
+          "run_ids": [
+            "20261005T120433Z_codereviewer_msg_test_full_n40"
+          ],
+          "notes": [],
+          "how_to_run": null
+        }
+      ],
+      "conditions": {
+        "dataset": "CodeReviewer, test split, Python only",
+        "requested samples": 40,
+        "samples in every row": 36,
+        "sampling seed": 42,
+        "limit": 40,
+        "comment": "top finding's title + recommendation",
+        "scale": "BLEU-4, ROUGE-L, chrF: 0-100; coverage: 0-1"
+      },
+      "fairness": [
+        {
+          "name": "Same samples",
+          "ok": true,
+          "detail": "36 samples evaluated by every configuration (40 requested; reference run 20261005T120433Z_codereviewer_msg_test_full_n40)"
+        },
+        {
+          "name": "Same LLM model",
+          "ok": true,
+          "detail": "qwen/qwen3.8-27b"
+        },
+        {
+          "name": "Same temperature",
+          "ok": true,
+          "detail": "0.0"
+        },
+        {
+          "name": "Same prompt versions",
+          "ok": null,
+          "detail": "prompt versions not recorded"
+        },
+        {
+          "name": "Same confidence threshold",
+          "ok": true,
+          "detail": "0.3"
+        },
+        {
+          "name": "Same evaluation rules",
+          "ok": true,
+          "detail": "{'comment': 'top-ranked finding: title + recommendation (variant title_fix)', 'text_metric_scale': 'BLEU-4, ROUGE-L, chrF in 0-100; coverage in 0-1'} (1 run(s) did not record it)"
+        },
+        {
+          "name": "Run together (one ablation group)",
+          "ok": false,
+          "detail": "separate runs"
+        }
+      ],
+      "observations": [],
+      "notes": [
+        "Run all four on one sample set: python -m marl_agents.cli eval ablation --benchmark codereviewer --task msg --limit 40 --seed 42 --configurations static_only,llm_only,static_llm,static_llm_rag --config configs/gemini.yaml",
+        "n = 36: differences of a few points are within sampling noise (see the bootstrap CIs in each run's summary)."
+      ],
+      "supplementary": false,
+      "show_counts": true
+    },
+    {
+      "id": "codereviewer_msg_full",
+      "section": "3. Review comment generation",
+      "title": "Static Only on the full Python test split (n = 1403)",
+      "about": "Static analysis is cheap enough to run on every sample; LLM configurations are limited by API quota, so they are compared on the subset above.",
+      "columns": [
+        {
+          "key": "bleu4",
+          "label": "BLEU-4",
+          "metric": "bleu4",
+          "group": null,
+          "digits": 2
+        },
+        {
+          "key": "rouge_l",
+          "label": "ROUGE-L",
+          "metric": "rouge_l",
+          "group": null,
+          "digits": 2
+        },
+        {
+          "key": "chrf",
+          "label": "chrF",
+          "metric": "chrf",
+          "group": null,
+          "digits": 2
+        },
+        {
+          "key": "coverage",
+          "label": "Coverage",
+          "metric": "coverage",
+          "group": null,
+          "digits": 3
+        }
+      ],
+      "rows": [
+        {
+          "label": "Static Only",
+          "configuration": {
+            "key": "static_only",
+            "letter": "A",
+            "label": "Static Only",
+            "static": true,
+            "llm": false,
+            "rag": false,
+            "mode": "static_only",
+            "description": "Ruff, Radon, AST checks, secrets, test gaps (and mypy when enabled)."
+          },
+          "status": "ok",
+          "values": {
+            "bleu4": 1.1768468424823648,
+            "rouge_l": 3.0278243628652683,
+            "chrf": 4.832477795605831,
+            "coverage": 0.28082679971489666
+          },
+          "sd": {},
+          "spread": {},
+          "na": {},
+          "n": 1403,
+          "n_failed": 0,
+          "n_runs": 1,
+          "model": null,
+          "run_ids": [
+            "20261012T163624Z_codereviewer_msg_test_static_only_n1403"
+          ],
+          "notes": [],
+          "how_to_run": null
+        }
+      ],
+      "conditions": {
+        "dataset": "CodeReviewer, test split, Python only (all samples)"
+      },
+      "fairness": [],
+      "observations": [],
+      "notes": [],
+      "supplementary": false,
+      "show_counts": true
+    },
+    {
+      "id": "retrieval",
+      "section": "4. RAG retrieval",
+      "title": "RAG retrieval vs random retrieval",
+      "about": "Self-supervised from the AST call graph: for each function, the relevant chunks are those containing the functions it calls; the query is the function's own chunk.",
+      "columns": [
+        {
+          "key": "recall_at_10",
+          "label": "Recall@10",
+          "metric": "recall_at_10",
+          "group": null,
+          "digits": 3
+        },
+        {
+          "key": "mrr",
+          "label": "MRR",
+          "metric": "mrr",
+          "group": null,
+          "digits": 3
+        }
+      ],
+      "rows": [
+        {
+          "label": "Random baseline",
+          "configuration": null,
+          "status": "ok",
+          "values": {
+            "recall_at_10": 0.0118,
+            "mrr": 0.0198
+          },
+          "sd": {},
+          "spread": {},
+          "na": {},
+          "n": 381,
+          "n_failed": null,
+          "n_runs": 1,
+          "model": null,
+          "run_ids": [
+            "20261012T163120Z_retrieval_src"
+          ],
+          "notes": [],
+          "how_to_run": null
+        },
+        {
+          "label": "RAG (hashing embedder)",
+          "configuration": null,
+          "status": "ok",
+          "values": {
+            "recall_at_10": 0.3648,
+            "mrr": 0.3121
+          },
+          "sd": {},
+          "spread": {},
+          "na": {},
+          "n": 381,
+          "n_failed": null,
+          "n_runs": 1,
+          "model": null,
+          "run_ids": [
+            "20261012T163120Z_retrieval_src"
+          ],
+          "notes": [],
+          "how_to_run": null
+        }
+      ],
+      "conditions": {
+        "repository": "src",
+        "queries": 381,
+        "chunks": 665,
+        "cut-offs evaluated (k)": [
+          1,
+          3,
+          5,
+          10
+        ],
+        "embedding model": "hashing",
+        "review-time retrieval": "top_k = 6 similar chunks + guideline_k = 2 guideline chunks per review unit",
+        "random seed": 42
+      },
+      "fairness": [],
+      "observations": [
+        "RAG (hashing) has a higher Recall@10 than random (0.365 vs 0.012)."
+      ],
+      "notes": [
+        "Retrieval is measured on its own; its effect on review quality is configuration C vs D in the detection tables.",
+        "Other cut-offs (Recall@1/3/5, Hit@k, nDCG@10) are in run 20261012T163120Z_retrieval_src."
+      ],
+      "supplementary": false,
+      "show_counts": true
+    },
+    {
+      "id": "risk",
+      "section": "5. Risk ranking",
+      "title": "Risk-based hunk ranking vs baselines",
+      "about": "CodeReviewer cls hunks (test split, Python): does ranking by risk put the hunks a human commented on first?",
+      "columns": [
+        {
+          "key": "roc_auc",
+          "label": "ROC-AUC",
+          "metric": "roc_auc",
+          "group": null,
+          "digits": 3
+        },
+        {
+          "key": "precision_at_top10",
+          "label": "Precision@Top10%",
+          "metric": "precision_at_top10",
+          "group": null,
+          "digits": 3
+        }
+      ],
+      "rows": [
+        {
+          "label": "Random (expected value)",
+          "configuration": null,
+          "status": "ok",
+          "values": {
+            "roc_auc": 0.5,
+            "precision_at_top10": 0.4845
+          },
+          "sd": {},
+          "spread": {},
+          "na": {},
+          "n": 4194,
+          "n_failed": null,
+          "n_runs": 1,
+          "model": null,
+          "run_ids": [
+            "20261012T163944Z_hunkrisk_cls_test_n4196"
+          ],
+          "notes": [
+            "exact expectation of a random order: precision = base rate, AUC = 0.5"
+          ],
+          "how_to_run": null
+        },
+        {
+          "label": "Size only (changed lines)",
+          "configuration": null,
+          "status": "ok",
+          "values": {
+            "roc_auc": 0.6510378349734498,
+            "precision_at_top10": 0.7923627684964201
+          },
+          "sd": {},
+          "spread": {},
+          "na": {},
+          "n": 4194,
+          "n_failed": null,
+          "n_runs": 1,
+          "model": null,
+          "run_ids": [
+            "20261012T163944Z_hunkrisk_cls_test_n4196"
+          ],
+          "notes": [],
+          "how_to_run": null
+        },
+        {
+          "label": "Finding score only (static findings)",
+          "configuration": null,
+          "status": "ok",
+          "values": {
+            "roc_auc": 0.4073945002075943,
+            "precision_at_top10": 0.2243436754176611
+          },
+          "sd": {},
+          "spread": {},
+          "na": {},
+          "n": 4194,
+          "n_failed": null,
+          "n_runs": 1,
+          "model": null,
+          "run_ids": [
+            "20261012T163944Z_hunkrisk_cls_test_n4196"
+          ],
+          "notes": [],
+          "how_to_run": null
+        },
+        {
+          "label": "Risk v1 (hand-set points)",
+          "configuration": null,
+          "status": "ok",
+          "values": {
+            "roc_auc": 0.43123006002024955,
+            "precision_at_top10": 0.3054892601431981
+          },
+          "sd": {},
+          "spread": {},
+          "na": {},
+          "n": 4194,
+          "n_failed": null,
+          "n_runs": 1,
+          "model": null,
+          "run_ids": [
+            "20261012T163944Z_hunkrisk_cls_test_n4196"
+          ],
+          "notes": [],
+          "how_to_run": null
+        },
+        {
+          "label": "Risk model v2 (calibrated, shipped)",
+          "configuration": null,
+          "status": "ok",
+          "values": {
+            "roc_auc": 0.6439879367675017,
+            "precision_at_top10": 0.7326968973747017
+          },
+          "sd": {},
+          "spread": {},
+          "na": {},
+          "n": 4194,
+          "n_failed": null,
+          "n_runs": 1,
+          "model": null,
+          "run_ids": [
+            "20261012T163944Z_hunkrisk_cls_test_n4196"
+          ],
+          "notes": [],
+          "how_to_run": null
+        }
+      ],
+      "conditions": {
+        "hunks": 4194,
+        "failed": 2,
+        "commented base rate": 0.4845,
+        "commented if level high": 0.7378,
+        "commented if level low": 0.4623,
+        "configuration": "static analysis only (the ranking must be cheap enough for every change)"
+      },
+      "fairness": [],
+      "observations": [
+        "Size only has a higher ROC-AUC than Risk model v2 (0.651 vs 0.644).",
+        "Size only has a higher Precision@Top10% than Risk model v2 (0.792 vs 0.733)."
+      ],
+      "notes": [
+        "v2 weights were fitted on the validation split; the test split was used once."
+      ],
+      "supplementary": false,
+      "show_counts": true
+    },
+    {
+      "id": "timing_planted_repo",
+      "section": "6. Efficiency",
+      "title": "Time per review: planted_repo (median of 3 runs, seconds)",
+      "about": "Fixed input, interleaved repeats, concurrency 1, fresh vector store per run, one untimed warm-up; incomplete runs excluded.",
+      "columns": [
+        {
+          "key": "total_sec",
+          "label": "Total",
+          "metric": "seconds",
+          "group": null,
+          "digits": 2
+        },
+        {
+          "key": "static_analysis_sec",
+          "label": "Static",
+          "metric": "seconds",
+          "group": null,
+          "digits": 2
+        },
+        {
+          "key": "rag_sec",
+          "label": "RAG",
+          "metric": "seconds",
+          "group": null,
+          "digits": 2
+        },
+        {
+          "key": "llm_inference_sec",
+          "label": "LLM",
+          "metric": "seconds",
+          "group": null,
+          "digits": 2
+        },
+        {
+          "key": "validation_sec",
+          "label": "Validation",
+          "metric": "seconds",
+          "group": null,
+          "digits": 3
+        },
+        {
+          "key": "report_generation_sec",
+          "label": "Reports",
+          "metric": "seconds",
+          "group": null,
+          "digits": 2
+        },
+        {
+          "key": "other_sec",
+          "label": "Other",
+          "metric": "seconds",
+          "group": null,
+          "digits": 2
+        },
+        {
+          "key": "active_sec",
+          "label": "Active (total - quota wait)",
+          "metric": "seconds",
+          "group": null,
+          "digits": 2
+        }
+      ],
+      "rows": [
+        {
+          "label": "Static Only",
+          "configuration": {
+            "key": "static_only",
+            "letter": "A",
+            "label": "Static Only",
+            "static": true,
+            "llm": false,
+            "rag": false,
+            "mode": "static_only",
+            "description": "Ruff, Radon, AST checks, secrets, test gaps (and mypy when enabled)."
+          },
+          "status": "ok",
+          "values": {
+            "total_sec": 6.1008,
+            "static_analysis_sec": 5.9882,
+            "rag_sec": 0.0,
+            "llm_inference_sec": 0.0,
+            "validation_sec": 0.0015,
+            "report_generation_sec": 0.0952,
+            "other_sec": 0.0159,
+            "active_sec": 6.1008
+          },
+          "sd": {},
+          "spread": {
+            "total_sec": [
+              5.2399,
+              6.5104
+            ],
+            "static_analysis_sec": [
+              5.1434,
+              6.3527
+            ],
+            "rag_sec": [
+              0.0,
+              0.0
+            ],
+            "llm_inference_sec": [
+              0.0,
+              0.0
+            ],
+            "validation_sec": [
+              0.0015,
+              0.0024
+            ],
+            "report_generation_sec": [
+              0.0792,
+              0.138
+            ],
+            "other_sec": [
+              0.0158,
+              0.0173
+            ],
+            "active_sec": [
+              5.2399,
+              6.5104
+            ]
+          },
+          "na": {},
+          "n": 3,
+          "n_failed": 0,
+          "n_runs": 3,
+          "model": null,
+          "run_ids": [
+            "20261012T090910Z_timing_r3"
+          ],
+          "notes": [],
+          "how_to_run": null
+        },
+        {
+          "label": "LLM Only",
+          "configuration": {
+            "key": "llm_only",
+            "letter": "B",
+            "label": "LLM Only",
+            "static": false,
+            "llm": true,
+            "rag": false,
+            "mode": "llm_only",
+            "description": "The LLM reviews the code alone: no static findings, no project context."
+          },
+          "status": "not_run",
+          "values": {},
+          "sd": {},
+          "spread": {},
+          "na": {
+            "*": "not included in the latest timing run"
+          },
+          "n": null,
+          "n_failed": null,
+          "n_runs": 0,
+          "model": null,
+          "run_ids": [],
+          "notes": [],
+          "how_to_run": "python -m marl_agents.cli eval timing --repeats 3 --config configs/gemini.yaml"
+        },
+        {
+          "label": "Static + LLM",
+          "configuration": {
+            "key": "static_llm",
+            "letter": "C",
+            "label": "Static + LLM",
+            "static": true,
+            "llm": true,
+            "rag": false,
+            "mode": "full",
+            "description": "Static findings plus LLM review and triage, without project context."
+          },
+          "status": "ok",
+          "values": {
+            "total_sec": 186.7459,
+            "static_analysis_sec": 5.022,
+            "rag_sec": 0.0,
+            "llm_inference_sec": 18.4973,
+            "validation_sec": 0.004,
+            "report_generation_sec": 0.1084,
+            "other_sec": 164.7978,
+            "active_sec": 24.9189
+          },
+          "sd": {},
+          "spread": {
+            "total_sec": [
+              186.5617,
+              188.1218
+            ],
+            "static_analysis_sec": [
+              4.7174,
+              5.4231
+            ],
+            "rag_sec": [
+              0.0,
+              0.0
+            ],
+            "llm_inference_sec": [
+              14.9961,
+              19.7673
+            ],
+            "validation_sec": [
+              0.0038,
+              0.004
+            ],
+            "report_generation_sec": [
+              0.1055,
+              0.1264
+            ],
+            "other_sec": [
+              161.8442,
+              166.0121
+            ],
+            "active_sec": [
+              23.3408,
+              26.5137
+            ]
+          },
+          "na": {},
+          "n": 3,
+          "n_failed": 0,
+          "n_runs": 3,
+          "model": "openai/gpt-oss-120b",
+          "run_ids": [
+            "20261012T090910Z_timing_r3"
+          ],
+          "notes": [],
+          "how_to_run": null
+        },
+        {
+          "label": "Static + LLM + RAG",
+          "configuration": {
+            "key": "static_llm_rag",
+            "letter": "D",
+            "label": "Static + LLM + RAG",
+            "static": true,
+            "llm": true,
+            "rag": true,
+            "mode": "full",
+            "description": "The full agent: static analysis, LLM review, retrieved project context."
+          },
+          "status": "ok",
+          "values": {
+            "total_sec": 228.3393,
+            "static_analysis_sec": 5.5277,
+            "rag_sec": 0.3113,
+            "llm_inference_sec": 18.531,
+            "validation_sec": 0.0053,
+            "report_generation_sec": 0.1071,
+            "other_sec": 204.5307,
+            "active_sec": 24.855
+          },
+          "sd": {},
+          "spread": {
+            "total_sec": [
+              188.637,
+              305.4874
+            ],
+            "static_analysis_sec": [
+              4.8352,
+              5.6431
+            ],
+            "rag_sec": [
+              0.2175,
+              0.3369
+            ],
+            "llm_inference_sec": [
+              17.8575,
+              25.5637
+            ],
+            "validation_sec": [
+              0.005,
+              0.0083
+            ],
+            "report_generation_sec": [
+              0.1069,
+              0.1318
+            ],
+            "other_sec": [
+              163.9859,
+              274.7588
+            ],
+            "active_sec": [
+              23.9033,
+              37.5674
+            ]
+          },
+          "na": {},
+          "n": 3,
+          "n_failed": 0,
+          "n_runs": 3,
+          "model": "openai/gpt-oss-120b",
+          "run_ids": [
+            "20261012T090910Z_timing_r3"
+          ],
+          "notes": [],
+          "how_to_run": null
+        }
+      ],
+      "conditions": {
+        "input": "planted_repo",
+        "files": 8,
+        "lines reviewed": 146,
+        "LLM review units": 4,
+        "provider / model": "groq / openai/gpt-oss-120b",
+        "repeats": 3,
+        "hardware": "AMD64 Family 25 Model 80 Stepping 0, AuthenticAMD"
+      },
+      "fairness": [],
+      "observations": [
+        "RAG overhead -0.3% (median active time 24.92s without -> 24.86s with RAG); RAG's own cost 0.31s."
+      ],
+      "notes": [
+        "Timing statistics (mean, median, min, max) per component are in run 20261012T090910Z_timing_r3; the table shows the median, ranges on hover."
+      ],
+      "supplementary": false,
+      "show_counts": true
+    },
+    {
+      "id": "timing_order_service_file",
+      "section": "6. Efficiency",
+      "title": "Time per review: order_service_file (median of 3 runs, seconds)",
+      "about": "Fixed input, interleaved repeats, concurrency 1, fresh vector store per run, one untimed warm-up; incomplete runs excluded.",
+      "columns": [
+        {
+          "key": "total_sec",
+          "label": "Total",
+          "metric": "seconds",
+          "group": null,
+          "digits": 2
+        },
+        {
+          "key": "static_analysis_sec",
+          "label": "Static",
+          "metric": "seconds",
+          "group": null,
+          "digits": 2
+        },
+        {
+          "key": "rag_sec",
+          "label": "RAG",
+          "metric": "seconds",
+          "group": null,
+          "digits": 2
+        },
+        {
+          "key": "llm_inference_sec",
+          "label": "LLM",
+          "metric": "seconds",
+          "group": null,
+          "digits": 2
+        },
+        {
+          "key": "validation_sec",
+          "label": "Validation",
+          "metric": "seconds",
+          "group": null,
+          "digits": 3
+        },
+        {
+          "key": "report_generation_sec",
+          "label": "Reports",
+          "metric": "seconds",
+          "group": null,
+          "digits": 2
+        },
+        {
+          "key": "other_sec",
+          "label": "Other",
+          "metric": "seconds",
+          "group": null,
+          "digits": 2
+        },
+        {
+          "key": "active_sec",
+          "label": "Active (total - quota wait)",
+          "metric": "seconds",
+          "group": null,
+          "digits": 2
+        }
+      ],
+      "rows": [
+        {
+          "label": "Static Only",
+          "configuration": {
+            "key": "static_only",
+            "letter": "A",
+            "label": "Static Only",
+            "static": true,
+            "llm": false,
+            "rag": false,
+            "mode": "static_only",
+            "description": "Ruff, Radon, AST checks, secrets, test gaps (and mypy when enabled)."
+          },
+          "status": "ok",
+          "values": {
+            "total_sec": 5.4901,
+            "static_analysis_sec": 5.4256,
+            "rag_sec": 0.0,
+            "llm_inference_sec": 0.0,
+            "validation_sec": 0.0009,
+            "report_generation_sec": 0.053,
+            "other_sec": 0.0106,
+            "active_sec": 5.4901
+          },
+          "sd": {},
+          "spread": {
+            "total_sec": [
+              5.37,
+              6.292
+            ],
+            "static_analysis_sec": [
+              5.3069,
+              6.2121
+            ],
+            "rag_sec": [
+              0.0,
+              0.0
+            ],
+            "llm_inference_sec": [
+              0.0,
+              0.0
+            ],
+            "validation_sec": [
+              0.0009,
+              0.001
+            ],
+            "report_generation_sec": [
+              0.0524,
+              0.0653
+            ],
+            "other_sec": [
+              0.0098,
+              0.0136
+            ],
+            "active_sec": [
+              5.37,
+              6.292
+            ]
+          },
+          "na": {},
+          "n": 3,
+          "n_failed": 0,
+          "n_runs": 3,
+          "model": null,
+          "run_ids": [
+            "20261012T090910Z_timing_r3"
+          ],
+          "notes": [],
+          "how_to_run": null
+        },
+        {
+          "label": "LLM Only",
+          "configuration": {
+            "key": "llm_only",
+            "letter": "B",
+            "label": "LLM Only",
+            "static": false,
+            "llm": true,
+            "rag": false,
+            "mode": "llm_only",
+            "description": "The LLM reviews the code alone: no static findings, no project context."
+          },
+          "status": "not_run",
+          "values": {},
+          "sd": {},
+          "spread": {},
+          "na": {
+            "*": "not included in the latest timing run"
+          },
+          "n": null,
+          "n_failed": null,
+          "n_runs": 0,
+          "model": null,
+          "run_ids": [],
+          "notes": [],
+          "how_to_run": "python -m marl_agents.cli eval timing --repeats 3 --config configs/gemini.yaml"
+        },
+        {
+          "label": "Static + LLM",
+          "configuration": {
+            "key": "static_llm",
+            "letter": "C",
+            "label": "Static + LLM",
+            "static": true,
+            "llm": true,
+            "rag": false,
+            "mode": "full",
+            "description": "Static findings plus LLM review and triage, without project context."
+          },
+          "status": "ok",
+          "values": {
+            "total_sec": 60.6484,
+            "static_analysis_sec": 5.3679,
+            "rag_sec": 0.0,
+            "llm_inference_sec": 5.9235,
+            "validation_sec": 0.0019,
+            "report_generation_sec": 0.0615,
+            "other_sec": 49.2935,
+            "active_sec": 11.3668
+          },
+          "sd": {},
+          "spread": {
+            "total_sec": [
+              60.218,
+              61.0787
+            ],
+            "static_analysis_sec": [
+              5.1095,
+              5.6263
+            ],
+            "rag_sec": [
+              0.0,
+              0.0
+            ],
+            "llm_inference_sec": [
+              5.9219,
+              5.9251
+            ],
+            "validation_sec": [
+              0.0019,
+              0.002
+            ],
+            "report_generation_sec": [
+              0.0589,
+              0.0641
+            ],
+            "other_sec": [
+              48.6058,
+              49.9812
+            ],
+            "active_sec": [
+              11.1097,
+              11.624
+            ]
+          },
+          "na": {},
+          "n": 2,
+          "n_failed": 1,
+          "n_runs": 2,
+          "model": "openai/gpt-oss-120b",
+          "run_ids": [
+            "20261012T090910Z_timing_r3"
+          ],
+          "notes": [],
+          "how_to_run": null
+        },
+        {
+          "label": "Static + LLM + RAG",
+          "configuration": {
+            "key": "static_llm_rag",
+            "letter": "D",
+            "label": "Static + LLM + RAG",
+            "static": true,
+            "llm": true,
+            "rag": true,
+            "mode": "full",
+            "description": "The full agent: static analysis, LLM review, retrieved project context."
+          },
+          "status": "ok",
+          "values": {
+            "total_sec": 121.3538,
+            "static_analysis_sec": 5.2239,
+            "rag_sec": 0.1636,
+            "llm_inference_sec": 9.8899,
+            "validation_sec": 0.0017,
+            "report_generation_sec": 0.0582,
+            "other_sec": 105.2523,
+            "active_sec": 21.8698
+          },
+          "sd": {},
+          "spread": {
+            "total_sec": [
+              10.3627,
+              136.9341
+            ],
+            "static_analysis_sec": [
+              5.2176,
+              5.8744
+            ],
+            "rag_sec": [
+              0.162,
+              0.2277
+            ],
+            "llm_inference_sec": [
+              4.851,
+              12.1376
+            ],
+            "validation_sec": [
+              0.0015,
+              0.0067
+            ],
+            "report_generation_sec": [
+              0.0558,
+              0.1028
+            ],
+            "other_sec": [
+              0.0732,
+              119.3507
+            ],
+            "active_sec": [
+              10.3627,
+              23.4831
+            ]
+          },
+          "na": {},
+          "n": 3,
+          "n_failed": 0,
+          "n_runs": 3,
+          "model": "openai/gpt-oss-120b",
+          "run_ids": [
+            "20261012T090910Z_timing_r3"
+          ],
+          "notes": [],
+          "how_to_run": null
+        }
+      ],
+      "conditions": {
+        "input": "order_service_file",
+        "files": 1,
+        "lines reviewed": 114,
+        "LLM review units": 1,
+        "provider / model": "groq / openai/gpt-oss-120b",
+        "repeats": 3,
+        "hardware": "AMD64 Family 25 Model 80 Stepping 0, AuthenticAMD"
+      },
+      "fairness": [],
+      "observations": [
+        "RAG overhead +92.4% (median active time 11.37s without -> 21.87s with RAG); RAG's own cost 0.16s.",
+        "Median LLM JSON retries differ (0 without vs 1 with RAG): a retry repeats the whole LLM call, so retries, not retrieval, explain most of this overhead."
+      ],
+      "notes": [
+        "Timing statistics (mean, median, min, max) per component are in run 20261012T090910Z_timing_r3; the table shows the median, ranges on hover."
+      ],
+      "supplementary": false,
+      "show_counts": true
+    },
+    {
+      "id": "timing_planted_runs",
+      "section": "6. Efficiency",
+      "title": "Time per review in the planted-benchmark runs (seconds)",
+      "about": "The same repository reviewed under each configuration (the runs in section 1). One measurement per run; repeated runs show the mean.",
+      "columns": [
+        {
+          "key": "total_sec",
+          "label": "Total",
+          "metric": "seconds",
+          "group": null,
+          "digits": 2
+        },
+        {
+          "key": "static_analysis_sec",
+          "label": "Static",
+          "metric": "seconds",
+          "group": null,
+          "digits": 2
+        },
+        {
+          "key": "rag_sec",
+          "label": "RAG",
+          "metric": "seconds",
+          "group": null,
+          "digits": 2
+        },
+        {
+          "key": "llm_inference_sec",
+          "label": "LLM",
+          "metric": "seconds",
+          "group": null,
+          "digits": 2
+        },
+        {
+          "key": "validation_sec",
+          "label": "Validation",
+          "metric": "seconds",
+          "group": null,
+          "digits": 3
+        },
+        {
+          "key": "report_generation_sec",
+          "label": "Reports",
+          "metric": "seconds",
+          "group": null,
+          "digits": 2
+        },
+        {
+          "key": "other_sec",
+          "label": "Other",
+          "metric": "seconds",
+          "group": null,
+          "digits": 2
+        },
+        {
+          "key": "active_sec",
+          "label": "Active (total - quota wait)",
+          "metric": "seconds",
+          "group": null,
+          "digits": 2
+        }
+      ],
+      "rows": [
+        {
+          "label": "Static Only",
+          "configuration": {
+            "key": "static_only",
+            "letter": "A",
+            "label": "Static Only",
+            "static": true,
+            "llm": false,
+            "rag": false,
+            "mode": "static_only",
+            "description": "Ruff, Radon, AST checks, secrets, test gaps (and mypy when enabled)."
+          },
+          "status": "ok",
+          "values": {
+            "total_sec": 5.6201,
+            "static_analysis_sec": 5.6026,
+            "rag_sec": 0.0,
+            "llm_inference_sec": 0.0,
+            "validation_sec": 0.0014,
+            "report_generation_sec": null,
+            "other_sec": 0.0161,
+            "active_sec": 5.6201
+          },
+          "sd": {},
+          "spread": {},
+          "na": {
+            "report_generation_sec": "benchmark runs do not write reports"
+          },
+          "n": null,
+          "n_failed": null,
+          "n_runs": 1,
+          "model": null,
+          "run_ids": [
+            "20261012T161020Z_planted_static_only"
+          ],
+          "notes": [],
+          "how_to_run": null
+        },
+        {
+          "label": "LLM Only",
+          "configuration": {
+            "key": "llm_only",
+            "letter": "B",
+            "label": "LLM Only",
+            "static": false,
+            "llm": true,
+            "rag": false,
+            "mode": "llm_only",
+            "description": "The LLM reviews the code alone: no static findings, no project context."
+          },
+          "status": "ok",
+          "values": {
+            "total_sec": 67.6124,
+            "static_analysis_sec": 0.0,
+            "rag_sec": 0.0,
+            "llm_inference_sec": 15.9796,
+            "validation_sec": 0.003,
+            "report_generation_sec": null,
+            "other_sec": 51.6298,
+            "active_sec": 16.003399999999992
+          },
+          "sd": {},
+          "spread": {},
+          "na": {
+            "report_generation_sec": "benchmark runs do not write reports"
+          },
+          "n": null,
+          "n_failed": null,
+          "n_runs": 1,
+          "model": "openai/gpt-oss-120b",
+          "run_ids": [
+            "20261012T161026Z_planted_llm_only"
+          ],
+          "notes": [],
+          "how_to_run": null
+        },
+        {
+          "label": "Static + LLM",
+          "configuration": {
+            "key": "static_llm",
+            "letter": "C",
+            "label": "Static + LLM",
+            "static": true,
+            "llm": true,
+            "rag": false,
+            "mode": "full",
+            "description": "Static findings plus LLM review and triage, without project context."
+          },
+          "status": "ok",
+          "values": {
+            "total_sec": 180.8798,
+            "static_analysis_sec": 5.8751,
+            "rag_sec": 0.0,
+            "llm_inference_sec": 16.7972,
+            "validation_sec": 0.0031,
+            "report_generation_sec": null,
+            "other_sec": 158.2044,
+            "active_sec": 22.69379999999998
+          },
+          "sd": {},
+          "spread": {},
+          "na": {
+            "report_generation_sec": "benchmark runs do not write reports"
+          },
+          "n": null,
+          "n_failed": null,
+          "n_runs": 1,
+          "model": "openai/gpt-oss-120b",
+          "run_ids": [
+            "20261012T161133Z_planted_static_llm"
+          ],
+          "notes": [],
+          "how_to_run": null
+        },
+        {
+          "label": "Static + LLM + RAG",
+          "configuration": {
+            "key": "static_llm_rag",
+            "letter": "D",
+            "label": "Static + LLM + RAG",
+            "static": true,
+            "llm": true,
+            "rag": true,
+            "mode": "full",
+            "description": "The full agent: static analysis, LLM review, retrieved project context."
+          },
+          "status": "ok",
+          "values": {
+            "total_sec": 190.3066,
+            "static_analysis_sec": 5.2722,
+            "rag_sec": 0.1756,
+            "llm_inference_sec": 19.5181,
+            "validation_sec": 0.0045,
+            "report_generation_sec": null,
+            "other_sec": 165.3363,
+            "active_sec": 26.526600000000002
+          },
+          "sd": {},
+          "spread": {},
+          "na": {
+            "report_generation_sec": "benchmark runs do not write reports"
+          },
+          "n": null,
+          "n_failed": null,
+          "n_runs": 1,
+          "model": "openai/gpt-oss-120b",
+          "run_ids": [
+            "20261012T161434Z_planted_static_llm_rag"
+          ],
+          "notes": [],
+          "how_to_run": null
+        }
+      ],
+      "conditions": {
+        "input": "planted fixture repository (8 files, 6 Python)"
+      },
+      "fairness": [
+        {
+          "name": "Same input",
+          "ok": true,
+          "detail": "planted fixture repository for every row"
+        }
+      ],
+      "observations": [
+        "RAG overhead +16.9% on active time (n = 1 run(s) per configuration; a single run is noisy, the timing benchmark is the fair measure).",
+        "Of that difference, retrieval itself took 0.18s; LLM inference took +2.72s more with RAG (longer prompts carrying the context)."
+      ],
+      "notes": [],
+      "supplementary": false,
+      "show_counts": true
+    },
+    {
+      "id": "usefulness",
+      "section": "Supplementary",
+      "title": "Supplementary comment usefulness evaluation (LLM judge)",
+      "about": "Blind, reference-free 1-5 ratings of the agent's and the human's comment on the same diff. Supplementary only: not a primary result.",
+      "columns": [
+        {
+          "key": "relevance",
+          "label": "Relevance (1-5)",
+          "metric": "rating",
+          "group": null,
+          "digits": 2
+        },
+        {
+          "key": "informativeness",
+          "label": "Informativeness (1-5)",
+          "metric": "rating",
+          "group": null,
+          "digits": 2
+        }
+      ],
+      "rows": [
+        {
+          "label": "Agent comment",
+          "configuration": null,
+          "status": "ok",
+          "values": {
+            "relevance": 4.714,
+            "informativeness": 4.643
+          },
+          "sd": {},
+          "spread": {},
+          "na": {},
+          "n": 64,
+          "n_failed": null,
+          "n_runs": 1,
+          "model": null,
+          "run_ids": [
+            "20261005T154602Z_usefulness_codereviewer_msg_test_full_n40"
+          ],
+          "notes": [],
+          "how_to_run": null
+        },
+        {
+          "label": "Human reviewer comment",
+          "configuration": null,
+          "status": "ok",
+          "values": {
+            "relevance": 3.667,
+            "informativeness": 3.0
+          },
+          "sd": {},
+          "spread": {},
+          "na": {},
+          "n": 64,
+          "n_failed": null,
+          "n_runs": 1,
+          "model": null,
+          "run_ids": [
+            "20261005T154602Z_usefulness_codereviewer_msg_test_full_n40"
+          ],
+          "notes": [],
+          "how_to_run": null
+        }
+      ],
+      "conditions": {
+        "judge model": "openai/gpt-oss-20b",
+        "reviewer model": "qwen/qwen3.8-27b",
+        "source run": "20261005T120433Z_codereviewer_msg_test_full_n40",
+        "comments judged": 64
+      },
+      "fairness": [],
+      "observations": [],
+      "notes": [
+        "Limitations: a single LLM judge (possible self-preference and verbosity bias); small sample; the agent's comments are longer than human ones, which judges tend to reward; judge-human agreement must be measured with the human rating kit before citing."
+      ],
+      "supplementary": true,
+      "show_counts": true
+    }
+  ],
+  "definitions": [
+    {
+      "key": "precision",
+      "name": "Precision",
+      "definition": "TP / (TP + FP)",
+      "scale": "0-1",
+      "higher_is_better": true
+    },
+    {
+      "key": "recall",
+      "name": "Recall",
+      "definition": "TP / (TP + FN)",
+      "scale": "0-1",
+      "higher_is_better": true
+    },
+    {
+      "key": "f1",
+      "name": "F1",
+      "definition": "2 x Precision x Recall / (Precision + Recall)",
+      "scale": "0-1",
+      "higher_is_better": true
+    },
+    {
+      "key": "roc_auc",
+      "name": "ROC-AUC",
+      "definition": "Probability that a randomly chosen positive case is scored above a randomly chosen negative one (Mann-Whitney U; ties count 1/2): ranking quality across all thresholds. 0.5 = chance.",
+      "scale": "0-1",
+      "higher_is_better": true
+    },
+    {
+      "key": "accuracy",
+      "name": "Accuracy",
+      "definition": "(TP + TN) / N",
+      "scale": "0-1",
+      "higher_is_better": true
+    },
+    {
+      "key": "bleu4",
+      "name": "BLEU-4",
+      "definition": "Smoothed sentence BLEU-4 (Lin & Och 2004 +1 smoothing for n >= 2), averaged over samples, x100 (CodeReviewer convention).",
+      "scale": "0-100",
+      "higher_is_better": true
+    },
+    {
+      "key": "rouge_l",
+      "name": "ROUGE-L",
+      "definition": "Longest-common-subsequence F1 of word tokens, averaged over samples, x100.",
+      "scale": "0-100",
+      "higher_is_better": true
+    },
+    {
+      "key": "chrf",
+      "name": "chrF",
+      "definition": "Character 1-6-gram F-score (beta = 2, Popovic 2015), averaged over samples, x100.",
+      "scale": "0-100",
+      "higher_is_better": true
+    },
+    {
+      "key": "coverage",
+      "name": "Coverage",
+      "definition": "Share of diffs for which the agent produced a comment.",
+      "scale": "0-1",
+      "higher_is_better": true
+    },
+    {
+      "key": "recall_at_10",
+      "name": "Recall@10",
+      "definition": "Share of a query's relevant chunks (its callees in the AST call graph) found in the top 10 retrieved; averaged over queries.",
+      "scale": "0-1",
+      "higher_is_better": true
+    },
+    {
+      "key": "mrr",
+      "name": "MRR",
+      "definition": "Mean over queries of 1 / rank of the first relevant chunk.",
+      "scale": "0-1",
+      "higher_is_better": true
+    },
+    {
+      "key": "precision_at_top10",
+      "name": "Precision@Top10%",
+      "definition": "Of the 10% of hunks ranked riskiest, the share a human reviewer commented on.",
+      "scale": "0-1",
+      "higher_is_better": true
+    },
+    {
+      "key": "seconds",
+      "name": "Time",
+      "definition": "Wall-clock seconds measured with time.perf_counter().",
+      "scale": "seconds",
+      "higher_is_better": false
+    },
+    {
+      "key": "rating",
+      "name": "Rating",
+      "definition": "Mean 1-5 rating by the LLM judge (supplementary).",
+      "scale": "1-5",
+      "higher_is_better": true
+    }
+  ],
+  "scope": [
+    "Agent-level benchmark evaluation of the Code Review Agent on its own. These numbers are not system-level results of the five-agent platform (SWE-bench Lite resolve rate), which is not built yet.",
+    "Configuration D (Static + LLM + RAG) is the shipped Code Review Agent; A-C are ablations that switch one component off.",
+    "Every value comes from a saved run in experiments/results/ (run ids are listed per row). A configuration without a valid run is N/A with the command that produces it. Runs made with the offline mock LLM test the pipeline and are never shown as results."
+  ]
+}

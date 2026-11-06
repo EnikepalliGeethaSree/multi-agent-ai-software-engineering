@@ -1,0 +1,295 @@
+{
+  "group_id": "abl-20261012T161828Z",
+  "benchmark": "codereviewer_cls",
+  "configurations": [
+    "static_only",
+    "llm_only",
+    "static_llm",
+    "static_llm_rag"
+  ],
+  "repeats": 1,
+  "suggested_fixes": false,
+  "runs": {
+    "static_only": [
+      "20261012T161828Z_codereviewer_cls_test_static_only_n10"
+    ],
+    "llm_only": [
+      "20261012T161832Z_codereviewer_cls_test_llm_only_n10"
+    ],
+    "static_llm": [
+      "20261012T162634Z_codereviewer_cls_test_static_llm_n10"
+    ],
+    "static_llm_rag": [
+      "20261012T163034Z_codereviewer_cls_test_static_llm_rag_n10"
+    ]
+  },
+  "tables": [
+    {
+      "id": "codereviewer_cls",
+      "section": "2. CodeReviewer classification",
+      "title": "CodeReviewer: does this change need a review comment? (classification)",
+      "about": "Paired comparison: every row is scored on the same samples.",
+      "columns": [
+        {
+          "key": "precision",
+          "label": "Precision",
+          "metric": "precision",
+          "group": "RAW",
+          "digits": 3
+        },
+        {
+          "key": "recall",
+          "label": "Recall",
+          "metric": "recall",
+          "group": "RAW",
+          "digits": 3
+        },
+        {
+          "key": "f1",
+          "label": "F1",
+          "metric": "f1",
+          "group": "RAW",
+          "digits": 3
+        },
+        {
+          "key": "roc_auc",
+          "label": "ROC-AUC",
+          "metric": "roc_auc",
+          "group": "RAW",
+          "digits": 3
+        },
+        {
+          "key": "adj_precision",
+          "label": "Precision",
+          "metric": "precision",
+          "group": "ADJUSTED",
+          "digits": 3
+        },
+        {
+          "key": "adj_recall",
+          "label": "Recall",
+          "metric": "recall",
+          "group": "ADJUSTED",
+          "digits": 3
+        },
+        {
+          "key": "adj_f1",
+          "label": "F1",
+          "metric": "f1",
+          "group": "ADJUSTED",
+          "digits": 3
+        },
+        {
+          "key": "adj_roc_auc",
+          "label": "ROC-AUC",
+          "metric": "roc_auc",
+          "group": "ADJUSTED",
+          "digits": 3
+        }
+      ],
+      "rows": [
+        {
+          "label": "Static Only",
+          "configuration": {
+            "key": "static_only",
+            "letter": "A",
+            "label": "Static Only",
+            "static": true,
+            "llm": false,
+            "rag": false,
+            "mode": "static_only",
+            "description": "Ruff, Radon, AST checks, secrets, test gaps (and mypy when enabled)."
+          },
+          "status": "ok",
+          "values": {
+            "precision": 0.0,
+            "recall": 0.0,
+            "f1": 0.0,
+            "roc_auc": 0.0,
+            "adj_precision": null,
+            "adj_recall": 0.0,
+            "adj_f1": null,
+            "adj_roc_auc": 0.5
+          },
+          "sd": {},
+          "spread": {},
+          "na": {
+            "adj_precision": "undefined on these samples (zero denominator or one class only)",
+            "adj_f1": "undefined on these samples (zero denominator or one class only)"
+          },
+          "n": 3,
+          "n_failed": 0,
+          "n_runs": 1,
+          "model": null,
+          "run_ids": [
+            "20261012T161828Z_codereviewer_cls_test_static_only_n10"
+          ],
+          "notes": [],
+          "how_to_run": null
+        },
+        {
+          "label": "LLM Only",
+          "configuration": {
+            "key": "llm_only",
+            "letter": "B",
+            "label": "LLM Only",
+            "static": false,
+            "llm": true,
+            "rag": false,
+            "mode": "llm_only",
+            "description": "The LLM reviews the code alone: no static findings, no project context."
+          },
+          "status": "ok",
+          "values": {
+            "precision": 0.6666666666666666,
+            "recall": 1.0,
+            "f1": 0.8,
+            "roc_auc": 0.5,
+            "adj_precision": 0.6666666666666666,
+            "adj_recall": 1.0,
+            "adj_f1": 0.8,
+            "adj_roc_auc": 0.5
+          },
+          "sd": {},
+          "spread": {},
+          "na": {},
+          "n": 3,
+          "n_failed": 0,
+          "n_runs": 1,
+          "model": "openai/gpt-oss-120b",
+          "run_ids": [
+            "20261012T161832Z_codereviewer_cls_test_llm_only_n10"
+          ],
+          "notes": [],
+          "how_to_run": null
+        },
+        {
+          "label": "Static + LLM",
+          "configuration": {
+            "key": "static_llm",
+            "letter": "C",
+            "label": "Static + LLM",
+            "static": true,
+            "llm": true,
+            "rag": false,
+            "mode": "full",
+            "description": "Static findings plus LLM review and triage, without project context."
+          },
+          "status": "ok",
+          "values": {
+            "precision": 0.6666666666666666,
+            "recall": 1.0,
+            "f1": 0.8,
+            "roc_auc": 1.0,
+            "adj_precision": 1.0,
+            "adj_recall": 1.0,
+            "adj_f1": 1.0,
+            "adj_roc_auc": 1.0
+          },
+          "sd": {},
+          "spread": {},
+          "na": {},
+          "n": 3,
+          "n_failed": 7,
+          "n_runs": 1,
+          "model": "openai/gpt-oss-120b",
+          "run_ids": [
+            "20261012T162634Z_codereviewer_cls_test_static_llm_n10"
+          ],
+          "notes": [],
+          "how_to_run": null
+        },
+        {
+          "label": "Static + LLM + RAG",
+          "configuration": {
+            "key": "static_llm_rag",
+            "letter": "D",
+            "label": "Static + LLM + RAG",
+            "static": true,
+            "llm": true,
+            "rag": true,
+            "mode": "full",
+            "description": "The full agent: static analysis, LLM review, retrieved project context."
+          },
+          "status": "not_run",
+          "values": {},
+          "sd": {},
+          "spread": {},
+          "na": {
+            "*": "no saved run"
+          },
+          "n": null,
+          "n_failed": null,
+          "n_runs": 0,
+          "model": null,
+          "run_ids": [],
+          "notes": [],
+          "how_to_run": "python -m marl_agents.cli eval codereviewer --task cls --limit 40 --seed 42 --configuration static_llm_rag --workers 1 --config configs/groq.yaml"
+        }
+      ],
+      "conditions": {
+        "dataset": "CodeReviewer, test split, Python only",
+        "requested samples": 10,
+        "samples in every row": 3,
+        "sampling seed": 42,
+        "limit": 10,
+        "flagged": "at least one finding of severity >= low",
+        "score (ROC-AUC)": "highest finding priority / 5",
+        "ADJUSTED": "excludes F401, F403, F405, F811, F821"
+      },
+      "fairness": [
+        {
+          "name": "Same samples",
+          "ok": true,
+          "detail": "3 samples evaluated by every configuration (10 requested; reference run 20261012T162634Z_codereviewer_cls_test_static_llm_n10)"
+        },
+        {
+          "name": "Same LLM model",
+          "ok": true,
+          "detail": "openai/gpt-oss-120b"
+        },
+        {
+          "name": "Same temperature",
+          "ok": true,
+          "detail": "0.0"
+        },
+        {
+          "name": "Same prompt versions",
+          "ok": true,
+          "detail": "{'system': '1.0', 'review': '1.0'}"
+        },
+        {
+          "name": "Same confidence threshold",
+          "ok": true,
+          "detail": "0.3"
+        },
+        {
+          "name": "Same evaluation rules",
+          "ok": true,
+          "detail": "{'flag_threshold': 'at least one finding of severity >= low', 'score': 'highest finding priority (severity rank + confidence) / 5', 'adjusted_excludes_rules': ['F401', 'F403', 'F405', 'F811', 'F821']}"
+        },
+        {
+          "name": "Run together (one ablation group)",
+          "ok": true,
+          "detail": "abl-20261012T161828Z"
+        }
+      ],
+      "observations": [
+        "Static + LLM has a higher F1 (raw) than Static Only (0.800 vs 0.000).",
+        "LLM Only has a higher F1 (raw) than Static Only (0.800 vs 0.000).",
+        "Static + LLM has a higher ROC-AUC (raw) than Static Only (1.000 vs 0.000).",
+        "LLM Only has a higher ROC-AUC (raw) than Static Only (0.500 vs 0.000).",
+        "Static Only: raw ROC-AUC 0.000 is below chance (0.5).",
+        "LLM Only: raw ROC-AUC 0.500 is at chance (0.5).",
+        "Static + LLM: raw ROC-AUC 1.000 is above chance (0.5)."
+      ],
+      "notes": [
+        "RAW counts every finding. ADJUSTED drops the rules that cannot be judged from one hunk (imports/names defined in the commit's other hunks); both are always reported, neither replaces the other.",
+        "Run all four on one sample set: python -m marl_agents.cli eval ablation --benchmark codereviewer --task cls --limit 40 --seed 42 --configurations static_only,llm_only,static_llm,static_llm_rag --config configs/groq.yaml",
+        "n = 3: differences of a few points are within sampling noise (see the bootstrap CIs in each run's summary)."
+      ],
+      "supplementary": false,
+      "show_counts": true
+    }
+  ]
+}

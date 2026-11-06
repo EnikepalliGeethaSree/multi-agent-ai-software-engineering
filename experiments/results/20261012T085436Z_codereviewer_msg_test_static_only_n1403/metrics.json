@@ -1,0 +1,153 @@
+{
+  "task": "msg",
+  "n_samples": 1403,
+  "n_evaluated": 1403,
+  "n_failed": 0,
+  "failure_reasons": {},
+  "seconds": 72.2,
+  "findings_per_sample": 0.473,
+  "timing": {
+    "total_sec": {
+      "n": 1403,
+      "mean": 0.3695,
+      "median": 0.1915,
+      "min": 0.0814,
+      "max": 18.9499
+    },
+    "static_analysis_sec": {
+      "n": 1403,
+      "mean": 0.2884,
+      "median": 0.1304,
+      "min": 0.0531,
+      "max": 18.8086
+    },
+    "rag_sec": {
+      "n": 1403,
+      "mean": 0.0,
+      "median": 0.0,
+      "min": 0.0,
+      "max": 0.0
+    },
+    "llm_inference_sec": {
+      "n": 1403,
+      "mean": 0.0,
+      "median": 0.0,
+      "min": 0.0,
+      "max": 0.0
+    },
+    "validation_sec": {
+      "n": 1403,
+      "mean": 0.0072,
+      "median": 0.0005,
+      "min": 0.0,
+      "max": 0.5892
+    },
+    "other_sec": {
+      "n": 1403,
+      "mean": 0.074,
+      "median": 0.0572,
+      "min": 0.0244,
+      "max": 0.6368
+    },
+    "llm_rate_limit_wait_sec": {
+      "n": 0,
+      "mean": null,
+      "median": null,
+      "min": null,
+      "max": null
+    },
+    "conditions": {
+      "samples": 1403,
+      "workers": 8,
+      "note": "per-sample review time; samples ran concurrently on `workers` workers"
+    }
+  },
+  "finding_categories": {
+    "quality": 216,
+    "maintainability": 46,
+    "standards": 199,
+    "documentation": 68,
+    "bug": 84,
+    "error_handling": 33,
+    "security": 12,
+    "performance": 4,
+    "testing": 1
+  },
+  "finding_rules_top20": {
+    "F401": 181,
+    "E703": 123,
+    "AST-MISSING-DOCSTRING": 68,
+    "F821": 44,
+    "F405": 29,
+    "F841": 23,
+    "RADON-CC": 20,
+    "B904": 18,
+    "F403": 15,
+    "B006": 14,
+    "E999": 10,
+    "E701": 9,
+    "AST-TOO-MANY-PARAMS": 8,
+    "E722": 8,
+    "BLE001": 7,
+    "E731": 7,
+    "E721": 6,
+    "RADON-MI": 5,
+    "AST-LONG-FUNCTION": 5,
+    "PLW0603": 4
+  },
+  "comment_coverage": 0.28082679971489666,
+  "text_metrics": {
+    "title": {
+      "bleu4_smoothed": 0.735,
+      "rouge_l": 1.946,
+      "chrf": 3.625
+    },
+    "title_fix": {
+      "bleu4_smoothed": 1.177,
+      "rouge_l": 3.028,
+      "chrf": 4.832
+    },
+    "description": {
+      "bleu4_smoothed": 0.921,
+      "rouge_l": 2.43,
+      "chrf": 3.843
+    }
+  },
+  "bleu4_ci95_title_fix": [
+    1.0505124097548333,
+    1.2982382907024257
+  ],
+  "hit_rate_non_info": 0.24376336421952957,
+  "sensitivity_without_cross_hunk_rules": {
+    "excluded_rules": [
+      "F401",
+      "F403",
+      "F405",
+      "F811",
+      "F821"
+    ],
+    "comment_coverage": 0.18246614397719174,
+    "text_metrics": {
+      "title": {
+        "bleu4_smoothed": 0.409,
+        "rouge_l": 1.037,
+        "chrf": 2.372
+      },
+      "title_fix": {
+        "bleu4_smoothed": 0.742,
+        "rouge_l": 1.821,
+        "chrf": 2.992
+      },
+      "description": {
+        "bleu4_smoothed": 0.615,
+        "rouge_l": 1.566,
+        "chrf": 2.601
+      }
+    },
+    "bleu4_ci95_title_fix": [
+      0.6486514203895429,
+      0.8413556548897548
+    ],
+    "hit_rate_non_info": 0.14183891660727013
+  }
+}

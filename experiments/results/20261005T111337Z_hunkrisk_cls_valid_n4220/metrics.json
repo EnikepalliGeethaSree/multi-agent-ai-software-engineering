@@ -1,0 +1,190 @@
+{
+  "n_evaluated": 4219,
+  "base_rate": 0.4866,
+  "auc": {
+    "hunk_risk": {
+      "auc": 0.4526364813513004,
+      "ci95": [
+        0.4358308826518858,
+        0.46952412881593436
+      ]
+    },
+    "hunk_risk_adjusted": {
+      "auc": 0.5273674450694634,
+      "ci95": [
+        0.5103668517832679,
+        0.5447745370376617
+      ]
+    },
+    "size_baseline": {
+      "auc": 0.6155914885272504,
+      "ci95": [
+        0.5995210603818556,
+        0.6312792335907284
+      ]
+    },
+    "finding_score_baseline": {
+      "auc": 0.41683330342417174,
+      "ci95": [
+        0.40146551654293117,
+        0.4320822195822196
+      ]
+    }
+  },
+  "precision_at_top": {
+    "hunk_risk": {
+      "5%": 0.34285714285714286,
+      "10%": 0.35391923990498814,
+      "25%": 0.3757115749525617
+    },
+    "hunk_risk_adjusted": {
+      "5%": 0.3761904761904762,
+      "10%": 0.48931116389548696,
+      "25%": 0.4791271347248577
+    },
+    "size_baseline": {
+      "5%": 0.32857142857142857,
+      "10%": 0.5439429928741093,
+      "25%": 0.6404174573055028
+    },
+    "finding_score_baseline": {
+      "5%": 0.40476190476190477,
+      "10%": 0.29691211401425177,
+      "25%": 0.32637571157495254
+    }
+  },
+  "by_level": {
+    "high": {
+      "n": 317,
+      "share": 0.0751,
+      "commented_rate": 0.3722
+    },
+    "medium": {
+      "n": 447,
+      "share": 0.1059,
+      "commented_rate": 0.3602
+    },
+    "low": {
+      "n": 3455,
+      "share": 0.8189,
+      "commented_rate": 0.5135
+    }
+  },
+  "signals": {
+    "breaks_callers": {
+      "n_fired": 0,
+      "commented_rate_fired": null,
+      "commented_rate_not_fired": 0.4866
+    },
+    "error_handling": {
+      "n_fired": 369,
+      "commented_rate_fired": 0.6694,
+      "commented_rate_not_fired": 0.4691
+    },
+    "findings_in_hunk": {
+      "n_fired": 1584,
+      "commented_rate_fired": 0.4015,
+      "commented_rate_not_fired": 0.5378
+    },
+    "has_dependents": {
+      "n_fired": 1070,
+      "commented_rate_fired": 0.3935,
+      "commented_rate_not_fired": 0.5183
+    },
+    "removes_function": {
+      "n_fired": 136,
+      "commented_rate_fired": 0.3382,
+      "commented_rate_not_fired": 0.4916
+    },
+    "sensitive_api": {
+      "n_fired": 222,
+      "commented_rate_fired": 0.6261,
+      "commented_rate_not_fired": 0.4789
+    },
+    "signature_change": {
+      "n_fired": 200,
+      "commented_rate_fired": 0.53,
+      "commented_rate_not_fired": 0.4844
+    },
+    "size_20plus": {
+      "n_fired": 795,
+      "commented_rate_fired": 0.6528,
+      "commented_rate_not_fired": 0.448
+    },
+    "untested": {
+      "n_fired": 0,
+      "commented_rate_fired": null,
+      "commented_rate_not_fired": 0.4866
+    }
+  },
+  "by_level_adjusted": {
+    "high": {
+      "n": 222,
+      "share": 0.0526,
+      "commented_rate": 0.3829
+    },
+    "medium": {
+      "n": 264,
+      "share": 0.0626,
+      "commented_rate": 0.5871
+    },
+    "low": {
+      "n": 3733,
+      "share": 0.8848,
+      "commented_rate": 0.4857
+    }
+  },
+  "signals_adjusted": {
+    "breaks_callers": {
+      "n_fired": 0,
+      "commented_rate_fired": null,
+      "commented_rate_not_fired": 0.4866
+    },
+    "error_handling": {
+      "n_fired": 369,
+      "commented_rate_fired": 0.6694,
+      "commented_rate_not_fired": 0.4691
+    },
+    "findings_in_hunk": {
+      "n_fired": 857,
+      "commented_rate_fired": 0.5356,
+      "commented_rate_not_fired": 0.4741
+    },
+    "has_dependents": {
+      "n_fired": 1070,
+      "commented_rate_fired": 0.3935,
+      "commented_rate_not_fired": 0.5183
+    },
+    "removes_function": {
+      "n_fired": 136,
+      "commented_rate_fired": 0.3382,
+      "commented_rate_not_fired": 0.4916
+    },
+    "sensitive_api": {
+      "n_fired": 222,
+      "commented_rate_fired": 0.6261,
+      "commented_rate_not_fired": 0.4789
+    },
+    "signature_change": {
+      "n_fired": 200,
+      "commented_rate_fired": 0.53,
+      "commented_rate_not_fired": 0.4844
+    },
+    "size_20plus": {
+      "n_fired": 795,
+      "commented_rate_fired": 0.6528,
+      "commented_rate_not_fired": 0.448
+    },
+    "untested": {
+      "n_fired": 0,
+      "commented_rate_fired": null,
+      "commented_rate_not_fired": 0.4866
+    }
+  },
+  "n_samples": 4220,
+  "n_failed": 1,
+  "failure_reasons": {
+    "patch": 1
+  },
+  "seconds": 426.2
+}

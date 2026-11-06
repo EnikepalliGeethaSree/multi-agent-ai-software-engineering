@@ -1,0 +1,114 @@
+{
+  "n_evaluated": 4195,
+  "base_rate": 0.4846,
+  "auc": {
+    "hunk_risk": {
+      "auc": 0.4340337484239011,
+      "ci95": [
+        0.4183660310000082,
+        0.4516358861738239
+      ]
+    },
+    "size_baseline": {
+      "auc": 0.6240718023108989,
+      "ci95": [
+        0.6068692005514947,
+        0.640577826442723
+      ]
+    },
+    "finding_score_baseline": {
+      "auc": 0.40687650073509574,
+      "ci95": [
+        0.39154569472651907,
+        0.4236294618418971
+      ]
+    }
+  },
+  "precision_at_top": {
+    "hunk_risk": {
+      "5%": 0.37320574162679426,
+      "10%": 0.36515513126491644,
+      "25%": 0.3568702290076336
+    },
+    "size_baseline": {
+      "5%": 0.3444976076555024,
+      "10%": 0.5298329355608592,
+      "25%": 0.6354961832061069
+    },
+    "finding_score_baseline": {
+      "5%": 0.3253588516746411,
+      "10%": 0.27923627684964203,
+      "25%": 0.32729007633587787
+    }
+  },
+  "by_level": {
+    "high": {
+      "n": 354,
+      "share": 0.0844,
+      "commented_rate": 0.3588
+    },
+    "medium": {
+      "n": 445,
+      "share": 0.1061,
+      "commented_rate": 0.364
+    },
+    "low": {
+      "n": 3396,
+      "share": 0.8095,
+      "commented_rate": 0.5135
+    }
+  },
+  "signals": {
+    "breaks_callers": {
+      "n_fired": 0,
+      "commented_rate_fired": null,
+      "commented_rate_not_fired": 0.4846
+    },
+    "error_handling": {
+      "n_fired": 379,
+      "commented_rate_fired": 0.6623,
+      "commented_rate_not_fired": 0.467
+    },
+    "findings_in_hunk": {
+      "n_fired": 1563,
+      "commented_rate_fired": 0.3986,
+      "commented_rate_not_fired": 0.5357
+    },
+    "has_dependents": {
+      "n_fired": 1131,
+      "commented_rate_fired": 0.3749,
+      "commented_rate_not_fired": 0.5251
+    },
+    "removes_function": {
+      "n_fired": 110,
+      "commented_rate_fired": 0.3818,
+      "commented_rate_not_fired": 0.4874
+    },
+    "sensitive_api": {
+      "n_fired": 219,
+      "commented_rate_fired": 0.6758,
+      "commented_rate_not_fired": 0.4741
+    },
+    "signature_change": {
+      "n_fired": 218,
+      "commented_rate_fired": 0.5321,
+      "commented_rate_not_fired": 0.482
+    },
+    "size_20plus": {
+      "n_fired": 780,
+      "commented_rate_fired": 0.6372,
+      "commented_rate_not_fired": 0.4498
+    },
+    "untested": {
+      "n_fired": 0,
+      "commented_rate_fired": null,
+      "commented_rate_not_fired": 0.4846
+    }
+  },
+  "n_samples": 4196,
+  "n_failed": 1,
+  "failure_reasons": {
+    "patch": 1
+  },
+  "seconds": 431.9
+}

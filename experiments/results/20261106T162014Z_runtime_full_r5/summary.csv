@@ -1,0 +1,7 @@
+category,run_type,runs,complete,partial,failed,skipped,success_rate,mean_sec,median_sec,p95_sec,min_sec,max_sec,mean_llm_inference_sec,mean_rag_retrieval_sec,mean_static_analysis_sec,mean_input_tokens,mean_output_tokens,mean_findings,mean_cache_hit_rate,mean_review_chunks,mean_lines,mean_size_kb,skipped_chunks
+small,cold,15,3,0,0,12,0.2,20.8248,20.0411,22.3345,19.844,22.5893,17.4159,0.013,2.2844,2238.0,909.0,10.6667,0.0,1.0,46.3333,1.2267,0
+small,warm,15,3,0,0,12,0.2,0.119,0.1078,0.1402,0.1055,0.1438,0.0,0.0118,0.0203,,,10.6667,1.0,1.0,46.3333,1.2267,0
+medium,cold,15,1,2,0,12,0.0667,23.0831,23.0831,23.0831,23.0831,23.0831,20.4366,0.013,2.3534,2689.0,192.0,2.0,0.0,1.0,110.0,3.17,3
+medium,warm,15,1,1,0,13,0.0667,0.0934,0.0934,0.0934,0.0934,0.0934,0.0,0.0126,0.019,,,2.0,1.0,1.0,110.0,3.17,0
+large,cold,15,0,0,0,15,0.0,,,,,,,,,,,,,,,,0
+large,warm,15,0,0,0,15,0.0,,,,,,,,,,,,,,,,0

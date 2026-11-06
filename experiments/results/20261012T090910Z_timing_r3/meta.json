@@ -1,0 +1,29 @@
+{
+  "name": "timing_r3",
+  "started_at": "2026-10-12T09:09:10.146702+00:00",
+  "git_commit": "uncommitted",
+  "python": "3.11.7",
+  "platform": "Windows-10-10.0.26200-SP0",
+  "packages": {
+    "marl-agents": "0.1.0",
+    "pydantic": "2.13.5",
+    "ruff": "0.16.9",
+    "radon": "6.0.1",
+    "chromadb": "1.5.9",
+    "openai": "3.21.0",
+    "sentence-transformers": "6.1.0"
+  },
+  "benchmark": "timing",
+  "repeats": 3,
+  "configs": [
+    "static_only",
+    "llm_rag",
+    "llm_no_rag"
+  ],
+  "llm_provider": "groq",
+  "llm_model": "openai/gpt-oss-120b",
+  "finished_at": "2026-10-12T09:39:59.832102+00:00",
+  "errors": 0,
+  "reaggregated_at": "2026-10-12T09:41:34.134329+00:00",
+  "reaggregation_note": "aggregates recomputed from the run's own predictions.jsonl (added LLM-call and RAG-share columns); no new measurements"
+}

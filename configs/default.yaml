@@ -1,0 +1,59 @@
+# Default runtime configuration. Override with env vars (MARL_ prefix, "__" for nesting),
+# e.g. MARL_LLM__PROVIDER=openai. Secrets never go here.
+
+llm:
+  provider: gemini        # gemini | groq | openai | local | mock (offline, used by tests)
+  model: gemini-3.8-flash # Free on the pricing page (checked 2026-11-06); verify with `cli check`
+  temperature: 0.0
+  max_tokens: 16384       # reasoning counts against this: at 4096, replies were cut off
+  seed: 42
+  base_url: null          # OpenAI-compatible servers: Ollama, LM Studio, vLLM, Groq, OpenRouter
+  api_key_env: null       # env var holding the key; default GEMINI_API_KEY for gemini
+  # Cautious starting points, not Google's figures: see configs/gemini.yaml.
+  requests_per_minute: 10
+  tokens_per_minute: 200000
+
+ingestion:
+  max_zip_bytes: 104857600          # 100 MB compressed
+  max_uncompressed_bytes: 524288000 # 500 MB
+  max_files: 20000
+  max_file_bytes: 2097152           # 2 MB per file
+  include_extensions: [".py", ".md", ".rst", ".txt", ".yaml", ".yml", ".json", ".toml", ".cfg", ".ini"]
+  ignore_dirs: [".git", ".venv", "venv", "env", "__pycache__", "node_modules", ".idea", ".vscode",
+                "dist", "build", ".mypy_cache", ".pytest_cache", ".ruff_cache"]
+  workspace_dir: data/workspaces
+
+rag:
+  enabled: true           # false = experiment configuration B
+  vector_store: chroma    # chroma | memory
+  persist_dir: data/chroma
+  # "hashing" = offline lexical baseline; or a sentence-transformers model name (needs the rag extra),
+  # e.g. sentence-transformers/all-MiniLM-L6-v2. Comparing them is part of the RAG evaluation.
+  embedding_model: hashing
+  top_k: 6                # similar-code chunks per review unit
+  guideline_k: 2          # coding-standard / OWASP guideline chunks per review unit
+  structural_context: true  # callees, callers, tests from the AST call graph
+  max_context_chars: 12000
+
+review:
+  mode: full              # full | static_only | llm_only  (ablations)
+  min_confidence: 0.3     # findings below this are dropped (critical findings are always kept)
+  require_llm_evidence: true  # reject LLM findings whose evidence is not in the file
+  max_unit_lines: 200     # a review unit (LLM call) covers at most this many lines
+  max_units: 200          # safety cap on LLM calls per run
+  include_info: true
+  llm_triage_static: true # the LLM confirms / disputes static-analysis findings
+  scope_slack: 3          # lines of tolerance around changed hunks in diff review
+  concurrency: 2
+  unit_cache: true        # reuse finished LLM units on a rerun (evaluation always turns this off)
+  analysis_cache: true    # reuse deterministic static-analysis results for unchanged code
+
+classifier:
+  enabled: false          # fine-tuned change classifier (change reviews only), see docs/fine-tuning.md
+  model_dir: null
+  mode: prioritize        # prioritize: riskiest first | gate: also skip low scores
+  threshold: null         # null = the model's own threshold, chosen on dev and tested
+
+datasets:
+  root: capstone-datasets
+  cache_dir: data/cache

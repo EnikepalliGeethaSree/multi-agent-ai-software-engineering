@@ -1,0 +1,32 @@
+# Groq overlay: loaded on top of configs/default.yaml with `--config configs/groq.yaml`.
+# The key comes from the environment: put GROQ_API_KEY=... in .env (never in this file).
+#
+#   python -m marl_agents.cli models --config configs/groq.yaml          # list models for your key
+#   python -m marl_agents.cli review path/to/repo --config configs/groq.yaml --model <model-id>
+
+llm:
+  provider: groq
+  # Chosen by benchmark on 2026-09-29 (docs/results.md): best precision, localization and speed of
+  # the chat models available to our key. Re-check `cli models` if Groq retires it.
+  model: openai/gpt-oss-120b
+  temperature: 0.0
+  max_tokens: 2048
+  seed: 42
+  json_mode: true           # Groq JSON mode; falls back automatically if the model rejects it
+  # Groq enforces per-model quotas (requests and tokens per minute, plus daily caps). Set these to
+  # the limits shown for your model at https://console.groq.com/settings/limits so the agent
+  # throttles itself instead of hitting HTTP 429. The values below are deliberately conservative.
+  requests_per_minute: 30
+  tokens_per_minute: 6000
+  max_retries: 5
+  timeout_s: 120
+  # Reasoning models: hide the chain of thought so replies stay plain JSON, e.g.
+  #   extra_params: {reasoning_format: hidden}   (Qwen3 / DeepSeek-R1 style models)
+  #   extra_params: {reasoning_effort: low}      (gpt-oss models)
+  extra_params: {}
+
+review:
+  concurrency: 2            # parallel LLM calls; the rate limiter keeps them within quota
+
+rag:
+  max_context_chars: 8000   # a smaller prompt fits more calls into a tokens-per-minute quota

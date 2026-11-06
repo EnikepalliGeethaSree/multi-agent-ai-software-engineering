@@ -1,0 +1,345 @@
+{
+  "task": "cls",
+  "n_samples": 10,
+  "n_evaluated": 10,
+  "n_failed": 0,
+  "failure_reasons": {},
+  "seconds": 2.8,
+  "findings_per_sample": 1.0,
+  "timing": {
+    "total_sec": {
+      "n": 10,
+      "mean": 0.2343,
+      "median": 0.1631,
+      "min": 0.092,
+      "max": 0.5569
+    },
+    "static_analysis_sec": {
+      "n": 10,
+      "mean": 0.1713,
+      "median": 0.1235,
+      "min": 0.063,
+      "max": 0.4134
+    },
+    "rag_sec": {
+      "n": 10,
+      "mean": 0.0,
+      "median": 0.0,
+      "min": 0.0,
+      "max": 0.0
+    },
+    "llm_inference_sec": {
+      "n": 10,
+      "mean": 0.0,
+      "median": 0.0,
+      "min": 0.0,
+      "max": 0.0
+    },
+    "validation_sec": {
+      "n": 10,
+      "mean": 0.0035,
+      "median": 0.0008,
+      "min": 0.0001,
+      "max": 0.0149
+    },
+    "other_sec": {
+      "n": 10,
+      "mean": 0.0594,
+      "median": 0.039,
+      "min": 0.0207,
+      "max": 0.1372
+    },
+    "llm_rate_limit_wait_sec": {
+      "n": 0,
+      "mean": null,
+      "median": null,
+      "min": null,
+      "max": null
+    },
+    "conditions": {
+      "samples": 10,
+      "workers": 8,
+      "note": "per-sample review time; samples ran concurrently on `workers` workers"
+    }
+  },
+  "finding_categories": {
+    "quality": 1,
+    "bug": 8,
+    "performance": 1
+  },
+  "finding_rules_top20": {
+    "F821": 7,
+    "F401": 1,
+    "PERF203": 1,
+    "AST-RESOURCE-LEAK": 1
+  },
+  "label_balance": {
+    "positive": 5,
+    "negative": 5
+  },
+  "threshold_sweep": {
+    "info": {
+      "n": 10,
+      "tp": 1,
+      "fp": 3,
+      "tn": 2,
+      "fn": 4,
+      "accuracy": 0.3,
+      "precision": 0.25,
+      "recall": 0.2,
+      "f1": 0.22222222222222224,
+      "positive_rate": 0.4
+    },
+    "low": {
+      "n": 10,
+      "tp": 1,
+      "fp": 3,
+      "tn": 2,
+      "fn": 4,
+      "accuracy": 0.3,
+      "precision": 0.25,
+      "recall": 0.2,
+      "f1": 0.22222222222222224,
+      "positive_rate": 0.4
+    },
+    "medium": {
+      "n": 10,
+      "tp": 1,
+      "fp": 2,
+      "tn": 3,
+      "fn": 4,
+      "accuracy": 0.4,
+      "precision": 0.3333333333333333,
+      "recall": 0.2,
+      "f1": 0.25,
+      "positive_rate": 0.3
+    },
+    "high": {
+      "n": 10,
+      "tp": 0,
+      "fp": 2,
+      "tn": 3,
+      "fn": 5,
+      "accuracy": 0.3,
+      "precision": 0.0,
+      "recall": 0.0,
+      "f1": 0.0,
+      "positive_rate": 0.2
+    },
+    "critical": {
+      "n": 10,
+      "tp": 0,
+      "fp": 0,
+      "tn": 5,
+      "fn": 5,
+      "accuracy": 0.5,
+      "precision": 0.0,
+      "recall": 0.0,
+      "f1": 0.0,
+      "positive_rate": 0.0
+    }
+  },
+  "default_threshold": "low",
+  "default": {
+    "n": 10,
+    "tp": 1,
+    "fp": 3,
+    "tn": 2,
+    "fn": 4,
+    "accuracy": 0.3,
+    "precision": 0.25,
+    "recall": 0.2,
+    "f1": 0.22222222222222224,
+    "positive_rate": 0.4
+  },
+  "f1_ci95": [
+    0.0,
+    0.5714285714285715
+  ],
+  "accuracy_ci95": [
+    0.0,
+    0.6
+  ],
+  "precision_ci95": [
+    0.0,
+    0.8
+  ],
+  "roc_auc": 0.28,
+  "baselines": {
+    "majority_class_accuracy": 0.5,
+    "always_positive": {
+      "n": 10,
+      "tp": 5,
+      "fp": 5,
+      "tn": 0,
+      "fn": 0,
+      "accuracy": 0.5,
+      "precision": 0.5,
+      "recall": 1.0,
+      "f1": 0.6666666666666666,
+      "positive_rate": 1.0
+    }
+  },
+  "sensitivity_without_cross_hunk_rules": {
+    "excluded_rules": [
+      "F401",
+      "F403",
+      "F405",
+      "F811",
+      "F821"
+    ],
+    "label_balance": {
+      "positive": 5,
+      "negative": 5
+    },
+    "threshold_sweep": {
+      "info": {
+        "n": 10,
+        "tp": 1,
+        "fp": 1,
+        "tn": 4,
+        "fn": 4,
+        "accuracy": 0.5,
+        "precision": 0.5,
+        "recall": 0.2,
+        "f1": 0.28571428571428575,
+        "positive_rate": 0.2
+      },
+      "low": {
+        "n": 10,
+        "tp": 1,
+        "fp": 1,
+        "tn": 4,
+        "fn": 4,
+        "accuracy": 0.5,
+        "precision": 0.5,
+        "recall": 0.2,
+        "f1": 0.28571428571428575,
+        "positive_rate": 0.2
+      },
+      "medium": {
+        "n": 10,
+        "tp": 1,
+        "fp": 0,
+        "tn": 5,
+        "fn": 4,
+        "accuracy": 0.6,
+        "precision": 1.0,
+        "recall": 0.2,
+        "f1": 0.33333333333333337,
+        "positive_rate": 0.1
+      },
+      "high": {
+        "n": 10,
+        "tp": 0,
+        "fp": 0,
+        "tn": 5,
+        "fn": 5,
+        "accuracy": 0.5,
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1": 0.0,
+        "positive_rate": 0.0
+      },
+      "critical": {
+        "n": 10,
+        "tp": 0,
+        "fp": 0,
+        "tn": 5,
+        "fn": 5,
+        "accuracy": 0.5,
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1": 0.0,
+        "positive_rate": 0.0
+      }
+    },
+    "default_threshold": "low",
+    "default": {
+      "n": 10,
+      "tp": 1,
+      "fp": 1,
+      "tn": 4,
+      "fn": 4,
+      "accuracy": 0.5,
+      "precision": 0.5,
+      "recall": 0.2,
+      "f1": 0.28571428571428575,
+      "positive_rate": 0.2
+    },
+    "f1_ci95": [
+      0.0,
+      0.6666666666666666
+    ],
+    "accuracy_ci95": [
+      0.2,
+      0.8
+    ],
+    "precision_ci95": [
+      0.0,
+      1.0
+    ],
+    "roc_auc": 0.52,
+    "baselines": {
+      "majority_class_accuracy": 0.5,
+      "always_positive": {
+        "n": 10,
+        "tp": 5,
+        "fp": 5,
+        "tn": 0,
+        "fn": 0,
+        "accuracy": 0.5,
+        "precision": 0.5,
+        "recall": 1.0,
+        "f1": 0.6666666666666666,
+        "positive_rate": 1.0
+      }
+    }
+  },
+  "experiment": {
+    "configuration": {
+      "key": "static_only",
+      "letter": "A",
+      "label": "Static Only",
+      "static": true,
+      "llm": false,
+      "rag": false,
+      "mode": "static_only"
+    },
+    "benchmark": "codereviewer_cls",
+    "dataset": "CodeReviewer (Python)",
+    "split": "test",
+    "sampling_seed": 42,
+    "limit": 10,
+    "sample_count": 10,
+    "sample_fingerprint": "75d51b33e2021e4f",
+    "n_evaluated": 10,
+    "n_failed": 0,
+    "llm": null,
+    "rag": null,
+    "static_analyzers": [
+      "ruff",
+      "radon",
+      "ast",
+      "secrets"
+    ],
+    "confidence_threshold": 0.3,
+    "include_info": true,
+    "evaluation_rules": {
+      "flag_threshold": "at least one finding of severity >= low",
+      "score": "highest finding priority (severity rank + confidence) / 5",
+      "adjusted_excludes_rules": [
+        "F401",
+        "F403",
+        "F405",
+        "F811",
+        "F821"
+      ]
+    },
+    "prompt_versions": {},
+    "group_id": "abl-20261012T161828Z",
+    "repeat": 1,
+    "repeats": 1,
+    "timestamp": "2026-10-12T16:18:32.008100+00:00"
+  }
+}

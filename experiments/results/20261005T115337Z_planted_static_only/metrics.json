@@ -1,0 +1,47 @@
+{
+  "detection": {
+    "expected": 17,
+    "matched": 16,
+    "recall": 0.9411764705882353,
+    "recall_static": 1.0,
+    "recall_llm": 0.0,
+    "defect_findings": 13,
+    "defect_true_positives": 13,
+    "defect_precision": 1.0,
+    "negative_file_false_positives": 0,
+    "mean_line_error": 0.0,
+    "missed": [
+      "P13"
+    ],
+    "false_positive_titles": []
+  },
+  "pipeline": {
+    "mode": "static_only",
+    "rag_enabled": true,
+    "files_total": 8,
+    "python_files": 6,
+    "files_reviewed": 5,
+    "lines_reviewed": 146,
+    "syntax_errors": 0,
+    "has_tests": true,
+    "static_findings_raw": {
+      "ruff": 14,
+      "radon": 1,
+      "ast": 6,
+      "secrets": 1,
+      "test_gap": 5,
+      "mypy": 0
+    },
+    "static_rejected": 0,
+    "dedup_merged": 5,
+    "filtered_low_confidence": 0,
+    "fixes_available": 3,
+    "final_findings": 22,
+    "timings_s": {
+      "ingest_parse": 0.013,
+      "static_analysis": 4.073,
+      "postprocess": 0.001
+    }
+  },
+  "final_findings": 22
+}

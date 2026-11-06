@@ -1,0 +1,73 @@
+{
+  "benchmark": "gemini_smoke",
+  "provider": "gemini",
+  "model": "gemini-3.8-flash",
+  "live_checks": 6,
+  "live_passed": 4,
+  "failed": [
+    "json_and_schema",
+    "agent_review"
+  ],
+  "checks": [
+    {
+      "name": "missing_key",
+      "kind": "local",
+      "passed": true,
+      "detail": "GEMINI_API_KEY is not set. Create a free key at https://aistudio.google.com/apikey and put it in .env (never in a config file)."
+    },
+    {
+      "name": "key",
+      "kind": "local",
+      "passed": true,
+      "detail": "variable: GEMINI_API_KEY"
+    },
+    {
+      "name": "model_access",
+      "kind": "live",
+      "passed": true,
+      "detail": "gemini-3.8-flash is listed (47 text models available)"
+    },
+    {
+      "name": "json_and_schema",
+      "kind": "live",
+      "passed": false,
+      "detail": "Gemini call failed after 6 attempt(s): This model is currently experiencing high demand. Spikes in demand are usually temporary. Please try again later."
+    },
+    {
+      "name": "agent_review",
+      "kind": "live",
+      "passed": false,
+      "detail": "failed units=1 calls=0 findings=0 from LLM=0 rejected={}"
+    },
+    {
+      "name": "invalid_key",
+      "kind": "live",
+      "passed": true,
+      "detail": "attempts=1 kind=fatal status=400 key in message=False"
+    },
+    {
+      "name": "failed_request_is_safe",
+      "kind": "live",
+      "passed": true,
+      "detail": "failed units=1; static findings kept=0"
+    },
+    {
+      "name": "timeout_and_retry",
+      "kind": "live",
+      "passed": true,
+      "detail": "attempts=2 kinds=['transient', 'transient']"
+    },
+    {
+      "name": "rate_limit_429",
+      "kind": "simulated",
+      "passed": null,
+      "detail": "not provoked live; unit tests with a fake client verify that it waits as the server asks, then retries"
+    },
+    {
+      "name": "daily_quota",
+      "kind": "simulated",
+      "passed": null,
+      "detail": "not provoked live; unit tests with a fake client verify that it stops at once and reports the Pacific reset time"
+    }
+  ]
+}

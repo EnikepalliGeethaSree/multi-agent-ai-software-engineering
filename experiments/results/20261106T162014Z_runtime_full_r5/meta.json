@@ -1,0 +1,33 @@
+{
+  "name": "runtime_full_r5",
+  "started_at": "2026-11-06T16:20:14.359671+00:00",
+  "git_commit": "uncommitted",
+  "python": "3.11.7",
+  "platform": "Windows-10-10.0.26300-SP0",
+  "packages": {
+    "marl-agents": "0.1.0",
+    "pydantic": "2.13.5",
+    "ruff": "0.16.9",
+    "radon": "6.0.1",
+    "chromadb": "1.5.9",
+    "openai": "3.21.0",
+    "sentence-transformers": "6.1.0"
+  },
+  "benchmark": "runtime",
+  "repeats": 5,
+  "llm_provider": "gemini",
+  "llm_model": "gemini-3.6-flash",
+  "sample_ids": [
+    "f205d8dc95d81b5d2b59362cbe0e385cfeeb98c14a70971f3372be1403378b03",
+    "45805f726bf977290dfac21aeac1e506e7759804bf9d01db5dcf7d17337aea30",
+    "d470d65c87914ae671a202b8987437a6918aae477942e58bdb1d0056528115f7",
+    "05d6b239ee3d6114a682aa9a5efb8f8b315cce6fc2a5d6f1147192ab5a044f44",
+    "731c1374ed3d47c53c0c38e4898f2a21df0b7984e730c7ff3f3b26b96b25fac6",
+    "36a33cb62bce2eefc61ad2c7c7555407404481a9543f1c366c32cde3513d8a14",
+    "cc73fbc2865d5e88f1e04d23f5e0b0a4ad46ea7410c86b39a43b8eaa0384daca",
+    "08417bfd8b0bff87f63c2d0f333cd768d5bbe7072d6e6883bda199b5c47221a0",
+    "b8c4c89a95f2e242ebd633cb258144ac9151fa906a8c7b42f045843f481468d4"
+  ],
+  "finished_at": "2026-11-06T16:25:30.100196+00:00",
+  "errors": 0
+}

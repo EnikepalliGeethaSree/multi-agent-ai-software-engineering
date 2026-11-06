@@ -1,0 +1,48 @@
+# Benchmark data (~11 GB) — never commit
+capstone-datasets/
+
+# Runtime data: vector stores, uploaded workspaces, caches, generated reports
+data/
+experiments/results/*/*
+!experiments/results/.gitkeep
+!experiments/results/*/summary.md
+!experiments/results/*/metrics.json
+!experiments/results/*/meta.json
+!experiments/results/*/config.yaml
+!experiments/results/*/results.csv
+!experiments/results/*/summary.csv
+
+# Secrets
+.env
+.env.*
+!.env.example
+
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.venv/
+venv/
+build/
+dist/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.coverage
+htmlcov/
+.ipynb_checkpoints/
+
+# Frontend (later)
+node_modules/
+frontend/dist/
+
+# Editors / OS
+.idea/
+.vscode/*
+!.vscode/settings.json
+.DS_Store
+Thumbs.db
+~$*
+
+# Claude Code local-only settings
+.claude/settings.local.json

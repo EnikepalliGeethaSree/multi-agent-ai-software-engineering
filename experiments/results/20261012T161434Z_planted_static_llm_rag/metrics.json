@@ -1,0 +1,173 @@
+{
+  "detection": {
+    "expected": 17,
+    "matched": 17,
+    "tp": 14,
+    "fp": 0,
+    "fn": 0,
+    "precision": 1.0,
+    "f1": 1.0,
+    "recall": 1.0,
+    "recall_static": 1.0,
+    "recall_llm": 1.0,
+    "defect_findings": 14,
+    "defect_true_positives": 14,
+    "defect_precision": 1.0,
+    "negative_file_false_positives": 0,
+    "mean_line_error": 0.058823529411764705,
+    "missed": [],
+    "false_positive_titles": []
+  },
+  "pipeline": {
+    "mode": "full",
+    "static_enabled": true,
+    "llm_enabled": true,
+    "rag_enabled": true,
+    "files_total": 8,
+    "python_files": 6,
+    "files_reviewed": 5,
+    "lines_reviewed": 146,
+    "syntax_errors": 0,
+    "has_tests": true,
+    "static_findings_raw": {
+      "ruff": 14,
+      "radon": 1,
+      "ast": 6,
+      "secrets": 1,
+      "test_gap": 5,
+      "mypy": 0
+    },
+    "rag_index": {
+      "chunks": 31,
+      "by_source_type": {
+        "doc": 3,
+        "config": 1,
+        "code": 23,
+        "test": 4
+      }
+    },
+    "units_total": 4,
+    "llm_repaired": 0,
+    "units_failed": 0,
+    "llm_findings_raw": 9,
+    "llm_findings_valid": 7,
+    "vague_dropped": 0,
+    "vague_downgraded": 0,
+    "llm_rejected_by_reason": {
+      "evidence_not_found": 2
+    },
+    "llm_rejection_rate": 0.2222,
+    "static_assessments": {
+      "confirm": 14
+    },
+    "context_items_by_reason": {
+      "readme": 4,
+      "similar": 14,
+      "guideline": 8,
+      "test": 3
+    },
+    "avg_context_items_per_unit": 7.25,
+    "llm_usage": {
+      "calls": 4,
+      "input_tokens": 8305,
+      "output_tokens": 7255,
+      "parse_retries": 0
+    },
+    "static_rejected": 0,
+    "dedup_merged": 11,
+    "filtered_low_confidence": 0,
+    "fixes_available": 3,
+    "final_findings": 23,
+    "timings_s": {
+      "ingest_parse": 0.012,
+      "static_analysis": 5.272,
+      "rag_index": 1.658,
+      "llm_review": 183.359,
+      "postprocess": 0.001
+    }
+  },
+  "timing": {
+    "total_sec": 190.3066,
+    "static_analysis_sec": 5.2722,
+    "static_tools_sec": {
+      "ruff": 0.0506,
+      "radon": 0.0137,
+      "ast": 0.0056,
+      "secrets": 0.001,
+      "test_gap": 0.0002,
+      "mypy": 5.2011
+    },
+    "rag_index_sec": 0.1197,
+    "rag_retrieval_sec": 0.0559,
+    "rag_queries": 8,
+    "llm_inference_sec": 19.5181,
+    "llm_calls": 4,
+    "llm_rate_limit_wait_sec": 163.78,
+    "validation_sec": 0.0045,
+    "report_generation_sec": null,
+    "ingestion_parsing_sec": 0.0121,
+    "other_sec": 165.3363,
+    "concurrency": 1
+  },
+  "final_findings": 23,
+  "complete": true,
+  "llm_units_failed": 0,
+  "experiment": {
+    "configuration": {
+      "key": "static_llm_rag",
+      "letter": "D",
+      "label": "Static + LLM + RAG",
+      "static": true,
+      "llm": true,
+      "rag": true,
+      "mode": "full"
+    },
+    "benchmark": "planted",
+    "dataset": "planted-issue fixture (tests/fixtures/repos/planted)",
+    "split": null,
+    "sampling_seed": null,
+    "limit": null,
+    "sample_count": 17,
+    "sample_fingerprint": "0001417736134671",
+    "n_evaluated": 17,
+    "n_failed": 0,
+    "llm": {
+      "provider": "groq",
+      "model": "openai/gpt-oss-120b",
+      "temperature": 0.0,
+      "seed": 42,
+      "max_tokens": 2048
+    },
+    "rag": {
+      "top_k": 6,
+      "guideline_k": 2,
+      "embedding_model": "hashing",
+      "vector_store": "chroma",
+      "structural_context": true,
+      "max_context_chars": 8000
+    },
+    "static_analyzers": [
+      "ruff",
+      "radon",
+      "ast",
+      "secrets",
+      "test_gap",
+      "mypy"
+    ],
+    "confidence_threshold": 0.3,
+    "include_info": true,
+    "evaluation_rules": {
+      "line_tolerance": 2,
+      "match": "same file, start within +-2 lines, compatible category",
+      "precision_over": "defect findings (bug, security, error_handling, edge_case)"
+    },
+    "prompt_versions": {
+      "system": "1.0",
+      "review": "1.0"
+    },
+    "group_id": "abl-20261012T161020Z",
+    "repeat": 1,
+    "repeats": 1,
+    "timestamp": "2026-10-12T16:17:45.126740+00:00"
+  }
+}

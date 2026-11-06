@@ -1,0 +1,95 @@
+{
+  "name": "codereviewer_cls_test_static_llm_n10",
+  "started_at": "2026-10-12T16:26:35.005450+00:00",
+  "git_commit": "uncommitted",
+  "python": "3.11.7",
+  "platform": "Windows-10-10.0.26200-SP0",
+  "packages": {
+    "marl-agents": "0.1.0",
+    "pydantic": "2.13.5",
+    "ruff": "0.16.9",
+    "radon": "6.0.1",
+    "chromadb": "1.5.9",
+    "openai": "3.21.0",
+    "sentence-transformers": "6.1.0"
+  },
+  "dataset": "CodeReviewer",
+  "task": "cls",
+  "split": "test",
+  "seed": 42,
+  "limit": 10,
+  "languages": [
+    "py"
+  ],
+  "sample_ids": [
+    "cls-test-10866-606",
+    "cls-test-13171-1711",
+    "cls-test-18483-2020",
+    "cls-test-17167-3810",
+    "cls-test-22076-3971",
+    "cls-test-18542-4721",
+    "cls-test-19002-14971",
+    "cls-test-16843-26657",
+    "cls-test-13184-26864",
+    "cls-test-20155-31197"
+  ],
+  "llm_provider": "groq",
+  "llm_model": "openai/gpt-oss-120b",
+  "experiment": {
+    "configuration": {
+      "key": "static_llm",
+      "letter": "C",
+      "label": "Static + LLM",
+      "static": true,
+      "llm": true,
+      "rag": false,
+      "mode": "full"
+    },
+    "benchmark": "codereviewer_cls",
+    "dataset": "CodeReviewer (Python)",
+    "split": "test",
+    "sampling_seed": 42,
+    "limit": 10,
+    "sample_count": 10,
+    "sample_fingerprint": "75d51b33e2021e4f",
+    "n_evaluated": 3,
+    "n_failed": 7,
+    "llm": {
+      "provider": "groq",
+      "model": "openai/gpt-oss-120b",
+      "temperature": 0.0,
+      "seed": 42,
+      "max_tokens": 2048
+    },
+    "rag": null,
+    "static_analyzers": [
+      "ruff",
+      "radon",
+      "ast",
+      "secrets"
+    ],
+    "confidence_threshold": 0.3,
+    "include_info": true,
+    "evaluation_rules": {
+      "flag_threshold": "at least one finding of severity >= low",
+      "score": "highest finding priority (severity rank + confidence) / 5",
+      "adjusted_excludes_rules": [
+        "F401",
+        "F403",
+        "F405",
+        "F811",
+        "F821"
+      ]
+    },
+    "prompt_versions": {
+      "system": "1.0",
+      "review": "1.0"
+    },
+    "group_id": "abl-20261012T161828Z",
+    "repeat": 1,
+    "repeats": 1,
+    "timestamp": "2026-10-12T16:30:34.430181+00:00"
+  },
+  "finished_at": "2026-10-12T16:30:34.431183+00:00",
+  "errors": 7
+}

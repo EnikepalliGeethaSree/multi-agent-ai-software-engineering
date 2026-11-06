@@ -1,0 +1,354 @@
+{
+  "task": "cls",
+  "n_samples": 10,
+  "n_evaluated": 0,
+  "n_failed": 10,
+  "failure_reasons": {
+    "llm": 10
+  },
+  "seconds": 3.3,
+  "findings_per_sample": 0.0,
+  "timing": {
+    "total_sec": {
+      "n": 0,
+      "mean": null,
+      "median": null,
+      "min": null,
+      "max": null
+    },
+    "static_analysis_sec": {
+      "n": 0,
+      "mean": null,
+      "median": null,
+      "min": null,
+      "max": null
+    },
+    "rag_sec": {
+      "n": 0,
+      "mean": null,
+      "median": null,
+      "min": null,
+      "max": null
+    },
+    "llm_inference_sec": {
+      "n": 0,
+      "mean": null,
+      "median": null,
+      "min": null,
+      "max": null
+    },
+    "validation_sec": {
+      "n": 0,
+      "mean": null,
+      "median": null,
+      "min": null,
+      "max": null
+    },
+    "other_sec": {
+      "n": 0,
+      "mean": null,
+      "median": null,
+      "min": null,
+      "max": null
+    },
+    "llm_rate_limit_wait_sec": {
+      "n": 0,
+      "mean": null,
+      "median": null,
+      "min": null,
+      "max": null
+    },
+    "conditions": {
+      "samples": 0,
+      "workers": 1,
+      "note": "per-sample review time; samples ran concurrently on `workers` workers"
+    }
+  },
+  "finding_categories": {},
+  "finding_rules_top20": {},
+  "label_balance": {
+    "positive": 0,
+    "negative": 0
+  },
+  "threshold_sweep": {
+    "info": {
+      "n": 0,
+      "tp": 0,
+      "fp": 0,
+      "tn": 0,
+      "fn": 0,
+      "accuracy": 0.0,
+      "precision": 0.0,
+      "recall": 0.0,
+      "f1": 0.0,
+      "positive_rate": 0.0
+    },
+    "low": {
+      "n": 0,
+      "tp": 0,
+      "fp": 0,
+      "tn": 0,
+      "fn": 0,
+      "accuracy": 0.0,
+      "precision": 0.0,
+      "recall": 0.0,
+      "f1": 0.0,
+      "positive_rate": 0.0
+    },
+    "medium": {
+      "n": 0,
+      "tp": 0,
+      "fp": 0,
+      "tn": 0,
+      "fn": 0,
+      "accuracy": 0.0,
+      "precision": 0.0,
+      "recall": 0.0,
+      "f1": 0.0,
+      "positive_rate": 0.0
+    },
+    "high": {
+      "n": 0,
+      "tp": 0,
+      "fp": 0,
+      "tn": 0,
+      "fn": 0,
+      "accuracy": 0.0,
+      "precision": 0.0,
+      "recall": 0.0,
+      "f1": 0.0,
+      "positive_rate": 0.0
+    },
+    "critical": {
+      "n": 0,
+      "tp": 0,
+      "fp": 0,
+      "tn": 0,
+      "fn": 0,
+      "accuracy": 0.0,
+      "precision": 0.0,
+      "recall": 0.0,
+      "f1": 0.0,
+      "positive_rate": 0.0
+    }
+  },
+  "default_threshold": "low",
+  "default": {
+    "n": 0,
+    "tp": 0,
+    "fp": 0,
+    "tn": 0,
+    "fn": 0,
+    "accuracy": 0.0,
+    "precision": 0.0,
+    "recall": 0.0,
+    "f1": 0.0,
+    "positive_rate": 0.0
+  },
+  "f1_ci95": [
+    NaN,
+    NaN
+  ],
+  "accuracy_ci95": [
+    NaN,
+    NaN
+  ],
+  "precision_ci95": [
+    NaN,
+    NaN
+  ],
+  "roc_auc": null,
+  "baselines": {
+    "majority_class_accuracy": 0.0,
+    "always_positive": {
+      "n": 0,
+      "tp": 0,
+      "fp": 0,
+      "tn": 0,
+      "fn": 0,
+      "accuracy": 0.0,
+      "precision": 0.0,
+      "recall": 0.0,
+      "f1": 0.0,
+      "positive_rate": 0.0
+    }
+  },
+  "sensitivity_without_cross_hunk_rules": {
+    "excluded_rules": [
+      "F401",
+      "F403",
+      "F405",
+      "F811",
+      "F821"
+    ],
+    "label_balance": {
+      "positive": 0,
+      "negative": 0
+    },
+    "threshold_sweep": {
+      "info": {
+        "n": 0,
+        "tp": 0,
+        "fp": 0,
+        "tn": 0,
+        "fn": 0,
+        "accuracy": 0.0,
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1": 0.0,
+        "positive_rate": 0.0
+      },
+      "low": {
+        "n": 0,
+        "tp": 0,
+        "fp": 0,
+        "tn": 0,
+        "fn": 0,
+        "accuracy": 0.0,
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1": 0.0,
+        "positive_rate": 0.0
+      },
+      "medium": {
+        "n": 0,
+        "tp": 0,
+        "fp": 0,
+        "tn": 0,
+        "fn": 0,
+        "accuracy": 0.0,
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1": 0.0,
+        "positive_rate": 0.0
+      },
+      "high": {
+        "n": 0,
+        "tp": 0,
+        "fp": 0,
+        "tn": 0,
+        "fn": 0,
+        "accuracy": 0.0,
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1": 0.0,
+        "positive_rate": 0.0
+      },
+      "critical": {
+        "n": 0,
+        "tp": 0,
+        "fp": 0,
+        "tn": 0,
+        "fn": 0,
+        "accuracy": 0.0,
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1": 0.0,
+        "positive_rate": 0.0
+      }
+    },
+    "default_threshold": "low",
+    "default": {
+      "n": 0,
+      "tp": 0,
+      "fp": 0,
+      "tn": 0,
+      "fn": 0,
+      "accuracy": 0.0,
+      "precision": 0.0,
+      "recall": 0.0,
+      "f1": 0.0,
+      "positive_rate": 0.0
+    },
+    "f1_ci95": [
+      NaN,
+      NaN
+    ],
+    "accuracy_ci95": [
+      NaN,
+      NaN
+    ],
+    "precision_ci95": [
+      NaN,
+      NaN
+    ],
+    "roc_auc": null,
+    "baselines": {
+      "majority_class_accuracy": 0.0,
+      "always_positive": {
+        "n": 0,
+        "tp": 0,
+        "fp": 0,
+        "tn": 0,
+        "fn": 0,
+        "accuracy": 0.0,
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1": 0.0,
+        "positive_rate": 0.0
+      }
+    }
+  },
+  "experiment": {
+    "configuration": {
+      "key": "static_llm_rag",
+      "letter": "D",
+      "label": "Static + LLM + RAG",
+      "static": true,
+      "llm": true,
+      "rag": true,
+      "mode": "full"
+    },
+    "benchmark": "codereviewer_cls",
+    "dataset": "CodeReviewer (Python)",
+    "split": "test",
+    "sampling_seed": 42,
+    "limit": 10,
+    "sample_count": 10,
+    "sample_fingerprint": "75d51b33e2021e4f",
+    "n_evaluated": 0,
+    "n_failed": 10,
+    "llm": {
+      "provider": "groq",
+      "model": "openai/gpt-oss-120b",
+      "temperature": 0.0,
+      "seed": 42,
+      "max_tokens": 2048
+    },
+    "rag": {
+      "top_k": 6,
+      "guideline_k": 2,
+      "embedding_model": "hashing",
+      "vector_store": "memory",
+      "structural_context": true,
+      "max_context_chars": 8000
+    },
+    "static_analyzers": [
+      "ruff",
+      "radon",
+      "ast",
+      "secrets"
+    ],
+    "confidence_threshold": 0.3,
+    "include_info": true,
+    "evaluation_rules": {
+      "flag_threshold": "at least one finding of severity >= low",
+      "score": "highest finding priority (severity rank + confidence) / 5",
+      "adjusted_excludes_rules": [
+        "F401",
+        "F403",
+        "F405",
+        "F811",
+        "F821"
+      ]
+    },
+    "prompt_versions": {
+      "system": "1.0",
+      "review": "1.0"
+    },
+    "group_id": "abl-20261012T161828Z",
+    "repeat": 1,
+    "repeats": 1,
+    "timestamp": "2026-10-12T16:30:37.821593+00:00"
+  }
+}

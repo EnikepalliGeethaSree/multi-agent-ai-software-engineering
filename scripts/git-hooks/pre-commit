@@ -1,0 +1,30 @@
+#!/bin/sh
+# Pre-commit gate: reviews the STAGED change with the Code Review Agent and blocks the commit
+# when a finding at or above MARL_FAIL_ON (default: high) is found.
+#
+# Install in any git repository (run from that repository's root):
+#   python <marl-agents>/scripts/install_hooks.py
+# Skip once:   git commit --no-verify
+# Settings:    MARL_REVIEW_MODE   static_only (default, free, ~seconds) | full | llm_only
+#              MARL_FAIL_ON       critical | high (default) | medium | low | none
+#              MARL_PYTHON        python interpreter that has marl-agents installed
+
+PYTHON="${MARL_PYTHON:-python}"
+MODE="${MARL_REVIEW_MODE:-static_only}"
+FAIL_ON="${MARL_FAIL_ON:-high}"
+
+# Only Python changes are reviewed; skip quickly otherwise.
+if ! git diff --cached --name-only --diff-filter=ACMR | grep -q '\.py$'; then
+    exit 0
+fi
+
+OUT="$(git rev-parse --git-dir)/marl-review"
+"$PYTHON" -m marl_agents.cli review-change . --staged --mode "$MODE" \
+    --fail-on "$FAIL_ON" --formats md --out "$OUT"
+status=$?
+if [ $status -eq 1 ]; then
+    echo ""
+    echo "Commit blocked by the code review gate. Full report: $OUT/review.md"
+    echo "Fix the findings above, or commit with --no-verify to skip the check."
+fi
+exit $status

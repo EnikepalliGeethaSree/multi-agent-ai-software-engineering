@@ -1,0 +1,346 @@
+{
+  "task": "cls",
+  "n_samples": 10,
+  "n_evaluated": 10,
+  "n_failed": 0,
+  "failure_reasons": {},
+  "seconds": 482.8,
+  "findings_per_sample": 0.8,
+  "timing": {
+    "total_sec": {
+      "n": 10,
+      "mean": 48.2741,
+      "median": 59.013,
+      "min": 1.8009,
+      "max": 62.2604
+    },
+    "static_analysis_sec": {
+      "n": 10,
+      "mean": 0.0,
+      "median": 0.0,
+      "min": 0.0,
+      "max": 0.0
+    },
+    "rag_sec": {
+      "n": 10,
+      "mean": 0.0,
+      "median": 0.0,
+      "min": 0.0,
+      "max": 0.0
+    },
+    "llm_inference_sec": {
+      "n": 10,
+      "mean": 2.927,
+      "median": 2.6865,
+      "min": 1.7922,
+      "max": 4.9247
+    },
+    "validation_sec": {
+      "n": 10,
+      "mean": 0.0046,
+      "median": 0.0026,
+      "min": 0.0001,
+      "max": 0.0154
+    },
+    "other_sec": {
+      "n": 10,
+      "mean": 45.3424,
+      "median": 56.352,
+      "min": 0.0082,
+      "max": 57.9953
+    },
+    "llm_rate_limit_wait_sec": {
+      "n": 10,
+      "mean": 45.2827,
+      "median": 56.2655,
+      "min": 0.0,
+      "max": 57.812
+    },
+    "conditions": {
+      "samples": 10,
+      "workers": 1,
+      "note": "per-sample review time; samples ran concurrently on `workers` workers"
+    }
+  },
+  "finding_categories": {
+    "quality": 1,
+    "edge_case": 2,
+    "bug": 5
+  },
+  "finding_rules_top20": {
+    "llm": 8
+  },
+  "label_balance": {
+    "positive": 5,
+    "negative": 5
+  },
+  "threshold_sweep": {
+    "info": {
+      "n": 10,
+      "tp": 5,
+      "fp": 3,
+      "tn": 2,
+      "fn": 0,
+      "accuracy": 0.7,
+      "precision": 0.625,
+      "recall": 1.0,
+      "f1": 0.7692307692307693,
+      "positive_rate": 0.8
+    },
+    "low": {
+      "n": 10,
+      "tp": 5,
+      "fp": 3,
+      "tn": 2,
+      "fn": 0,
+      "accuracy": 0.7,
+      "precision": 0.625,
+      "recall": 1.0,
+      "f1": 0.7692307692307693,
+      "positive_rate": 0.8
+    },
+    "medium": {
+      "n": 10,
+      "tp": 4,
+      "fp": 2,
+      "tn": 3,
+      "fn": 1,
+      "accuracy": 0.7,
+      "precision": 0.6666666666666666,
+      "recall": 0.8,
+      "f1": 0.7272727272727272,
+      "positive_rate": 0.6
+    },
+    "high": {
+      "n": 10,
+      "tp": 3,
+      "fp": 2,
+      "tn": 3,
+      "fn": 2,
+      "accuracy": 0.6,
+      "precision": 0.6,
+      "recall": 0.6,
+      "f1": 0.6,
+      "positive_rate": 0.5
+    },
+    "critical": {
+      "n": 10,
+      "tp": 0,
+      "fp": 0,
+      "tn": 5,
+      "fn": 5,
+      "accuracy": 0.5,
+      "precision": 0.0,
+      "recall": 0.0,
+      "f1": 0.0,
+      "positive_rate": 0.0
+    }
+  },
+  "default_threshold": "low",
+  "default": {
+    "n": 10,
+    "tp": 5,
+    "fp": 3,
+    "tn": 2,
+    "fn": 0,
+    "accuracy": 0.7,
+    "precision": 0.625,
+    "recall": 1.0,
+    "f1": 0.7692307692307693,
+    "positive_rate": 0.8
+  },
+  "f1_ci95": [
+    0.4,
+    1.0
+  ],
+  "accuracy_ci95": [
+    0.4,
+    1.0
+  ],
+  "precision_ci95": [
+    0.25,
+    1.0
+  ],
+  "roc_auc": 0.56,
+  "baselines": {
+    "majority_class_accuracy": 0.5,
+    "always_positive": {
+      "n": 10,
+      "tp": 5,
+      "fp": 5,
+      "tn": 0,
+      "fn": 0,
+      "accuracy": 0.5,
+      "precision": 0.5,
+      "recall": 1.0,
+      "f1": 0.6666666666666666,
+      "positive_rate": 1.0
+    }
+  },
+  "sensitivity_without_cross_hunk_rules": {
+    "excluded_rules": [
+      "F401",
+      "F403",
+      "F405",
+      "F811",
+      "F821"
+    ],
+    "label_balance": {
+      "positive": 5,
+      "negative": 5
+    },
+    "threshold_sweep": {
+      "info": {
+        "n": 10,
+        "tp": 5,
+        "fp": 3,
+        "tn": 2,
+        "fn": 0,
+        "accuracy": 0.7,
+        "precision": 0.625,
+        "recall": 1.0,
+        "f1": 0.7692307692307693,
+        "positive_rate": 0.8
+      },
+      "low": {
+        "n": 10,
+        "tp": 5,
+        "fp": 3,
+        "tn": 2,
+        "fn": 0,
+        "accuracy": 0.7,
+        "precision": 0.625,
+        "recall": 1.0,
+        "f1": 0.7692307692307693,
+        "positive_rate": 0.8
+      },
+      "medium": {
+        "n": 10,
+        "tp": 4,
+        "fp": 2,
+        "tn": 3,
+        "fn": 1,
+        "accuracy": 0.7,
+        "precision": 0.6666666666666666,
+        "recall": 0.8,
+        "f1": 0.7272727272727272,
+        "positive_rate": 0.6
+      },
+      "high": {
+        "n": 10,
+        "tp": 3,
+        "fp": 2,
+        "tn": 3,
+        "fn": 2,
+        "accuracy": 0.6,
+        "precision": 0.6,
+        "recall": 0.6,
+        "f1": 0.6,
+        "positive_rate": 0.5
+      },
+      "critical": {
+        "n": 10,
+        "tp": 0,
+        "fp": 0,
+        "tn": 5,
+        "fn": 5,
+        "accuracy": 0.5,
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1": 0.0,
+        "positive_rate": 0.0
+      }
+    },
+    "default_threshold": "low",
+    "default": {
+      "n": 10,
+      "tp": 5,
+      "fp": 3,
+      "tn": 2,
+      "fn": 0,
+      "accuracy": 0.7,
+      "precision": 0.625,
+      "recall": 1.0,
+      "f1": 0.7692307692307693,
+      "positive_rate": 0.8
+    },
+    "f1_ci95": [
+      0.4,
+      1.0
+    ],
+    "accuracy_ci95": [
+      0.4,
+      1.0
+    ],
+    "precision_ci95": [
+      0.25,
+      1.0
+    ],
+    "roc_auc": 0.56,
+    "baselines": {
+      "majority_class_accuracy": 0.5,
+      "always_positive": {
+        "n": 10,
+        "tp": 5,
+        "fp": 5,
+        "tn": 0,
+        "fn": 0,
+        "accuracy": 0.5,
+        "precision": 0.5,
+        "recall": 1.0,
+        "f1": 0.6666666666666666,
+        "positive_rate": 1.0
+      }
+    }
+  },
+  "experiment": {
+    "configuration": {
+      "key": "llm_only",
+      "letter": "B",
+      "label": "LLM Only",
+      "static": false,
+      "llm": true,
+      "rag": false,
+      "mode": "llm_only"
+    },
+    "benchmark": "codereviewer_cls",
+    "dataset": "CodeReviewer (Python)",
+    "split": "test",
+    "sampling_seed": 42,
+    "limit": 10,
+    "sample_count": 10,
+    "sample_fingerprint": "75d51b33e2021e4f",
+    "n_evaluated": 10,
+    "n_failed": 0,
+    "llm": {
+      "provider": "groq",
+      "model": "openai/gpt-oss-120b",
+      "temperature": 0.0,
+      "seed": 42,
+      "max_tokens": 2048
+    },
+    "rag": null,
+    "static_analyzers": [],
+    "confidence_threshold": 0.3,
+    "include_info": true,
+    "evaluation_rules": {
+      "flag_threshold": "at least one finding of severity >= low",
+      "score": "highest finding priority (severity rank + confidence) / 5",
+      "adjusted_excludes_rules": [
+        "F401",
+        "F403",
+        "F405",
+        "F811",
+        "F821"
+      ]
+    },
+    "prompt_versions": {
+      "system": "1.0",
+      "review": "1.0"
+    },
+    "group_id": "abl-20261012T161828Z",
+    "repeat": 1,
+    "repeats": 1,
+    "timestamp": "2026-10-12T16:26:34.993448+00:00"
+  }
+}

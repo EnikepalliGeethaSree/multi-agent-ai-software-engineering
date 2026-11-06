@@ -1,0 +1,6 @@
+app:
+  name: shop
+  debug: false
+aws:
+  region: eu-west-1
+  access_key_id: AKIAQ3EGUSPW7XJ2LM4K

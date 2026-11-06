@@ -1,0 +1,90 @@
+{
+  "task": "msg",
+  "n_samples": 40,
+  "n_evaluated": 36,
+  "n_failed": 4,
+  "failure_reasons": {
+    "llm": 4
+  },
+  "seconds": 2623.0,
+  "findings_per_sample": 1.528,
+  "finding_categories": {
+    "bug": 20,
+    "quality": 12,
+    "security": 2,
+    "edge_case": 2,
+    "maintainability": 3,
+    "testing": 1,
+    "standards": 11,
+    "documentation": 2,
+    "performance": 1,
+    "error_handling": 1
+  },
+  "finding_rules_top20": {
+    "llm": 21,
+    "F821": 11,
+    "F401": 9,
+    "E703": 5,
+    "AST-MISSING-DOCSTRING": 2,
+    "E731": 2,
+    "F405": 2,
+    "B006": 1,
+    "E722": 1,
+    "AST-LONG-FUNCTION": 1
+  },
+  "comment_coverage": 0.7777777777777778,
+  "text_metrics": {
+    "title": {
+      "bleu4_smoothed": 1.661,
+      "rouge_l": 3.35,
+      "chrf": 9.552
+    },
+    "title_fix": {
+      "bleu4_smoothed": 2.136,
+      "rouge_l": 6.909,
+      "chrf": 13.595
+    },
+    "description": {
+      "bleu4_smoothed": 1.766,
+      "rouge_l": 5.312,
+      "chrf": 12.379
+    }
+  },
+  "bleu4_ci95_title_fix": [
+    1.532098103208456,
+    2.7477599892590843
+  ],
+  "hit_rate_non_info": 0.75,
+  "sensitivity_without_cross_hunk_rules": {
+    "excluded_rules": [
+      "F401",
+      "F403",
+      "F405",
+      "F811",
+      "F821"
+    ],
+    "comment_coverage": 0.6666666666666666,
+    "text_metrics": {
+      "title": {
+        "bleu4_smoothed": 1.407,
+        "rouge_l": 2.308,
+        "chrf": 7.828
+      },
+      "title_fix": {
+        "bleu4_smoothed": 1.927,
+        "rouge_l": 5.916,
+        "chrf": 11.705
+      },
+      "description": {
+        "bleu4_smoothed": 1.606,
+        "rouge_l": 4.855,
+        "chrf": 11.432
+      }
+    },
+    "bleu4_ci95_title_fix": [
+      1.182894981629443,
+      2.8110718128768992
+    ],
+    "hit_rate_non_info": 0.6388888888888888
+  }
+}

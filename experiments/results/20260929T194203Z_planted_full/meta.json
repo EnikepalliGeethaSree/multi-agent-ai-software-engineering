@@ -1,0 +1,19 @@
+{
+  "name": "planted_full",
+  "started_at": "2026-09-29T19:42:03.206755+00:00",
+  "git_commit": "uncommitted",
+  "python": "3.11.7",
+  "platform": "Windows-10-10.0.26200-SP0",
+  "packages": {
+    "marl-agents": "0.1.0",
+    "pydantic": "2.13.5",
+    "ruff": "0.16.9",
+    "radon": "6.0.1",
+    "chromadb": "1.5.9",
+    "openai": "3.21.0"
+  },
+  "llm_provider": "groq",
+  "llm_model": "openai/gpt-oss-120b",
+  "finished_at": "2026-09-29T19:43:10.571249+00:00",
+  "errors": 0
+}

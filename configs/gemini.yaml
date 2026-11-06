@@ -1,0 +1,34 @@
+# Google Gemini (free tier via Google AI Studio). Default provider; this overlay exists so that
+# evaluation commands state their provider explicitly.
+# The key comes from the environment: GEMINI_API_KEY=... in .env (never in this file).
+#
+#   python -m marl_agents.cli models --config configs/gemini.yaml   # models this key can use
+#   python -m marl_agents.cli check  --config configs/gemini.yaml   # one tiny request
+
+llm:
+  provider: gemini
+  model: gemini-3.8-flash   # verify with `cli check`; set GEMINI_MODEL to change it
+  temperature: 0.0
+  max_tokens: 16384       # reasoning counts against this: at 4096, replies were cut off
+  seed: 42
+  json_mode: true
+  # Free-tier limits are per project, vary by model, and are not published as fixed numbers. Read
+  # yours at https://aistudio.google.com/rate-limit and set them here. The per-minute values below
+  # are cautious starting points, not Google's figures. The server's own 429 always wins.
+  requests_per_minute: 10
+  tokens_per_minute: 200000
+  requests_per_day: 20      # Google's free limit for gemini-3.6-flash, per project and
+                            # model, from its 429 on 2026-11-06. It can differ per model.
+  tokens_per_day: null
+  max_input_tokens: null    # e.g. 100000: larger requests are retried without retrieved context
+  max_retries: 5
+  timeout_s: 120
+  extra_params: {}          # Extra GenerateContentConfig fields, e.g. {thinking_config: {...}}
+
+review:
+  concurrency: 2            # the rate limiter keeps parallel calls within quota
+  unit_cache: true          # reruns after a quota stop reuse finished units
+  analysis_cache: true
+
+rag:
+  max_context_chars: 8000   # a smaller prompt fits more calls into the free quota
