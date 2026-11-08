@@ -47,6 +47,7 @@ pip install -e ".[dev]"
 cp .env.example .env            # add a free GEMINI_API_KEY for LLM reviews
 pytest                          # offline: needs no key
 python -m marl_agents.cli check # one small real request, once a key is set
+python -m marl_agents.cli bugs path/to/repo   # Bug Detection Agent (docs/bug-detection-agent.md)
 ```
 
 Optional extras: `.[analysis]`, `.[rag]`, `.[llm]`, `.[api]`, `.[reports]`, `.[eval]`, `.[train]`.

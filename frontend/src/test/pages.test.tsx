@@ -95,6 +95,28 @@ describe("new review", () => {
     expect(options).toMatchObject({ mode: "full", rag_enabled: false, model: "qwen/qwen3.8-27b", min_confidence: 0.3, suggest_fixes: true });
   });
 
+  it("sends the chosen agent and failing test", async () => {
+    const mock = mockFetch({
+      "GET /api/llm/status": LLM_READY,
+      "GET /api/llm/models": { models: [], default: null },
+      "POST /api/reviews": job({ id: "fedcba654321", status: "queued", summary: null }),
+      "GET /api/reviews/fedcba654321": { job: job({ id: "fedcba654321", status: "running", summary: null }), result: null },
+    });
+    vi.stubGlobal("fetch", mock.fn);
+    renderAt("/");
+    await userEvent.click(await screen.findByRole("tab", { name: "Paste code" }));
+    await userEvent.type(screen.getByLabelText("Python code"), "x = 1");
+    expect(screen.queryByLabelText(/Failing test/)).not.toBeInTheDocument();
+    await userEvent.click(screen.getByRole("radio", { name: /Bug detection/ }));
+    await userEvent.type(screen.getByLabelText(/Failing test/), "tests/test_x.py::test_y");
+    await userEvent.click(screen.getByRole("button", { name: "Start review" }));
+
+    await screen.findByText(/Reviewing/);
+    const post = mock.calls.find((c) => c.method === "POST")!;
+    const options = JSON.parse(String((post.body as FormData).get("options")));
+    expect(options).toMatchObject({ agent: "bug_detection", failing_test: "tests/test_x.py::test_y" });
+  });
+
   it("shows server-side rejections", async () => {
     vi.stubGlobal(
       "fetch",

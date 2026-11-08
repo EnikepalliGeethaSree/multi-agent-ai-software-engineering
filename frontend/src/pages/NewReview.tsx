@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState, type DragEvent, type FormEvent } from "react";
 import { useNavigate, useOutletContext } from "react-router-dom";
 import { api, type ReviewInput } from "../api/client";
-import type { LLMStatus, Mode, ReviewOptions } from "../api/types";
+import type { AgentName, LLMStatus, Mode, ReviewOptions } from "../api/types";
 import { ChangeForm, EMPTY_CHANGE, toChangeInput, type ChangeFormState } from "../components/ChangeForm";
 import { Button, Card, ErrorBanner, Spinner, StatusIcon, Toggle } from "../components/ui";
 
@@ -25,6 +25,11 @@ const MODES: { value: Mode; title: string; text: string; needsLLM: boolean }[] =
   { value: "llm_only", title: "LLM only", text: "LLM without static tools (ablation).", needsLLM: true },
 ];
 
+const AGENTS: { value: AgentName; title: string; text: string }[] = [
+  { value: "code_review", title: "Code review", text: "Quality, maintainability, security and bugs." },
+  { value: "bug_detection", title: "Bug detection", text: "Runtime and logic defects, with what triggers them." },
+];
+
 export default function NewReview() {
   const { llm } = useOutletContext<{ llm: LLMStatus | null }>();
   const navigate = useNavigate();
@@ -37,6 +42,8 @@ export default function NewReview() {
   const [filename, setFilename] = useState("snippet.py");
   const [dragging, setDragging] = useState(false);
   const [options, setOptions] = useState<ReviewOptions>({
+    agent: "code_review",
+    failing_test: null,
     mode: "full",
     rag_enabled: true,
     structural_context: true,
@@ -246,6 +253,48 @@ export default function NewReview() {
       </div>
 
       <aside className="space-y-4">
+        <Card title="Agent">
+          <div className="space-y-2" role="radiogroup" aria-label="Agent">
+            {AGENTS.map((a) => {
+              const on = (options.agent ?? "code_review") === a.value;
+              return (
+                <label
+                  key={a.value}
+                  className={`flex cursor-pointer gap-3 rounded-lg border p-3 ${on ? "border-accent bg-accent-wash" : "border-line"}`}
+                >
+                  <input
+                    type="radio"
+                    name="agent"
+                    value={a.value}
+                    checked={on}
+                    onChange={() => set("agent", a.value)}
+                    className="mt-1 accent-[var(--accent)]"
+                  />
+                  <span>
+                    <span className="block text-sm font-medium text-ink">{a.title}</span>
+                    <span className="block text-xs text-ink-3">{a.text}</span>
+                  </span>
+                </label>
+              );
+            })}
+          </div>
+          {options.agent === "bug_detection" && (
+            <div className="mt-3">
+              <label className="block text-xs text-ink-3" htmlFor="failing-test">
+                Failing test (optional)
+              </label>
+              <input
+                id="failing-test"
+                value={options.failing_test ?? ""}
+                onChange={(e) => set("failing_test", e.target.value || null)}
+                placeholder="tests/test_x.py::test_y"
+                className="mt-1 w-full rounded-lg border border-line bg-surface px-2 py-1.5 font-mono text-xs text-ink"
+              />
+              <p className="mt-1 text-xs text-ink-3">The test is read, never run. The agent ranks where the failure comes from.</p>
+            </div>
+          )}
+        </Card>
+
         <Card title="Review mode">
           <div className="space-y-2" role="radiogroup" aria-label="Review mode">
             {MODES.map((m) => {

@@ -1,0 +1,86 @@
+{
+  "n_functions": 56,
+  "n_bugs": 28,
+  "n_failed": 0,
+  "function_level": {
+    "n": 56,
+    "tp": 4,
+    "fp": 3,
+    "tn": 25,
+    "fn": 24,
+    "accuracy": 0.5178571428571429,
+    "precision": 0.5714285714285714,
+    "recall": 0.14285714285714285,
+    "f1": 0.2285714285714286,
+    "positive_rate": 0.125
+  },
+  "at_gold_lines": {
+    "n": 56,
+    "tp": 2,
+    "fp": 3,
+    "tn": 25,
+    "fn": 26,
+    "accuracy": 0.48214285714285715,
+    "precision": 0.4,
+    "recall": 0.07142857142857142,
+    "f1": 0.12121212121212122,
+    "positive_rate": 0.08928571428571429
+  },
+  "ci_f1": [
+    0.056,
+    0.4
+  ],
+  "auc": 0.5197704081632653,
+  "pairs": {
+    "n": 28,
+    "both_flagged": 3,
+    "only_buggy": 1,
+    "only_fixed": 0,
+    "neither": 24,
+    "discrimination": 0.0357
+  },
+  "llm_calls": 0,
+  "llm_rejected": 0,
+  "complete": true,
+  "experiment": {
+    "configuration": {
+      "key": "static_only",
+      "letter": "A",
+      "label": "Static Only",
+      "static": true,
+      "llm": false,
+      "rag": false,
+      "mode": "static_only"
+    },
+    "benchmark": "bugsinpy_detection",
+    "dataset": "BugsInPy",
+    "split": "dev",
+    "sampling_seed": 42,
+    "limit": 28,
+    "sample_count": 28,
+    "sample_fingerprint": "6963363560a4607e",
+    "n_evaluated": 56,
+    "n_failed": 0,
+    "llm": null,
+    "rag": null,
+    "static_analyzers": [
+      "ruff",
+      "ast",
+      "flow"
+    ],
+    "classifier": null,
+    "confidence_threshold": 0.3,
+    "include_info": true,
+    "evaluation_rules": {
+      "pool": "one source file, at most 10 changed lines, change inside a function",
+      "failed_samples": "counted as wrong, never dropped (D22)",
+      "line_tolerance": 2
+    },
+    "prompt_versions": {},
+    "group_id": null,
+    "repeat": null,
+    "repeats": null,
+    "timestamp": "2026-11-06T19:56:44.714547+00:00",
+    "agent": "bug_detection"
+  }
+}

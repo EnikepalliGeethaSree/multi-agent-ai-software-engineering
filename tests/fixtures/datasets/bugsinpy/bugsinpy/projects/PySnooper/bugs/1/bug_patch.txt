@@ -1,0 +1,14 @@
+diff --git a/pysnooper/tracer.py b/pysnooper/tracer.py
+--- a/pysnooper/tracer.py
++++ b/pysnooper/tracer.py
+@@ -84,3 +84,3 @@
+     if isinstance(source[0], bytes):
+-        encoding = 'ascii'
++        encoding = 'utf-8'
+         for line in source[:2]:
+diff --git a/tests/test_chinese.py b/tests/test_chinese.py
+--- a/tests/test_chinese.py
++++ b/tests/test_chinese.py
+@@ -1,1 +1,2 @@
+ a = 1
++b = 2

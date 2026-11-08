@@ -1,0 +1,30 @@
+{
+  "comparison": {
+    "top_1": [
+      {
+        "a": "static_only",
+        "b": "llm_only",
+        "n": 1,
+        "only_a_correct": 0,
+        "only_b_correct": 0,
+        "p_value": 1.0
+      }
+    ],
+    "top_5": [
+      {
+        "a": "static_only",
+        "b": "llm_only",
+        "n": 1,
+        "only_a_correct": 0,
+        "only_b_correct": 0,
+        "p_value": 1.0
+      }
+    ]
+  },
+  "configurations": [
+    "static_only",
+    "llm_only"
+  ],
+  "finished_configurations": [],
+  "bug_types": {}
+}

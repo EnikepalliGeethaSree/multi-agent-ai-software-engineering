@@ -199,6 +199,7 @@ def merge(primary: Finding, other: Finding) -> Finding:
             "symbol": primary.symbol or other.symbol,
             "recommendation": recommendation,
             "test_recommendation": richer.test_recommendation or poorer.test_recommendation,
+            "bug": richer.bug or poorer.bug,
             "notes": list(
                 dict.fromkeys(
                     [*primary.notes, *other.notes, *rule_notes, f"merged with: {poorer.title[:80]}"]

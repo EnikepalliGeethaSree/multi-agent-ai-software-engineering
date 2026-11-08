@@ -15,7 +15,7 @@ the file map, and section 11 to prepare for questions from the panel.
 | Agent | What it does | Status |
 |---|---|---|
 | Code Review | quality, bugs, security smells, maintainability, review comments | **Complete (Phase 1)** |
-| Bug Detection | logic/runtime errors, where they are, how to reproduce | next phase |
+| Bug Detection | logic/runtime errors, where they are, how to reproduce | **Built; test-split evaluation pending** |
 | Security | vulnerabilities, OWASP Top 10, CWE mapping | next phase |
 | Test Generation | unit tests and edge cases | next phase |
 | Documentation | missing or outdated docstrings and docs | next phase |
@@ -398,7 +398,7 @@ this hunk.**
 | Dataset | Used for | Note |
 |---|---|---|
 | CodeReviewer | Code Review Agent | multi-language; we filter to Python |
-| BugsInPy | Bug Detection (next phase) | needs per-bug checkout |
+| BugsInPy | Bug Detection | shallow per-bug commits, no execution (docs/bug-detection-agent.md) |
 | Devign | Security (next phase) | C code, not Python |
 | HumanEval | Test Generation (next phase) | 164 problems |
 | CodeSearchNet | Documentation (next phase) | code-comment pairs |

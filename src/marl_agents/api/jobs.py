@@ -26,6 +26,7 @@ from typing import Any, Literal
 
 from pydantic import BaseModel, Field
 
+from marl_agents.agents.bug_detection import BugDetectionAgent, FailingTestError
 from marl_agents.agents.code_review import CodeReviewAgent
 from marl_agents.config import Settings
 from marl_agents.core.performance import PerformanceRecord, from_result, from_stats
@@ -65,7 +66,15 @@ class JobStatus(StrEnum):
     FAILED = "failed"
 
 
+AGENTS: dict[str, type[CodeReviewAgent]] = {
+    "code_review": CodeReviewAgent,
+    "bug_detection": BugDetectionAgent,
+}
+
+
 class ReviewOptions(BaseModel):
+    agent: Literal["code_review", "bug_detection"] = "code_review"
+    failing_test: str | None = None  # bug detection: e.g. tests/test_x.py::test_y
     mode: Literal["full", "static_only", "llm_only"] = "full"
     rag_enabled: bool = True
     structural_context: bool = True
@@ -368,7 +377,7 @@ class JobManager:
         keep_input = False
         try:
             llm = None if settings.review.mode == "static_only" else self.provider_for(settings)
-            agent = CodeReviewAgent(
+            agent = AGENTS[self.get(job_id).options.agent](
                 llm,
                 settings=settings,
                 progress=lambda m: self._progress(job_id, m),
@@ -397,7 +406,7 @@ class JobManager:
                 self._progress(job_id, "partial review: some units were not reviewed; resumable")
         except LLMError as exc:
             self._fail(job_id, f"LLM error: {exc}", agent)
-        except ChangeError as exc:
+        except (ChangeError, FailingTestError) as exc:
             self._fail(job_id, str(exc), agent)
         except Exception as exc:
             logger.exception("Review job %s failed", job_id)

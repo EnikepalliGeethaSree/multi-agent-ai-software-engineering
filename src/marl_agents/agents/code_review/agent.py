@@ -22,11 +22,12 @@ from marl_agents.agents.base import BaseAgent
 from marl_agents.agents.code_review.context import ContextBuilder, ContextItem, render_context
 from marl_agents.agents.code_review.fixes import FixGenerator
 from marl_agents.agents.code_review.llm_schema import (
+    LLMFinding,
     LLMReviewEnvelope,
     StaticAssessment,
     parse_items,
 )
-from marl_agents.agents.code_review.prompts import load_prompt, prompt_versions
+from marl_agents.agents.code_review.prompts import PromptTemplate, load_prompt, prompt_versions
 from marl_agents.agents.code_review.scheduling import UnitCache, UnitPlan, plan_units
 from marl_agents.agents.code_review.units import ReviewUnit, build_units, render_numbered
 from marl_agents.config import PROJECT_ROOT, Settings, load_settings
@@ -94,6 +95,7 @@ class UnitOutcome:
 
 class CodeReviewAgent(BaseAgent):
     name = "code_review"
+    id_prefix = "CR"
 
     def __init__(
         self,
@@ -112,7 +114,7 @@ class CodeReviewAgent(BaseAgent):
         self.llm = llm  # type: ignore[assignment]
         self._retriever = retriever
         if analyzers is None:
-            analyzers = default_analyzers()
+            analyzers = self._default_analyzers()
             if self.settings.review.type_check and mypy_available():
                 analyzers.append(TypeCheckAnalyzer())
         self.analyzers = analyzers
@@ -131,6 +133,67 @@ class CodeReviewAgent(BaseAgent):
         self._analysis_cache = (
             AnalysisCache(cache_root / "static_analysis") if review.analysis_cache else None
         )
+
+    # ---- what a specialized agent replaces ------------------------------------------------------
+
+    def _default_analyzers(self) -> list[StaticAnalyzer]:
+        return default_analyzers()
+
+    def _load_prompt(self, name: str) -> PromptTemplate:
+        return load_prompt(name)
+
+    def _prompt_versions(self) -> dict[str, str]:
+        return prompt_versions()
+
+    def _parse_reply(
+        self, envelope: LLMReviewEnvelope
+    ) -> tuple[list[LLMFinding], list[StaticAssessment], list[str]]:
+        return parse_items(envelope)
+
+    def _filter_static(self, static: list[Finding]) -> list[Finding]:
+        """Which static findings this agent reports. All of them here."""
+        return static
+
+    def _build_units(
+        self,
+        repo: Repository,
+        index: RepoIndex,
+        targets: list[str],
+        scope: Scope | None,
+        request: AgentRequest,
+    ) -> list[ReviewUnit]:
+        units: list[ReviewUnit] = []
+        for f in targets:
+            units.extend(
+                build_units(
+                    repo,
+                    index.modules[f],
+                    self.settings.review.max_unit_lines,
+                    scope.get(f) if scope else None,
+                )
+            )
+        return units
+
+    def _select_units(
+        self,
+        units: list[ReviewUnit],
+        repo: Repository,
+        static: list[Finding],
+        stats: dict[str, Any],
+        errors: list[str],
+    ) -> list[ReviewUnit]:
+        """Which units get an LLM call. All of them here, up to `review.max_units`."""
+        return units
+
+    def _check_claims(
+        self, findings: list[Finding], repo: Repository, unit: ReviewUnit
+    ) -> tuple[list[Finding], list[str]]:
+        """Checks beyond shared validation: (kept findings, one reason per rejected finding)."""
+        return findings, []
+
+    def _finish_findings(self, findings: list[Finding], repo: Repository) -> list[Finding]:
+        """Last change to the ranked findings, before suggested fixes."""
+        return findings
 
     # ---- construction helpers ------------------------------------------------------------------
 
@@ -243,6 +306,7 @@ class CodeReviewAgent(BaseAgent):
                 static.extend(out.findings)
                 raw_by_analyzer[analyzer.name] = len(out.findings)
                 errors.extend(f"[{analyzer.name}] {e}" for e in out.errors)
+            static = self._filter_static(static)
         timings["static_analysis"] = time.perf_counter() - t
         stats["static_findings_raw"] = raw_by_analyzer
         self.progress(f"static analysis: {len(static)} raw findings")
@@ -274,13 +338,8 @@ class CodeReviewAgent(BaseAgent):
                     max_chars=self.settings.rag.max_context_chars,
                     timer=timer,
                 )
-            units: list[ReviewUnit] = []
-            for f in targets:
-                units.extend(
-                    build_units(
-                        repo, index.modules[f], cfg.max_unit_lines, scope.get(f) if scope else None
-                    )
-                )
+            units = self._build_units(repo, index, targets, scope, request)
+            units = self._select_units(units, repo, static, stats, errors)
             if len(units) > cfg.max_units:
                 errors.append(
                     f"{len(units)} review units exceed max_units={cfg.max_units}; truncated"
@@ -319,9 +378,11 @@ class CodeReviewAgent(BaseAgent):
                 )
                 with timer.span("evidence_validation", VALIDATION):
                     report = validate_all(validator, oc.findings)
-                llm_findings.extend(report.accepted)
+                    accepted, claim_rejections = self._check_claims(report.accepted, repo, oc.unit)
+                llm_findings.extend(accepted)
                 for rej in report.rejected:
                     llm_rejections[str(rej.reason)] += 1
+                llm_rejections.update(claim_rejections)
                 stats.setdefault("llm_repaired", 0)
                 stats["llm_repaired"] += report.repaired
             stats["llm_findings_raw"] = sum(len(oc.findings) for oc in outcomes)
@@ -364,7 +425,7 @@ class CodeReviewAgent(BaseAgent):
                 if passes_threshold(f, cfg.min_confidence)
                 and (cfg.include_info or f.severity is not Severity.INFO)
             ]
-            final = rank_and_number(kept)
+            final = self._finish_findings(rank_and_number(kept, self.id_prefix), repo)
         stats["dedup_merged"] = dedup.merged
         stats["filtered_low_confidence"] = len(ruled) - len(kept)
         timings["postprocess"] = time.perf_counter() - t
@@ -412,7 +473,7 @@ class CodeReviewAgent(BaseAgent):
             else "none",
             model=self.llm.model if self.llm is not None and cfg.mode != "static_only" else None,
             temperature=self.llm.config.temperature if self.llm is not None else None,
-            prompt_versions=prompt_versions() if cfg.mode != "static_only" else {},
+            prompt_versions=self._prompt_versions() if cfg.mode != "static_only" else {},
             rag_enabled=self.settings.rag.enabled and cfg.mode != "static_only",
             started_at=started,
             finished_at=datetime.now(UTC),
@@ -601,7 +662,7 @@ class CodeReviewAgent(BaseAgent):
             context_section = ""
 
         def messages_with(context: str) -> list[Message]:
-            review = load_prompt("review").render(
+            review = self._load_prompt("review").render(
                 file=unit.file,
                 start_line=unit.start_line,
                 end_line=unit.end_line,
@@ -615,7 +676,7 @@ class CodeReviewAgent(BaseAgent):
                 numbered_code=numbered,
             )
             return [
-                Message(role="system", content=load_prompt("system").text),
+                Message(role="system", content=self._load_prompt("system").text),
                 Message(role="user", content=review),
             ]
 
@@ -656,7 +717,7 @@ class CodeReviewAgent(BaseAgent):
             outcome.errors.append(f"LLM review failed: {exc}")
             return outcome
 
-        items, assessments, parse_errors = parse_items(envelope)
+        items, assessments, parse_errors = self._parse_reply(envelope)
         outcome.errors.extend(parse_errors)
         outcome.assessments = assessments
         module_symbols = {s.qualname: s for s in unit.symbols}

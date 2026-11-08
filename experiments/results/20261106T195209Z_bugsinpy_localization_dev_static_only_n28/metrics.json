@@ -1,0 +1,116 @@
+{
+  "n": 28,
+  "top_function": {
+    "top_1": 0.17857142857142858,
+    "top_3": 0.25,
+    "top_5": 0.2857142857142857
+  },
+  "top_file": {
+    "top_1": 0.6428571428571429,
+    "top_3": 0.8214285714285714,
+    "top_5": 0.8928571428571429
+  },
+  "mrr_function": 0.23979109340951446,
+  "mrr_file": 0.7440476190476192,
+  "n_failed": 0,
+  "gold_in_candidates": 0.8929,
+  "gold_shown_to_llm": null,
+  "mean_candidates": 134.9,
+  "random_expected": {
+    "top_1": 0.0085,
+    "top_3": 0.0249,
+    "top_5": 0.0405
+  },
+  "ci_top_1": [
+    0.036,
+    0.321
+  ],
+  "ci_top_5": [
+    0.107,
+    0.464
+  ],
+  "ci_mrr": [
+    0.113,
+    0.39
+  ],
+  "llm_calls": 0,
+  "by_project": {
+    "PySnooper": {
+      "n": 1,
+      "top_1": 0.0,
+      "top_5": 1.0
+    },
+    "black": {
+      "n": 9,
+      "top_1": 0.0,
+      "top_5": 0.111
+    },
+    "cookiecutter": {
+      "n": 2,
+      "top_1": 1.0,
+      "top_5": 1.0
+    },
+    "httpie": {
+      "n": 2,
+      "top_1": 0.0,
+      "top_5": 0.0
+    },
+    "sanic": {
+      "n": 3,
+      "top_1": 0.0,
+      "top_5": 0.0
+    },
+    "tornado": {
+      "n": 7,
+      "top_1": 0.143,
+      "top_5": 0.286
+    },
+    "tqdm": {
+      "n": 4,
+      "top_1": 0.5,
+      "top_5": 0.5
+    }
+  },
+  "complete": true,
+  "experiment": {
+    "configuration": {
+      "key": "static_only",
+      "letter": "A",
+      "label": "Static Only",
+      "static": true,
+      "llm": false,
+      "rag": false,
+      "mode": "static_only"
+    },
+    "benchmark": "bugsinpy_localization",
+    "dataset": "BugsInPy",
+    "split": "dev",
+    "sampling_seed": 42,
+    "limit": 28,
+    "sample_count": 28,
+    "sample_fingerprint": "6963363560a4607e",
+    "n_evaluated": 28,
+    "n_failed": 0,
+    "llm": null,
+    "rag": null,
+    "static_analyzers": [
+      "ruff",
+      "ast",
+      "flow"
+    ],
+    "classifier": null,
+    "confidence_threshold": 0.3,
+    "include_info": true,
+    "evaluation_rules": {
+      "pool": "one source file, at most 10 changed lines, change inside a function",
+      "failed_samples": "counted as wrong, never dropped (D22)",
+      "line_tolerance": 2
+    },
+    "prompt_versions": {},
+    "group_id": null,
+    "repeat": null,
+    "repeats": null,
+    "timestamp": "2026-11-06T19:52:10.083870+00:00",
+    "agent": "bug_detection"
+  }
+}

@@ -1,0 +1,86 @@
+{
+  "n": 1,
+  "top_function": {
+    "top_1": 0.0,
+    "top_3": 1.0,
+    "top_5": 1.0
+  },
+  "top_file": {
+    "top_1": 1.0,
+    "top_3": 1.0,
+    "top_5": 1.0
+  },
+  "mrr_function": 0.3333333333333333,
+  "mrr_file": 1.0,
+  "n_failed": 0,
+  "gold_in_candidates": 1.0,
+  "gold_shown_to_llm": null,
+  "mean_candidates": 4.0,
+  "random_expected": {
+    "top_1": 0.0526,
+    "top_3": 0.1579,
+    "top_5": 0.2632
+  },
+  "ci_top_1": [
+    0.0,
+    0.0
+  ],
+  "ci_top_5": [
+    1.0,
+    1.0
+  ],
+  "ci_mrr": [
+    0.333,
+    0.333
+  ],
+  "llm_calls": 0,
+  "by_project": {
+    "PySnooper": {
+      "n": 1,
+      "top_1": 0.0,
+      "top_5": 1.0
+    }
+  },
+  "complete": false,
+  "experiment": {
+    "configuration": {
+      "key": "static_only",
+      "letter": "A",
+      "label": "Static Only",
+      "static": true,
+      "llm": false,
+      "rag": false,
+      "mode": "static_only"
+    },
+    "benchmark": "bugsinpy_localization",
+    "dataset": "BugsInPy",
+    "split": "dev",
+    "sampling_seed": 42,
+    "limit": 5,
+    "sample_count": 5,
+    "sample_fingerprint": "14a18f9716970cac",
+    "n_evaluated": 1,
+    "n_failed": 0,
+    "llm": null,
+    "rag": null,
+    "static_analyzers": [
+      "ruff",
+      "ast",
+      "flow"
+    ],
+    "classifier": null,
+    "confidence_threshold": 0.3,
+    "include_info": true,
+    "evaluation_rules": {
+      "pool": "one source file, at most 10 changed lines, change inside a function",
+      "failed_samples": "counted as wrong, never dropped (D22)",
+      "line_tolerance": 2
+    },
+    "prompt_versions": {},
+    "group_id": null,
+    "repeat": null,
+    "repeats": null,
+    "timestamp": "2026-11-06T19:45:12.192217+00:00",
+    "agent": "bug_detection"
+  }
+}

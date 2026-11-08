@@ -39,7 +39,13 @@ It also reviews **code changes** (git refs / working tree / staged / two ZIPs): 
 unchanged callers, hunk risk ranking, verified fix suggestions, actionability filter, mypy, SARIF,
 CI/pre-commit gate (see [docs/change-review.md](docs/change-review.md), decisions D16-D20).
 Results (static baseline, LLM runs, hunk risk, usefulness judge) are in `docs/results.md`.
-Do not start the other four agents unless asked; reuse the shared building blocks listed in
+
+**Bug Detection Agent: implemented and tested** (see [docs/bug-detection-agent.md](docs/bug-detection-agent.md),
+D31). It subclasses the Code Review Agent: control-flow checks (`parsing/cfg.py`,
+`static_analysis/flow_checks.py`), bug prompts, claim checks, a scan budget, and fault localization from
+a failing test. Its BugsInPy evaluation has two tracks, and the test split has not been run.
+
+Do not start the other three agents unless asked; reuse the shared building blocks listed in
 `.claude/rules/architecture.md`.
 
 LLM: **Google Gemini free tier** (`GEMINI_API_KEY` in `.env`, default model `gemini-3.8-flash`, see
@@ -50,7 +56,9 @@ with one tiny call. Free-tier content may be used by Google, so never send confi
 Dashboard: `python -m marl_agents.cli serve` (FastAPI `src/marl_agents/api/` + React/TS/Tailwind
 `frontend/`, see docs/dashboard.md). Frontend: `cd frontend; npm test; npm run build`.
 
-CLI: `python -m marl_agents.cli review <dir|zip|file.py>`,
+CLI: `python -m marl_agents.cli bugs <dir|zip|file.py> [--failing-test tests/t.py::test_x]`,
+`python -m marl_agents.cli eval-bugs {audit|localization|detection|labels} [--split dev|test --final]`,
+`python -m marl_agents.cli review <dir|zip|file.py>`,
 `python -m marl_agents.cli review-change [repo] [--base/--head/--staged | --before/--after ZIPs] [--fail-on]`
 and `python -m marl_agents.cli eval {planted|codereviewer|retrieval|hunkrisk|timing|summary|usefulness|agreement|ablation|classifier|before-after}`
 (see `--help`). File-size benchmark: `python -m marl_agents.evaluation.benchmark_runtime`
@@ -131,7 +139,9 @@ mypy src
 - **CodeReviewer is multi-language**; filter to Python where the experiment claims Python-only.
 - **CodeReviewer `cls` train positives have no `lang` or `proj`**: `lang == "py"` selects negatives
   only, and field presence leaks the label. Use `training/data.py`. valid and test share projects.
-- **BugsInPy** entries are bug metadata + patches; source must be checked out per bug (git clone).
+- **BugsInPy** entries are bug metadata + patches; source comes from shallow per-commit fetches
+  (`evaluation/datasets/bugsinpy_repo.py`). It labels one bug per commit, so a repository scan cannot
+  measure precision: use the paired detection track. 501 bugs, not 502.
 - **SWE-bench Lite resolve rate** requires generating patches and running the repo's tests in a
   sandbox — that is the evaluation harness, never the analysis path. See docs/decisions.md (open item).
 Full details: [docs/datasets.md](docs/datasets.md).

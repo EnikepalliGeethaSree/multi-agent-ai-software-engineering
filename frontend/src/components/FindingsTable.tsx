@@ -94,6 +94,45 @@ function FixView({ fix }: { fix: SuggestedFix }) {
   );
 }
 
+function BugDetailView({ bug }: { bug: NonNullable<Finding["bug"]> }) {
+  return (
+    <div className="space-y-3">
+      {bug.trigger && (
+        <div>
+          <p className="mb-1 text-xs font-medium text-ink-3">Fails when</p>
+          <p className="leading-relaxed text-ink">{bug.trigger}</p>
+        </div>
+      )}
+      {(bug.expected || bug.actual) && (
+        <dl className="grid grid-cols-[auto_1fr] gap-x-4 gap-y-1 text-xs">
+          {bug.expected && (
+            <>
+              <dt className="text-ink-3">Expected</dt>
+              <dd className="text-ink-2">{bug.expected}</dd>
+            </>
+          )}
+          {bug.actual && (
+            <>
+              <dt className="text-ink-3">Actual</dt>
+              <dd className="text-ink-2">{bug.actual}</dd>
+            </>
+          )}
+        </dl>
+      )}
+      {bug.repro_steps.length > 0 && (
+        <div>
+          <p className="mb-1 text-xs font-medium text-ink-3">Steps to reproduce (suggested, not run)</p>
+          <ol className="list-decimal space-y-0.5 pl-4 text-ink-2">
+            {bug.repro_steps.map((step) => (
+              <li key={step}>{step}</li>
+            ))}
+          </ol>
+        </div>
+      )}
+    </div>
+  );
+}
+
 function FindingDetail({ f }: { f: Finding }) {
   return (
     <div className="grid gap-4 px-4 pb-4 pt-1 text-sm lg:grid-cols-2">
@@ -122,6 +161,7 @@ function FindingDetail({ f }: { f: Finding }) {
         {f.suggested_fix && <FixView fix={f.suggested_fix} />}
       </div>
       <div className="space-y-3">
+        {f.bug && <BugDetailView bug={f.bug} />}
         {f.recommendation && (
           <div>
             <p className="mb-1 text-xs font-medium text-ink-3">Recommendation</p>

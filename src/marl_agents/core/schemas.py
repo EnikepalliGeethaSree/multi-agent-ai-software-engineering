@@ -43,6 +43,36 @@ class FindingSource(StrEnum):
     MYPY = "mypy"
 
 
+class BugType(StrEnum):
+    """The defect classes of the Bug Detection Agent (approved deck, Fig. 3)."""
+
+    LOGIC = "logic"
+    NULL_EXCEPTION = "null_exception"
+    BOUNDARY = "boundary"
+    RESOURCE_LEAK = "resource_leak"
+    CONCURRENCY = "concurrency"
+    SECURITY = "security"
+    OTHER = "other"
+
+
+class BugDetail(BaseModel):
+    """What makes a bug finding more than a comment: how it fails, and how to see it fail.
+
+    `repro_steps` is advice for a developer. The product never runs analyzed code, so a report's
+    steps are unconfirmed.
+    """
+
+    bug_type: BugType = BugType.OTHER
+    trigger: str = Field(default="", description="Input or state that makes the code misbehave.")
+    expected: str | None = Field(default=None, description="Correct behaviour for that trigger.")
+    actual: str | None = Field(default=None, description="What the code does instead.")
+    root_cause: str = Field(default="", description="Why the code misbehaves.")
+    repro_steps: list[str] = Field(default_factory=list)
+    involved_names: list[str] = Field(
+        default_factory=list, description="Identifiers the claim depends on; checked against code."
+    )
+
+
 class SuggestedFix(BaseModel):
     """A concrete code change proposed for a finding. Never applied automatically."""
 
@@ -93,6 +123,7 @@ class Finding(BaseModel):
         description="Other locations involved, 'file:line description'.",
     )
     suggested_fix: SuggestedFix | None = None
+    bug: BugDetail | None = Field(default=None, description="Set by the Bug Detection Agent.")
 
     @property
     def line_range(self) -> tuple[int, int]:
@@ -110,6 +141,31 @@ class Finding(BaseModel):
         if self.end_line < self.start_line:
             raise ValueError(f"end_line ({self.end_line}) < start_line ({self.start_line})")
         return self
+
+
+class SuspectFunction(BaseModel):
+    """One ranked candidate for where a failure comes from."""
+
+    rank: int = Field(ge=1)
+    file: str
+    symbol: str
+    start_line: int = Field(ge=1)
+    end_line: int = Field(ge=1)
+    score: float = Field(description="Ordering signal before any LLM step; not a probability.")
+    reasons: list[str] = Field(default_factory=list)
+    signals: list[str] = Field(default_factory=list, description="Static rules that fired here.")
+
+
+class LocalizationResult(BaseModel):
+    """Fault localization: functions ranked by how likely they are to contain the failure."""
+
+    suspects: list[SuspectFunction] = Field(default_factory=list)
+    candidates_considered: int = 0
+    candidates_shown: int = Field(default=0, description="How many the LLM saw; 0 without one.")
+    ranked_by: str = Field(default="static", description="'static' or 'llm'.")
+    hypothesis: str | None = None
+    llm_failed: bool = False
+    errors: list[str] = Field(default_factory=list)
 
 
 class AgentRequest(BaseModel):

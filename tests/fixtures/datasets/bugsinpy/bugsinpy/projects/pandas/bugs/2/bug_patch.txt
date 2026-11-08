@@ -1,0 +1,6 @@
+diff --git a/pandas/core/dtypes/dtypes.py b/pandas/core/dtypes/dtypes.py
+--- a/pandas/core/dtypes/dtypes.py
++++ b/pandas/core/dtypes/dtypes.py
+@@ -1,1 +1,1 @@
+-a = 1
++a = 2

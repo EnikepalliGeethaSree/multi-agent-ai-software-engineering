@@ -410,6 +410,7 @@ def create_app(
         options: str = Form(default="{}"),
     ) -> JobInfo:
         opts = parse_options(options)
+        extra = {"failing_test": opts.failing_test} if opts.failing_test else {}
         has_file = file is not None and bool(file.filename)
         if has_file == bool(snippet and snippet.strip()):
             raise HTTPException(422, "Provide exactly one of: a .zip/.py file, or a code snippet.")
@@ -422,7 +423,7 @@ def create_app(
             if not name.endswith(".py"):
                 name += ".py"
             job = manager.new_job(name, "snippet", opts)
-            request = AgentRequest(snippet=snippet, snippet_filename=name)
+            request = AgentRequest(snippet=snippet, snippet_filename=name, options=extra)
             return manager.submit(job, request)
 
         assert file is not None and file.filename
@@ -440,9 +441,9 @@ def create_app(
         await save_upload(file, target, limit, job.id)
         if suffix == ".py":
             code = target.read_bytes().decode("utf-8", errors="replace")
-            request = AgentRequest(snippet=code, snippet_filename=name)
+            request = AgentRequest(snippet=code, snippet_filename=name, options=extra)
         else:
-            request = AgentRequest(repo_path=str(target))
+            request = AgentRequest(repo_path=str(target), options=extra)
         return manager.submit(job, request)
 
     @app.post("/api/changes", status_code=202)

@@ -260,3 +260,28 @@ statistics, and their counts are always shown.
   test split has been used once. Dev tuned the classifier, so this is not an independent test.
 - **ChromaDB.** Version 1.5.9 can fail when one process reads several saved collections in turn. The store
   reopens a persistent client once and retries, and a failure that persists is still raised.
+
+## D31 - Bug Detection Agent and its BugsInPy evaluation (accepted)
+- **Built on the Code Review Agent.** `BugDetectionAgent` subclasses it through small hooks (prompts,
+  analyzers, unit selection, claim checks), so quota handling, resume, validation, reports and the
+  dashboard job flow are shared. Code Review's behaviour did not change. `FlowAnalyzer` is left out of
+  `default_analyzers()` so saved Code Review baselines stay comparable.
+- **Two tracks, not a repository scan.** BugsInPy labels one bug per commit, so a finding matching no
+  label is not proven false, and a scan cannot measure precision. Detection shows each changed
+  function buggy and fixed in separate requests, and the fixed one is the negative. Localization ranks
+  functions from the failing test. Both run without executing project code.
+- **Fixed-function findings count as false positives under both scorings.** Otherwise precision "at the
+  fixed lines" would be 1.0 by construction.
+- **A suspect containing a fixed line counts as a hit.** A live reply named the outer function of a
+  closure and described the bug correctly, and strict matching scored that a miss.
+- **Failing test as the input to localization.** It comes from the fixed commit, as is standard in
+  fault localization. BugsInPy has no issue text, and a traceback would need execution.
+- **Configurations.** Localization needs candidates in all of A-D, so the call-graph walk is common to
+  all four, and "RAG" there means retrieval adds candidates. This differs from D25, where the call
+  graph is part of RAG. Detection follows D25.
+- **Own split.** BugsInPy has none. Dev and test share no project. The test split needs `--final`.
+- **Quota.** At one request per bug and configuration (two in detection), 20 requests a day means runs
+  span days. Finished samples are kept in a ledger keyed by model, prompts and harness version, and
+  the same command continues.
+- **D9 is still open,** but the localization harness is the cheap metric D9 proposed for SWE-bench Lite.
+- **Not built:** repro confirmation in Docker, and Fig. 3 stages 7-8 (bug-report store, learning loop).

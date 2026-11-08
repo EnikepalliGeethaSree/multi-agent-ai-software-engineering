@@ -7,6 +7,7 @@ from marl_agents.agents.base import BaseAgent
 # name -> "module:Class"; imported lazily so optional dependencies stay optional.
 AGENT_REGISTRY: dict[str, str] = {
     "code_review": "marl_agents.agents.code_review.agent:CodeReviewAgent",
+    "bug_detection": "marl_agents.agents.bug_detection.agent:BugDetectionAgent",
 }
 
 

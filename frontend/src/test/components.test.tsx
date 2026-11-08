@@ -3,11 +3,12 @@ import userEvent from "@testing-library/user-event";
 import { describe, expect, it } from "vitest";
 import { EMPTY_FILTERS, FindingsTable, applyFilters } from "../components/FindingsTable";
 import { HBarChart } from "../components/HBarChart";
+import { SuspectsPanel } from "../components/SuspectsPanel";
 import { StatTile } from "../components/StatTile";
 import { compact, duration, location, num, pct } from "../lib/format";
 import { categoryData, severityData } from "../pages/ReviewDetail";
 import { validateFile } from "../pages/NewReview";
-import { FINDINGS, SUMMARY } from "./fixtures";
+import { FINDINGS, SUMMARY, finding } from "./fixtures";
 
 describe("format helpers", () => {
   it("formats numbers, percentages and durations", () => {
@@ -102,6 +103,37 @@ describe("findings", () => {
     expect(f({ file: "shop/db.py" })).toEqual(["CR-001", "CR-003"]);
     expect(f({ query: "cwe-89" })).toEqual(["CR-001"]);
     expect(applyFilters(FINDINGS, EMPTY_FILTERS, "location").map((x) => x.id)).toEqual(["CR-003", "CR-001", "CR-002"]);
+  });
+
+  it("shows what triggers a bug and how to reproduce it", async () => {
+    const bug = finding({
+      id: "BD-001",
+      bug: {
+        bug_type: "boundary",
+        trigger: "values is an empty list",
+        expected: "a clear error",
+        actual: "ZeroDivisionError",
+        root_cause: "No empty check.",
+        repro_steps: ["Call mean([])"],
+        involved_names: ["values"],
+      },
+    });
+    render(<FindingsTable findings={[bug]} />);
+    await userEvent.click(screen.getByRole("button", { name: "Expand BD-001" }));
+    expect(screen.getByText("values is an empty list")).toBeInTheDocument();
+    expect(screen.getByText("ZeroDivisionError")).toBeInTheDocument();
+    expect(screen.getByText("Call mean([])")).toBeInTheDocument();
+    expect(screen.getByText(/not run/)).toBeInTheDocument();
+  });
+
+  it("ranks suspects and says when the LLM could not", () => {
+    const suspect = { rank: 1, file: "shop/cart.py", symbol: "total", start_line: 4, end_line: 5, score: 1, reasons: ["called by the test: total"], signals: [] };
+    const found = { suspects: [suspect], candidates_considered: 3, candidates_shown: 0, ranked_by: "static", hypothesis: null, llm_failed: true, errors: [] };
+    render(<SuspectsPanel found={found} />);
+    expect(screen.getByText("total")).toBeInTheDocument();
+    expect(screen.getByText("shop/cart.py:4")).toBeInTheDocument();
+    expect(screen.getByText(/could not rank/)).toBeInTheDocument();
+    expect(screen.getByText(/static signals from 3 candidates/)).toBeInTheDocument();
   });
 
   it("table filters, counts and expands a finding with its evidence, fix and test", async () => {

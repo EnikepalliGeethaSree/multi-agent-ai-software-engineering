@@ -88,6 +88,17 @@ class ReviewSettings(BaseModel):
     resume_ttl_hours: int = 72  # how long a partial dashboard review keeps its uploaded input
 
 
+class BugSettings(BaseModel):
+    """Bug Detection Agent. Each reviewed unit costs one LLM request, so scans are budgeted."""
+
+    max_units: int = 12  # highest-risk units sent to the LLM in a scan; the rest are reported
+    max_candidates: int = 40  # functions shown to the LLM for fault localization
+    candidate_lines: int = 30  # lines of each candidate function in that prompt
+    max_prompt_chars: int = 40_000  # candidates beyond this are ranked by static signals alone
+    retrieval_k: int = 20  # extra candidates from retrieval (configuration D only)
+    require_trigger: bool = True  # reject LLM bugs that do not say what makes the code fail
+
+
 class ClassifierSettings(BaseModel):
     """Fine-tuned change classifier. It prioritizes review work; it never decides code is safe."""
 
@@ -118,6 +129,7 @@ class Settings(BaseSettings):
     review: ReviewSettings = ReviewSettings()
     datasets: DatasetSettings = DatasetSettings()
     classifier: ClassifierSettings = ClassifierSettings()
+    bugs: BugSettings = BugSettings()
 
 
 def _deep_merge(base: dict[str, Any], override: dict[str, Any]) -> dict[str, Any]:

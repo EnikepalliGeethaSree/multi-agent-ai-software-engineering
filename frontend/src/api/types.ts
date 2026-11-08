@@ -28,6 +28,37 @@ export interface SuggestedFix {
   checks: string[];
 }
 
+export interface BugDetail {
+  bug_type: string;
+  trigger: string;
+  expected: string | null;
+  actual: string | null;
+  root_cause: string;
+  repro_steps: string[];
+  involved_names: string[];
+}
+
+export interface SuspectFunction {
+  rank: number;
+  file: string;
+  symbol: string;
+  start_line: number;
+  end_line: number;
+  score: number;
+  reasons: string[];
+  signals: string[];
+}
+
+export interface LocalizationResult {
+  suspects: SuspectFunction[];
+  candidates_considered: number;
+  candidates_shown: number;
+  ranked_by: string;
+  hypothesis: string | null;
+  llm_failed: boolean;
+  errors: string[];
+}
+
 export interface Finding {
   id: string;
   file: string;
@@ -49,6 +80,7 @@ export interface Finding {
   notes: string[];
   related?: string[];
   suggested_fix?: SuggestedFix | null;
+  bug?: BugDetail | null;
 }
 
 export interface RunMetadata {
@@ -71,6 +103,7 @@ export interface ReviewResult {
   files_analyzed: number;
   lines_analyzed: number;
   stats: Record<string, unknown>;
+  artifacts?: { localization?: LocalizationResult } & Record<string, unknown>;
   change?: ChangeReview | null;
 }
 
@@ -95,7 +128,11 @@ export interface ReviewSummary {
 export type Mode = "full" | "static_only" | "llm_only";
 export type JobStatus = "queued" | "running" | "done" | "failed";
 
+export type AgentName = "code_review" | "bug_detection";
+
 export interface ReviewOptions {
+  agent?: AgentName;
+  failing_test?: string | null;
   mode: Mode;
   rag_enabled: boolean;
   structural_context: boolean;

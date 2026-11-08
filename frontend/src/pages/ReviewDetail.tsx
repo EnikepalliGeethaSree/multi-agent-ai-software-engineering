@@ -4,6 +4,7 @@ import { api } from "../api/client";
 import type { Category, ReviewResult, ReviewSummary, Severity } from "../api/types";
 import { SEVERITIES } from "../api/types";
 import { ChangePanel } from "../components/ChangePanel";
+import { SuspectsPanel } from "../components/SuspectsPanel";
 import { FindingsTable } from "../components/FindingsTable";
 import { HBarChart, type BarDatum } from "../components/HBarChart";
 import { StatTile } from "../components/StatTile";
@@ -356,6 +357,7 @@ export default function ReviewDetail() {
           </div>
 
           {result.change && <ChangePanel change={result.change} findings={result.findings} />}
+          {result.artifacts?.localization && <SuspectsPanel found={result.artifacts.localization} />}
           <FindingsTable findings={result.findings} />
           <PipelinePanel result={result} />
         </>

@@ -1,0 +1,86 @@
+{
+  "name": "bugsinpy_localization_dev_static_only_n5",
+  "started_at": "2026-11-06T19:45:11.869685+00:00",
+  "git_commit": "4092ec78b9a2773d61833a34d1439cf043ab4c96-dirty",
+  "python": "3.11.7",
+  "platform": "Windows-10-10.0.26300-SP0",
+  "packages": {
+    "marl-agents": "0.1.0",
+    "pydantic": "2.13.5",
+    "ruff": "0.16.9",
+    "radon": "6.0.1",
+    "chromadb": "1.5.9",
+    "openai": "3.21.0",
+    "sentence-transformers": "6.1.0"
+  },
+  "audit": {
+    "split": "dev",
+    "seed": 42,
+    "bugs_total": 501,
+    "small_fix_total": 305,
+    "pool": 32,
+    "checked": 5,
+    "usable": 5,
+    "ineligible": {},
+    "sample_ids": [
+      "PySnooper-3",
+      "black-10",
+      "cookiecutter-3",
+      "httpie-3",
+      "sanic-3"
+    ]
+  },
+  "sample_ids": [
+    "PySnooper-3",
+    "black-10",
+    "cookiecutter-3",
+    "httpie-3",
+    "sanic-3"
+  ],
+  "pending": 4,
+  "stopped": "LLM quota: gemini quota reached for model gemini-3.6-flash. Daily quotas reset at 2026-11-07T08:00:00+00:00 (midnight Pacific). Finished review units are saved, so the review can be resumed then. Server said: You exceeded your current quota, please check your plan and billing details. For more infor",
+  "ledger": "localization_dev_0b8a52648808.jsonl",
+  "experiment": {
+    "configuration": {
+      "key": "static_only",
+      "letter": "A",
+      "label": "Static Only",
+      "static": true,
+      "llm": false,
+      "rag": false,
+      "mode": "static_only"
+    },
+    "benchmark": "bugsinpy_localization",
+    "dataset": "BugsInPy",
+    "split": "dev",
+    "sampling_seed": 42,
+    "limit": 5,
+    "sample_count": 5,
+    "sample_fingerprint": "14a18f9716970cac",
+    "n_evaluated": 1,
+    "n_failed": 0,
+    "llm": null,
+    "rag": null,
+    "static_analyzers": [
+      "ruff",
+      "ast",
+      "flow"
+    ],
+    "classifier": null,
+    "confidence_threshold": 0.3,
+    "include_info": true,
+    "evaluation_rules": {
+      "pool": "one source file, at most 10 changed lines, change inside a function",
+      "failed_samples": "counted as wrong, never dropped (D22)",
+      "line_tolerance": 2
+    },
+    "prompt_versions": {},
+    "group_id": null,
+    "repeat": null,
+    "repeats": null,
+    "timestamp": "2026-11-06T19:45:12.192217+00:00",
+    "agent": "bug_detection"
+  },
+  "finished_at": "2026-11-06T19:45:12.192754+00:00",
+  "errors": 0
+}

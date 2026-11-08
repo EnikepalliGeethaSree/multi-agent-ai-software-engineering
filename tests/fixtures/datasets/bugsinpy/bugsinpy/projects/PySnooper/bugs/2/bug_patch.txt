@@ -1,0 +1,6 @@
+diff --git a/pysnooper/utils.py b/pysnooper/utils.py
+--- a/pysnooper/utils.py
++++ b/pysnooper/utils.py
+@@ -1,1 +1,1 @@
+-x = 1
++x = 2

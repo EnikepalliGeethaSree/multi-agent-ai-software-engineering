@@ -48,6 +48,14 @@ review:
   unit_cache: true        # reuse finished LLM units on a rerun (evaluation always turns this off)
   analysis_cache: true    # reuse deterministic static-analysis results for unchanged code
 
+bugs:
+  max_units: 12           # highest-risk units sent to the LLM per scan (1 request each)
+  max_candidates: 40      # functions shown to the LLM for fault localization
+  candidate_lines: 30     # lines of each candidate in that prompt
+  max_prompt_chars: 40000
+  retrieval_k: 20         # extra candidates from retrieval (configuration D only)
+  require_trigger: true   # reject LLM bugs that do not say what makes the code fail
+
 classifier:
   enabled: false          # fine-tuned change classifier (change reviews only), see docs/fine-tuning.md
   model_dir: null

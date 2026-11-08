@@ -7,6 +7,8 @@ python -m marl_agents.cli eval ablation --benchmark planted --config configs/gem
 python -m marl_agents.cli eval retrieval --path src
 python -m marl_agents.cli eval classifier --model-dir data/models/change_cls   # test once
 python -m marl_agents.cli eval summary          # baseline comparison + five-component tables
+python -m marl_agents.cli bugs <dir|zip|file.py> [--failing-test tests/t.py::test_x]
+python -m marl_agents.cli eval-bugs {audit|localization|detection|labels} --split dev --limit 10
 python -m marl_agents.cli models                # models for the key in .env, with a recommendation
 python -m marl_agents.cli check --model <id>    # one tiny request to verify key + model
 """
@@ -212,6 +214,7 @@ def cmd_review_change(args: argparse.Namespace) -> int:
     """Review a code change: git refs, uncommitted work, staged changes, or two ZIP archives."""
     from datetime import UTC, datetime
 
+    from marl_agents.agents.bug_detection import BugDetectionAgent
     from marl_agents.agents.code_review import CodeReviewAgent
     from marl_agents.agents.code_review.change_review import review_change
     from marl_agents.ingestion.changes import ChangeError, changeset_from_git, changeset_from_zips
@@ -232,7 +235,8 @@ def cmd_review_change(args: argparse.Namespace) -> int:
         return 2
     llm = build_llm(s)
     _print_data_notice(llm)
-    agent = CodeReviewAgent(
+    agent_class = BugDetectionAgent if args.agent == "bug_detection" else CodeReviewAgent
+    agent = agent_class(
         llm,
         settings=s,
         progress=lambda m: print(f"  {m}", file=sys.stderr),
@@ -706,6 +710,114 @@ def _eval_agreement(args: argparse.Namespace) -> int:
     return 0
 
 
+def cmd_bugs(args: argparse.Namespace) -> int:
+    """Find bugs in a repository, or locate a known failure from its test. Runs nothing."""
+    from datetime import UTC, datetime
+
+    from marl_agents.agents.bug_detection import BugDetectionAgent, FailingTestError
+    from marl_agents.core.schemas import AgentRequest
+    from marl_agents.ingestion import IngestionError
+    from marl_agents.reports import write_reports_timed
+
+    s = build_settings(args)
+    if args.max_units:
+        s.bugs.max_units = args.max_units
+    llm = build_llm(s)
+    _print_data_notice(llm)
+    agent = BugDetectionAgent(llm, settings=s, progress=lambda m: print(f"  {m}", file=sys.stderr))
+    target = Path(args.path)
+    options: dict[str, Any] = {}
+    if args.failing_test:
+        options["failing_test"] = args.failing_test
+    if args.traceback:
+        options["error_text"] = Path(args.traceback).read_text(encoding="utf-8", errors="replace")
+    if target.is_file() and target.suffix == ".py":
+        code = target.read_text(encoding="utf-8", errors="replace")
+        request = AgentRequest(snippet=code, snippet_filename=target.name, options=options)
+    else:
+        request = AgentRequest(repo_path=str(target), options=options)
+    try:
+        result = agent.run(request)
+    except (FailingTestError, IngestionError) as exc:
+        print(f"error: {exc}", file=sys.stderr)
+        return 2
+    _print_llm_usage(llm, result)
+    found = result.artifacts.get("localization")
+    if found:
+        print("Most likely locations:")
+        if found.get("hypothesis"):
+            print(f"  {found['hypothesis']}")
+        for suspect in found["suspects"][:5]:
+            print(
+                f"  {suspect['rank']}. {suspect['file']}:{suspect['start_line']} "
+                f"{suspect['symbol']}"
+            )
+        print()
+    print(f"{len(result.findings)} finding(s):")
+    for f in result.findings[:20]:
+        kind = f.bug.bug_type.value if f.bug else f.category.value
+        print(f"  {f.id} {f.severity.value:8} {kind:15} {f.file}:{f.start_line}  {f.title}")
+    coverage = result.stats.get("scan_coverage")
+    if coverage and coverage["units_selected"] < coverage["units_total"]:
+        print(
+            f"\nThe LLM read {coverage['units_selected']} of {coverage['units_total']} parts; "
+            "raise --max-units to read more."
+        )
+    stamp = datetime.now(UTC).strftime("%Y%m%d-%H%M%S")
+    out = Path(args.out) if args.out else PROJECT_ROOT / "data" / "reports" / f"bugs-{stamp}"
+    for fmt, path in write_reports_timed(result, out, tuple(args.formats.split(","))).items():
+        print(f"{fmt}: {path}")
+    _print_timing(result)
+    _print_partial(result)
+    return _exit_code(result, args.fail_on)
+
+
+def cmd_eval_bugs(args: argparse.Namespace) -> int:
+    """Bug Detection Agent on BugsInPy. The test split needs --final."""
+    from marl_agents.evaluation.runners import bug_detection as runner
+
+    s = build_settings(args)
+    if args.split == "test" and not args.final:
+        print(
+            "error: the test split is for final numbers. Freeze prompts on dev, then pass --final.",
+            file=sys.stderr,
+        )
+        return 2
+    if args.task == "audit":
+        out = runner.run_audit(s, args.split, args.seed, args.limit, progress=print)
+        print((out / "summary.md").read_text(encoding="utf-8"))
+        print(f"saved: {out}")
+        return 0
+    if args.task == "labels":
+        default = PROJECT_ROOT / "experiments" / "bug_type_labels" / f"sheet_{args.split}.csv"
+        sheet = Path(args.out) if args.out else default
+        written = runner.write_label_sheet(s, args.split, args.seed, args.limit or 10, sheet)
+        print(f"saved: {written}")
+        return 0
+    configurations = args.configurations.split(",")
+    unknown = [c for c in configurations if c not in runner.DEFAULT_CONFIGURATIONS]
+    if unknown:
+        print(f"error: unknown configuration(s): {', '.join(unknown)}", file=sys.stderr)
+        return 2
+    options = runner.BugEvalOptions(
+        task=args.task,
+        split=args.split,
+        limit=args.limit or 10,
+        seed=args.seed,
+        configurations=configurations,
+        max_llm_calls=args.max_llm_calls,
+        bug_type_files=[Path(p) for p in args.bug_types.split(",")] if args.bug_types else [],
+    )
+    needs_llm = configurations != ["static_only"]
+    _warn_mock(s, needs_llm)
+    llm = build_llm(s) if needs_llm else None
+    _print_data_notice(llm)
+    for path in runner.run_bug_evaluation(options, s, llm, progress=print):
+        print((path / "summary.md").read_text(encoding="utf-8"))
+        print(f"saved: {path}")
+    return 0
+
+
 def cmd_models(args: argparse.Namespace) -> int:
     """List models available to the configured key, and recommend a free Gemini model."""
     s = build_settings(args)
@@ -928,6 +1040,41 @@ def main(argv: list[str] | None = None) -> int:
     p_eval.add_argument("--sheets", help="agreement: rated sheet(s), comma separated")
     _add_common(p_eval)
     p_eval.set_defaults(func=cmd_eval)
+
+    p_change.add_argument(
+        "--agent", choices=["code_review", "bug_detection"], default="code_review"
+    )
+
+    p_bugs = sub.add_parser("bugs", help="find bugs, or locate a known failure from its test")
+    p_bugs.add_argument("path", help="directory, ZIP or .py file")
+    p_bugs.add_argument("--failing-test", help="e.g. tests/test_x.py::test_y")
+    p_bugs.add_argument("--traceback", help="file holding the error output of that test")
+    p_bugs.add_argument("--max-units", type=int, help="most LLM requests for a scan")
+    p_bugs.add_argument("--out", help="report folder")
+    p_bugs.add_argument("--formats", default="json,md,pdf,sarif")
+    p_bugs.add_argument("--fail-on", choices=["none", *SEVERITY_ORDER], default="none")
+    _add_common(p_bugs)
+    p_bugs.set_defaults(func=cmd_bugs)
+
+    p_eval_bugs = sub.add_parser("eval-bugs", help="Bug Detection Agent on BugsInPy")
+    p_eval_bugs.add_argument(
+        "task",
+        choices=["audit", "localization", "detection", "labels"],
+        help="audit: which bugs are usable (no LLM); localization / detection: the two tracks; "
+        "labels: write a blank bug-type sheet",
+    )
+    p_eval_bugs.add_argument("--split", choices=["dev", "test"], default="dev")
+    p_eval_bugs.add_argument("--limit", type=int, help="bugs (default 10; audit: all)")
+    p_eval_bugs.add_argument("--seed", type=int, default=42)
+    p_eval_bugs.add_argument(
+        "--configurations", default="static_only,llm_only,static_llm,static_llm_rag"
+    )
+    p_eval_bugs.add_argument("--max-llm-calls", type=int, help="stop between bugs at this many")
+    p_eval_bugs.add_argument("--final", action="store_true", help="allow the test split")
+    p_eval_bugs.add_argument("--bug-types", help="two filled label sheets, comma separated")
+    p_eval_bugs.add_argument("--out", help="labels: where to write the sheet")
+    _add_common(p_eval_bugs)
+    p_eval_bugs.set_defaults(func=cmd_eval_bugs)
 
     p_models = sub.add_parser("models", help="list LLM models available to your API key")
     _add_common(p_models)

@@ -24,6 +24,54 @@ class RuleSpec:
     cwe: str | None = None
 
 
+# Control-flow checks (static_analysis/flow_checks.py). Bug Detection Agent only, so the Code Review
+# baselines stay comparable. Confidence is lower than Ruff's: these are hints for the LLM and a
+# human, and the checks cannot see what callers really pass.
+FLOW_RULES: dict[str, RuleSpec] = {
+    "BUG-NONE-DEREF": RuleSpec(
+        C.BUG,
+        S.HIGH,
+        0.6,
+        "Check for None before using the value, or make the call raise a clear error.",
+        "Add a test where the value is None.",
+    ),
+    "BUG-NONE-DEFAULT": RuleSpec(
+        C.BUG,
+        S.MEDIUM,
+        0.45,
+        "Handle the default None, or remove the default if the argument is required.",
+        "Call the function without this argument.",
+    ),
+    "BUG-MISSING-RETURN": RuleSpec(
+        C.BUG,
+        S.MEDIUM,
+        0.55,
+        "Return a value on every path, or raise when no case applies.",
+        "Add a test for the input that reaches the end of the function.",
+    ),
+    "BUG-DIV-BY-LEN": RuleSpec(
+        C.EDGE_CASE,
+        S.MEDIUM,
+        0.5,
+        "Handle the empty or zero case before dividing.",
+        "Add a test with an empty or zero input.",
+    ),
+    "BUG-OFF-BY-ONE": RuleSpec(
+        C.BUG,
+        S.HIGH,
+        0.7,
+        "Check the loop bound or index: this reaches one past the last valid position.",
+        "Add a test at the first and last position.",
+    ),
+    "BUG-MUTATE-WHILE-ITERATING": RuleSpec(
+        C.BUG,
+        S.MEDIUM,
+        0.65,
+        "Iterate over a copy, or build a new collection instead of changing this one.",
+        "Add a test with adjacent items that are both changed.",
+    ),
+}
+
 RUFF_RULES: dict[str, RuleSpec] = {
     # --- pyflakes: real defects / dead code ---------------------------------------------------
     "F821": RuleSpec(

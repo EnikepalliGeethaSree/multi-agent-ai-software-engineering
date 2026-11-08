@@ -8,7 +8,7 @@ from pathlib import Path
 from xml.sax.saxutils import escape
 
 from marl_agents.core.performance import from_result
-from marl_agents.core.schemas import ReviewResult, Severity
+from marl_agents.core.schemas import BugDetail, ReviewResult, Severity
 from marl_agents.core.timing import TimingBreakdown
 from marl_agents.reports.sarif import to_sarif
 from marl_agents.reports.summary import ReviewSummary, summarize
@@ -83,8 +83,53 @@ def _change_markdown(result: ReviewResult) -> list[str]:
     return out
 
 
+def _default_title(result: ReviewResult) -> str:
+    if result.agent == "bug_detection":
+        return "Bug Detection Report"
+    return "Change Review Report" if result.change else "Code Review Report"
+
+
+def _bug_markdown(bug: BugDetail) -> list[str]:
+    out: list[str] = [f"- **Bug type:** {bug.bug_type.value}", ""]
+    if bug.trigger:
+        out += [f"**Trigger:** {bug.trigger}", ""]
+    if bug.expected or bug.actual:
+        out += [f"**Expected:** {bug.expected or 'n/a'} **Actual:** {bug.actual or 'n/a'}", ""]
+    if bug.repro_steps:
+        steps = [f"{i}. {s}" for i, s in enumerate(bug.repro_steps, start=1)]
+        out += ["**Reproduce:** (suggested, not run)", "", *steps, ""]
+    return out
+
+
+def _localization_markdown(result: ReviewResult) -> list[str]:
+    found = result.artifacts.get("localization")
+    if not found:
+        return []
+    out = ["## Most likely locations of the failure", ""]
+    if found.get("hypothesis"):
+        out += [found["hypothesis"], ""]
+    out += ["| Rank | Function | Location | Why |", "|---:|---|---|---|"]
+    for s in found.get("suspects", [])[:10]:
+        why = _md_escape("; ".join(s.get("reasons", [])[:2]))
+        out.append(f"| {s['rank']} | `{s['symbol']}` | `{s['file']}:{s['start_line']}` | {why} |")
+    return [*out, ""]
+
+
+def _coverage_markdown(result: ReviewResult) -> list[str]:
+    coverage = result.stats.get("scan_coverage")
+    if not coverage or coverage["units_selected"] >= coverage["units_total"]:
+        return []
+    return [
+        f"> **Scan budget:** the LLM read {coverage['units_selected']} of "
+        f"{coverage['units_total']} parts ({coverage['lines_selected']} of "
+        f"{coverage['lines_total']} lines), the riskiest first. The rest have static-analysis "
+        "findings only.",
+        "",
+    ]
+
+
 def to_markdown(result: ReviewResult, title: str | None = None) -> str:
-    title = title or ("Change Review Report" if result.change else "Code Review Report")
+    title = title or _default_title(result)
     s = summarize(result)
     meta = result.metadata
     out: list[str] = [f"# {title}", ""]
@@ -123,6 +168,8 @@ def to_markdown(result: ReviewResult, title: str | None = None) -> str:
     if s.top_files:
         out += ["**Most affected files:** " + ", ".join(f"`{f}`" for f, _ in s.top_files), ""]
     out += _change_markdown(result)
+    out += _coverage_markdown(result)
+    out += _localization_markdown(result)
 
     out += ["## Findings", ""]
     if not result.findings:
@@ -142,6 +189,8 @@ def to_markdown(result: ReviewResult, title: str | None = None) -> str:
             f.description,
             "",
         ]
+        if f.bug is not None:
+            out += _bug_markdown(f.bug)
         if f.evidence:
             out += ["**Evidence**", "", "```python", *[e for e in f.evidence[:3]], "```", ""]
         if f.related:
@@ -183,7 +232,7 @@ def to_markdown(result: ReviewResult, title: str | None = None) -> str:
 
 def to_pdf(result: ReviewResult, path: Path, title: str | None = None) -> Path:
     """Render a PDF with reportlab (the `reports` extra)."""
-    title = title or ("Change Review Report" if result.change else "Code Review Report")
+    title = title or _default_title(result)
     try:
         from reportlab.lib import colors
         from reportlab.lib.pagesizes import A4
@@ -305,6 +354,8 @@ def to_pdf(result: ReviewResult, path: Path, title: str | None = None) -> Path:
             story.append(
                 Paragraph("<b>Related:</b> " + escape("; ".join(f.related)), styles["Normal"])
             )
+        if f.bug is not None and f.bug.trigger:
+            story.append(Paragraph("<b>Trigger:</b> " + escape(f.bug.trigger), styles["Normal"]))
         if f.recommendation:
             story.append(Paragraph("<b>Fix:</b> " + escape(f.recommendation), styles["Normal"]))
         if f.suggested_fix:
