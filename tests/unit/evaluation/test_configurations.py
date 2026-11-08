@@ -193,3 +193,23 @@ def test_category_enum_unchanged() -> None:
     assert len(spec["issues"]) == 17
     assert all(Category(i["category"]) for i in spec["issues"])
     assert sum(1 for i in spec["issues"] if i["detectable_by"] == "llm") == 1
+
+
+@pytest.mark.parametrize(
+    ("porcelain", "changed"),
+    [
+        ("", []),
+        ("?? experiments/results/20261108T055008Z_planted_static_only/\n", []),
+        (" M experiments/evaluation_summary/summary.md\n", []),
+        (" M src/marl_agents/cli.py\n", ["src/marl_agents/cli.py"]),
+        ("?? experiments/results/run/\n M docs/results.md\n", ["docs/results.md"]),
+        ("R  old.py -> new.py\n", ["new.py"]),
+        ('?? "docs/a b.md"\n', ["docs/a b.md"]),
+    ],
+)
+def test_a_runs_own_output_does_not_count_as_uncommitted_code(
+    porcelain: str, changed: list[str]
+) -> None:
+    from marl_agents.evaluation.recorder import source_changes
+
+    assert source_changes(porcelain) == changed

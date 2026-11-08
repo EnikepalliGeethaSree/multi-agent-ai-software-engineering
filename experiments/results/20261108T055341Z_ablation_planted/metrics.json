@@ -1,0 +1,599 @@
+{
+  "group_id": "abl-20261108T055008Z",
+  "benchmark": "planted",
+  "configurations": [
+    "static_only",
+    "llm_only",
+    "static_llm",
+    "static_llm_rag"
+  ],
+  "repeats": 1,
+  "suggested_fixes": false,
+  "runs": {
+    "static_only": [
+      "20261108T055008Z_planted_static_only"
+    ],
+    "llm_only": [
+      "20261108T055018Z_planted_llm_only"
+    ],
+    "static_llm": [
+      "20261108T055101Z_planted_static_llm"
+    ],
+    "static_llm_rag": [
+      "20261108T055201Z_planted_static_llm_rag"
+    ]
+  },
+  "tables": [
+    {
+      "id": "planted",
+      "section": "1. Planted issues",
+      "title": "Planted-issue benchmark: detection by configuration",
+      "about": "17 hand-labelled issues in a fixture repository (16 detectable by a rule, 1 needing semantic reasoning) plus a clean negative-control file.",
+      "columns": [
+        {
+          "key": "recall",
+          "label": "Issue recall",
+          "metric": "issue_recall",
+          "group": "Labelled issues",
+          "digits": 3
+        },
+        {
+          "key": "issues_found",
+          "label": "Found",
+          "metric": null,
+          "group": "Labelled issues",
+          "digits": 0
+        },
+        {
+          "key": "fn",
+          "label": "Missed",
+          "metric": null,
+          "group": "Labelled issues",
+          "digits": 0
+        },
+        {
+          "key": "recall_static",
+          "label": "Rule-detectable recall",
+          "metric": "issue_recall",
+          "group": "Labelled issues",
+          "digits": 3
+        },
+        {
+          "key": "recall_llm",
+          "label": "Semantic recall",
+          "metric": "issue_recall",
+          "group": "Labelled issues",
+          "digits": 3
+        },
+        {
+          "key": "precision",
+          "label": "Precision",
+          "metric": "defect_precision",
+          "group": "Defect findings",
+          "digits": 3
+        },
+        {
+          "key": "tp",
+          "label": "Correct",
+          "metric": null,
+          "group": "Defect findings",
+          "digits": 0
+        },
+        {
+          "key": "fp",
+          "label": "False positives",
+          "metric": null,
+          "group": "Defect findings",
+          "digits": 0
+        },
+        {
+          "key": "clean_fp",
+          "label": "FP in clean file",
+          "metric": null,
+          "group": "Defect findings",
+          "digits": 0
+        },
+        {
+          "key": "f1",
+          "label": "F1 (mixed basis)",
+          "metric": "mixed_f1",
+          "group": "Other",
+          "digits": 3
+        },
+        {
+          "key": "roc_auc",
+          "label": "ROC-AUC",
+          "metric": "roc_auc",
+          "group": "Other",
+          "digits": 3
+        },
+        {
+          "key": "line_error",
+          "label": "Mean line error",
+          "metric": null,
+          "group": "Other",
+          "digits": 2
+        }
+      ],
+      "rows": [
+        {
+          "label": "Static Only",
+          "configuration": {
+            "key": "static_only",
+            "letter": "A",
+            "label": "Static Only",
+            "static": true,
+            "llm": false,
+            "rag": false,
+            "mode": "static_only",
+            "description": "Ruff, Radon, AST checks, secrets, test gaps (and mypy when enabled)."
+          },
+          "status": "ok",
+          "values": {
+            "recall": 0.9411764705882353,
+            "issues_found": 16,
+            "fn": 1,
+            "recall_static": 1.0,
+            "recall_llm": 0.0,
+            "precision": 1.0,
+            "tp": 13,
+            "fp": 0,
+            "clean_fp": 0,
+            "f1": 0.9696969696969697,
+            "roc_auc": null,
+            "line_error": 0.0
+          },
+          "sd": {},
+          "spread": {},
+          "na": {
+            "roc_auc": "not applicable: the planted suite labels positives only (no scored negative cases), so a ROC curve is undefined"
+          },
+          "n": 17,
+          "n_failed": 0,
+          "n_runs": 1,
+          "model": null,
+          "run_ids": [
+            "20261108T055008Z_planted_static_only"
+          ],
+          "notes": [],
+          "how_to_run": null
+        },
+        {
+          "label": "LLM Only",
+          "configuration": {
+            "key": "llm_only",
+            "letter": "B",
+            "label": "LLM Only",
+            "static": false,
+            "llm": true,
+            "rag": false,
+            "mode": "llm_only",
+            "description": "The LLM reviews the code alone: no static findings, no project context."
+          },
+          "status": "ok",
+          "values": {
+            "recall": 0.7058823529411765,
+            "issues_found": 12,
+            "fn": 5,
+            "recall_static": 0.6875,
+            "recall_llm": 1.0,
+            "precision": 1.0,
+            "tp": 11,
+            "fp": 0,
+            "clean_fp": 0,
+            "f1": 0.8275862068965517,
+            "roc_auc": null,
+            "line_error": 1.25
+          },
+          "sd": {},
+          "spread": {},
+          "na": {
+            "roc_auc": "not applicable: the planted suite labels positives only (no scored negative cases), so a ROC curve is undefined"
+          },
+          "n": 17,
+          "n_failed": 0,
+          "n_runs": 1,
+          "model": "gemini-3.6-flash",
+          "run_ids": [
+            "20261108T055018Z_planted_llm_only"
+          ],
+          "notes": [],
+          "how_to_run": null
+        },
+        {
+          "label": "Static + LLM",
+          "configuration": {
+            "key": "static_llm",
+            "letter": "C",
+            "label": "Static + LLM",
+            "static": true,
+            "llm": true,
+            "rag": false,
+            "mode": "full",
+            "description": "Static findings plus LLM review and triage, without project context."
+          },
+          "status": "ok",
+          "values": {
+            "recall": 1.0,
+            "issues_found": 17,
+            "fn": 0,
+            "recall_static": 1.0,
+            "recall_llm": 1.0,
+            "precision": 0.9333333333333333,
+            "tp": 14,
+            "fp": 1,
+            "clean_fp": 0,
+            "f1": 0.9655172413793104,
+            "roc_auc": null,
+            "line_error": 0.5294117647058824
+          },
+          "sd": {},
+          "spread": {},
+          "na": {
+            "roc_auc": "not applicable: the planted suite labels positives only (no scored negative cases), so a ROC curve is undefined"
+          },
+          "n": 17,
+          "n_failed": 0,
+          "n_runs": 1,
+          "model": "gemini-3.6-flash",
+          "run_ids": [
+            "20261108T055101Z_planted_static_llm"
+          ],
+          "notes": [],
+          "how_to_run": null
+        },
+        {
+          "label": "Static + LLM + RAG",
+          "configuration": {
+            "key": "static_llm_rag",
+            "letter": "D",
+            "label": "Static + LLM + RAG",
+            "static": true,
+            "llm": true,
+            "rag": true,
+            "mode": "full",
+            "description": "The full agent: static analysis, LLM review, retrieved project context."
+          },
+          "status": "ok",
+          "values": {
+            "recall": 1.0,
+            "issues_found": 17,
+            "fn": 0,
+            "recall_static": 1.0,
+            "recall_llm": 1.0,
+            "precision": 1.0,
+            "tp": 14,
+            "fp": 0,
+            "clean_fp": 0,
+            "f1": 1.0,
+            "roc_auc": null,
+            "line_error": 0.5294117647058824
+          },
+          "sd": {},
+          "spread": {},
+          "na": {
+            "roc_auc": "not applicable: the planted suite labels positives only (no scored negative cases), so a ROC curve is undefined"
+          },
+          "n": 17,
+          "n_failed": 0,
+          "n_runs": 1,
+          "model": "gemini-3.6-flash",
+          "run_ids": [
+            "20261108T055201Z_planted_static_llm_rag"
+          ],
+          "notes": [],
+          "how_to_run": null
+        }
+      ],
+      "conditions": {
+        "answer key": "tests/fixtures/repos/planted_expected.json (17 issues)",
+        "negative control": "shop/utils.py",
+        "matching": "same file, start within +-2 lines, compatible category",
+        "precision counts": "defect findings only (bug, security, error handling, edge case)"
+      },
+      "fairness": [
+        {
+          "name": "Same samples (answer key)",
+          "ok": true,
+          "detail": "one fixture repository and answer key for every configuration"
+        },
+        {
+          "name": "Same LLM model",
+          "ok": true,
+          "detail": "gemini-3.6-flash"
+        },
+        {
+          "name": "Same temperature",
+          "ok": true,
+          "detail": "0.0"
+        },
+        {
+          "name": "Same prompt versions",
+          "ok": true,
+          "detail": "{'system': '1.0', 'review': '1.0'}"
+        },
+        {
+          "name": "Same confidence threshold",
+          "ok": true,
+          "detail": "0.3"
+        },
+        {
+          "name": "Same evaluation rules",
+          "ok": true,
+          "detail": "{'line_tolerance': 2, 'match': 'same file, start within +-2 lines, compatible category', 'precision_over': 'defect findings (bug, security, error_handling, edge_case)'}"
+        },
+        {
+          "name": "Run together (one ablation group)",
+          "ok": true,
+          "detail": "abl-20261108T055008Z"
+        }
+      ],
+      "observations": [
+        "Static + LLM has a higher recall than Static Only (1.000 vs 0.941).",
+        "Static + LLM and Static + LLM + RAG have the same recall (1.000).",
+        "Static Only has a higher recall than LLM Only (0.941 vs 0.706).",
+        "Static Only has a higher precision than Static + LLM (1.000 vs 0.933).",
+        "Static + LLM + RAG has a higher precision than Static + LLM (1.000 vs 0.933).",
+        "Static Only and LLM Only have the same precision (1.000).",
+        "Static Only: semantic (LLM-only) issue recall 0.000 (the suite has a single such issue, so this is 0 or 1 per run).",
+        "LLM Only: semantic (LLM-only) issue recall 1.000 (the suite has a single such issue, so this is 0 or 1 per run).",
+        "Static + LLM: semantic (LLM-only) issue recall 1.000 (the suite has a single such issue, so this is 0 or 1 per run).",
+        "Static + LLM + RAG: semantic (LLM-only) issue recall 1.000 (the suite has a single such issue, so this is 0 or 1 per run)."
+      ],
+      "notes": [
+        "Why 14 correct findings can sit beside 17 issues found: the answer key has 14 defect-class issues and 3 others (quality, maintainability, standards). Found counts issues of every category. Correct counts findings of the defect classes only. They are separate counts, so Correct + Missed need not equal the number of issues.",
+        "Rule-detectable recall covers 16 issues. Semantic recall covers 1, so it can only be 0 or 1 in a run.",
+        "F1 here mixes defect precision and issue recall, which have different denominators. Treat it as a summary of this benchmark, not a standard F1.",
+        "Precision is N/A, not 1.0, when a configuration reports no defect findings at all.",
+        "Run all four together: python -m marl_agents.cli eval ablation --benchmark planted --configurations static_only,llm_only,static_llm,static_llm_rag --config configs/gemini.yaml"
+      ],
+      "supplementary": false,
+      "show_counts": true,
+      "badges": [
+        "Complete",
+        "Small benchmark (n = 17)",
+        "Gemini: gemini-3.6-flash"
+      ],
+      "warning": "Small benchmark: 17 issues written by the project team. It is a regression check, and a score of 1.000 is not evidence of 100% bug detection in real code."
+    },
+    {
+      "id": "timing_planted_runs",
+      "section": "6c. Efficiency: historical timing (not Gemini)",
+      "title": "Time per review in the planted-benchmark runs (seconds)",
+      "about": "The same repository reviewed under each configuration (the runs in section 1). One measurement per run; repeated runs show the mean.",
+      "columns": [
+        {
+          "key": "total_sec",
+          "label": "Total",
+          "metric": "seconds",
+          "group": null,
+          "digits": 2
+        },
+        {
+          "key": "static_analysis_sec",
+          "label": "Static",
+          "metric": "seconds",
+          "group": null,
+          "digits": 2
+        },
+        {
+          "key": "rag_sec",
+          "label": "RAG",
+          "metric": "seconds",
+          "group": null,
+          "digits": 2
+        },
+        {
+          "key": "llm_inference_sec",
+          "label": "LLM",
+          "metric": "seconds",
+          "group": null,
+          "digits": 2
+        },
+        {
+          "key": "validation_sec",
+          "label": "Validation",
+          "metric": "seconds",
+          "group": null,
+          "digits": 3
+        },
+        {
+          "key": "report_generation_sec",
+          "label": "Reports",
+          "metric": "seconds",
+          "group": null,
+          "digits": 2
+        },
+        {
+          "key": "other_sec",
+          "label": "Other",
+          "metric": "seconds",
+          "group": null,
+          "digits": 2
+        },
+        {
+          "key": "active_sec",
+          "label": "Active (total - quota wait)",
+          "metric": "seconds",
+          "group": null,
+          "digits": 2
+        }
+      ],
+      "rows": [
+        {
+          "label": "Static Only",
+          "configuration": {
+            "key": "static_only",
+            "letter": "A",
+            "label": "Static Only",
+            "static": true,
+            "llm": false,
+            "rag": false,
+            "mode": "static_only",
+            "description": "Ruff, Radon, AST checks, secrets, test gaps (and mypy when enabled)."
+          },
+          "status": "ok",
+          "values": {
+            "total_sec": 9.7467,
+            "static_analysis_sec": 9.6821,
+            "rag_sec": 0.0,
+            "llm_inference_sec": 0.0,
+            "validation_sec": 0.0015,
+            "report_generation_sec": null,
+            "other_sec": 0.0631,
+            "active_sec": 9.7467
+          },
+          "sd": {},
+          "spread": {},
+          "na": {
+            "report_generation_sec": "benchmark runs do not write reports"
+          },
+          "n": null,
+          "n_failed": null,
+          "n_runs": 1,
+          "model": null,
+          "run_ids": [
+            "20261108T055008Z_planted_static_only"
+          ],
+          "notes": [],
+          "how_to_run": null
+        },
+        {
+          "label": "LLM Only",
+          "configuration": {
+            "key": "llm_only",
+            "letter": "B",
+            "label": "LLM Only",
+            "static": false,
+            "llm": true,
+            "rag": false,
+            "mode": "llm_only",
+            "description": "The LLM reviews the code alone: no static findings, no project context."
+          },
+          "status": "ok",
+          "values": {
+            "total_sec": 42.8161,
+            "static_analysis_sec": 0.0,
+            "rag_sec": 0.0,
+            "llm_inference_sec": 42.7776,
+            "validation_sec": 0.0046,
+            "report_generation_sec": null,
+            "other_sec": 0.0339,
+            "active_sec": 42.8161
+          },
+          "sd": {},
+          "spread": {},
+          "na": {
+            "report_generation_sec": "benchmark runs do not write reports"
+          },
+          "n": null,
+          "n_failed": null,
+          "n_runs": 1,
+          "model": "gemini-3.6-flash",
+          "run_ids": [
+            "20261108T055018Z_planted_llm_only"
+          ],
+          "notes": [],
+          "how_to_run": null
+        },
+        {
+          "label": "Static + LLM",
+          "configuration": {
+            "key": "static_llm",
+            "letter": "C",
+            "label": "Static + LLM",
+            "static": true,
+            "llm": true,
+            "rag": false,
+            "mode": "full",
+            "description": "Static findings plus LLM review and triage, without project context."
+          },
+          "status": "ok",
+          "values": {
+            "total_sec": 60.5611,
+            "static_analysis_sec": 5.7937,
+            "rag_sec": 0.0,
+            "llm_inference_sec": 54.729,
+            "validation_sec": 0.0052,
+            "report_generation_sec": null,
+            "other_sec": 0.0333,
+            "active_sec": 60.5611
+          },
+          "sd": {},
+          "spread": {},
+          "na": {
+            "report_generation_sec": "benchmark runs do not write reports"
+          },
+          "n": null,
+          "n_failed": null,
+          "n_runs": 1,
+          "model": "gemini-3.6-flash",
+          "run_ids": [
+            "20261108T055101Z_planted_static_llm"
+          ],
+          "notes": [],
+          "how_to_run": null
+        },
+        {
+          "label": "Static + LLM + RAG",
+          "configuration": {
+            "key": "static_llm_rag",
+            "letter": "D",
+            "label": "Static + LLM + RAG",
+            "static": true,
+            "llm": true,
+            "rag": true,
+            "mode": "full",
+            "description": "The full agent: static analysis, LLM review, retrieved project context."
+          },
+          "status": "ok",
+          "values": {
+            "total_sec": 99.4996,
+            "static_analysis_sec": 5.7591,
+            "rag_sec": 0.3304,
+            "llm_inference_sec": 90.4435,
+            "validation_sec": 0.0053,
+            "report_generation_sec": null,
+            "other_sec": 2.9613,
+            "active_sec": 99.4996
+          },
+          "sd": {},
+          "spread": {},
+          "na": {
+            "report_generation_sec": "benchmark runs do not write reports"
+          },
+          "n": null,
+          "n_failed": null,
+          "n_runs": 1,
+          "model": "gemini-3.6-flash",
+          "run_ids": [
+            "20261108T055201Z_planted_static_llm_rag"
+          ],
+          "notes": [],
+          "how_to_run": null
+        }
+      ],
+      "conditions": {
+        "input": "planted fixture repository (8 files, 6 Python)"
+      },
+      "fairness": [
+        {
+          "name": "Same input",
+          "ok": true,
+          "detail": "planted fixture repository for every row"
+        }
+      ],
+      "observations": [
+        "RAG overhead +64.3% on active time (n = 1 run(s) per configuration; a single run is noisy, the timing benchmark is the fair measure).",
+        "Of that difference, retrieval itself took 0.33s; LLM inference took +35.71s more with RAG (longer prompts carrying the context)."
+      ],
+      "notes": [],
+      "supplementary": false,
+      "show_counts": true,
+      "badges": [
+        "Gemini: gemini-3.6-flash"
+      ],
+      "warning": null
+    }
+  ]
+}

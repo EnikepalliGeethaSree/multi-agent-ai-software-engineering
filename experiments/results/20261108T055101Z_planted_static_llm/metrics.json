@@ -1,0 +1,213 @@
+{
+  "detection": {
+    "expected": 17,
+    "matched": 17,
+    "tp": 14,
+    "fp": 1,
+    "fn": 0,
+    "precision": 0.9333333333333333,
+    "f1": 0.9655172413793104,
+    "recall": 1.0,
+    "recall_static": 1.0,
+    "recall_llm": 1.0,
+    "defect_findings": 15,
+    "defect_true_positives": 14,
+    "defect_precision": 0.9333333333333333,
+    "negative_file_false_positives": 0,
+    "mean_line_error": 0.5294117647058824,
+    "missed": [],
+    "false_positive_titles": [
+      "Missing request timeout in requests.get"
+    ]
+  },
+  "pipeline": {
+    "mode": "full",
+    "static_enabled": true,
+    "llm_enabled": true,
+    "rag_enabled": false,
+    "review_id": "88d1f95f2e94",
+    "source_name": "planted",
+    "bytes_reviewed": 3460,
+    "files_total": 8,
+    "python_files": 6,
+    "files_reviewed": 5,
+    "lines_reviewed": 146,
+    "syntax_errors": 0,
+    "has_tests": true,
+    "static_findings_raw": {
+      "ruff": 14,
+      "radon": 1,
+      "ast": 6,
+      "secrets": 1,
+      "test_gap": 5,
+      "mypy": 0
+    },
+    "units_total": 4,
+    "units_failed": 0,
+    "units_failed_list": [],
+    "units_not_attempted": 0,
+    "units_from_cache": 0,
+    "units_deduplicated": 0,
+    "units_skipped": 0,
+    "llm_repaired": 0,
+    "llm_findings_raw": 11,
+    "llm_findings_valid": 11,
+    "vague_dropped": 0,
+    "vague_downgraded": 0,
+    "llm_rejected_by_reason": {},
+    "llm_rejection_rate": 0.0,
+    "static_assessments": {
+      "confirm": 26
+    },
+    "context_items_by_reason": {},
+    "avg_context_items_per_unit": 0.0,
+    "llm_usage": {
+      "calls": 4,
+      "input_tokens": 5956,
+      "output_tokens": 4149,
+      "parse_retries": 0,
+      "failed_calls": 0,
+      "thinking_tokens": 5830,
+      "calls_without_token_usage": 0
+    },
+    "static_rejected": 0,
+    "dedup_merged": 14,
+    "filtered_low_confidence": 0,
+    "fixes_available": 2,
+    "final_findings": 24,
+    "run_type": "cold",
+    "review_status": "complete",
+    "llm_calls": [
+      {
+        "label": "shop/auth.py:1-28",
+        "latency_s": 24.51346950000152,
+        "input_tokens": 1357,
+        "output_tokens": 1583,
+        "ok": true,
+        "retry": false,
+        "error_kind": null
+      },
+      {
+        "label": "shop/db.py:1-36",
+        "latency_s": 14.22543880000012,
+        "input_tokens": 1548,
+        "output_tokens": 1256,
+        "ok": true,
+        "retry": false,
+        "error_kind": null
+      },
+      {
+        "label": "shop/pricing.py:1-59",
+        "latency_s": 10.971651699976064,
+        "input_tokens": 1821,
+        "output_tokens": 1223,
+        "ok": true,
+        "retry": false,
+        "error_kind": null
+      },
+      {
+        "label": "shop/utils.py:1-22",
+        "latency_s": 5.018402799993055,
+        "input_tokens": 1230,
+        "output_tokens": 87,
+        "ok": true,
+        "retry": false,
+        "error_kind": null
+      }
+    ],
+    "timings_s": {
+      "ingest_parse": 0.014,
+      "static_analysis": 5.794,
+      "rag_index": 0.0,
+      "llm_review": 54.746,
+      "postprocess": 0.002
+    }
+  },
+  "timing": {
+    "total_sec": 60.5611,
+    "static_analysis_sec": 5.7937,
+    "static_tools_sec": {
+      "ruff": 0.0733,
+      "radon": 0.0128,
+      "ast": 0.0061,
+      "secrets": 0.0011,
+      "test_gap": 0.0002,
+      "mypy": 5.7003
+    },
+    "rag_index_sec": 0.0,
+    "rag_retrieval_sec": 0.0,
+    "rag_queries": 0,
+    "llm_inference_sec": 54.729,
+    "llm_calls": 4,
+    "llm_rate_limit_wait_sec": 0.0,
+    "validation_sec": 0.0052,
+    "report_generation_sec": null,
+    "ingestion_parsing_sec": 0.014,
+    "other_sec": 0.0333,
+    "concurrency": 1,
+    "file_ingestion_sec": 0.0073,
+    "parsing_sec": 0.0065,
+    "ast_call_graph_sec": 0.0002,
+    "prompt_construction_sec": 0.0008,
+    "evidence_validation_sec": 0.0026,
+    "dedup_severity_sec": 0.0018,
+    "fix_generation_sec": null,
+    "classifier_sec": null,
+    "failed_stages": []
+  },
+  "final_findings": 24,
+  "complete": true,
+  "llm_units_failed": 0,
+  "experiment": {
+    "configuration": {
+      "key": "static_llm",
+      "letter": "C",
+      "label": "Static + LLM",
+      "static": true,
+      "llm": true,
+      "rag": false,
+      "mode": "full"
+    },
+    "benchmark": "planted",
+    "dataset": "planted-issue fixture (tests/fixtures/repos/planted)",
+    "split": null,
+    "sampling_seed": null,
+    "limit": null,
+    "sample_count": 17,
+    "sample_fingerprint": "0001417736134671",
+    "n_evaluated": 17,
+    "n_failed": 0,
+    "llm": {
+      "provider": "gemini",
+      "model": "gemini-3.6-flash",
+      "temperature": 0.0,
+      "seed": 42,
+      "max_tokens": 16384
+    },
+    "rag": null,
+    "static_analyzers": [
+      "ruff",
+      "radon",
+      "ast",
+      "secrets",
+      "test_gap",
+      "mypy"
+    ],
+    "classifier": null,
+    "confidence_threshold": 0.3,
+    "include_info": true,
+    "evaluation_rules": {
+      "line_tolerance": 2,
+      "match": "same file, start within +-2 lines, compatible category",
+      "precision_over": "defect findings (bug, security, error_handling, edge_case)"
+    },
+    "prompt_versions": {
+      "system": "1.0",
+      "review": "1.0"
+    },
+    "group_id": "abl-20261108T055008Z",
+    "repeat": 1,
+    "repeats": 1,
+    "timestamp": "2026-11-08T05:52:01.959353+00:00"
+  }
+}

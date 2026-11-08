@@ -34,6 +34,22 @@ _PACKAGES = [
 ]
 
 
+# Evaluation output, not source: a run's own new folder must not mark its code as uncommitted.
+OUTPUT_DIRS = ("experiments/results/", "experiments/evaluation_summary/")
+
+
+def source_changes(porcelain: str) -> list[str]:
+    """Changed paths from `git status --porcelain`, leaving out evaluation output folders."""
+    paths = []
+    for line in porcelain.splitlines():
+        if len(line) < 4:
+            continue
+        path = line[3:].split(" -> ")[-1].strip().strip('"')
+        if not path.startswith(OUTPUT_DIRS):
+            paths.append(path)
+    return paths
+
+
 def git_commit() -> str:
     try:
         out = subprocess.run(
@@ -47,15 +63,15 @@ def git_commit() -> str:
         commit = out.stdout.strip()
         if out.returncode != 0 or not commit:
             return "uncommitted"
-        dirty = subprocess.run(
+        porcelain = subprocess.run(
             ["git", "status", "--porcelain"],  # noqa: S607
             cwd=PROJECT_ROOT,
             capture_output=True,
             text=True,
             timeout=10,
             check=False,
-        ).stdout.strip()
-        return commit + ("-dirty" if dirty else "")
+        ).stdout
+        return commit + ("-dirty" if source_changes(porcelain) else "")
     except (OSError, subprocess.SubprocessError):
         return "unknown"
 
