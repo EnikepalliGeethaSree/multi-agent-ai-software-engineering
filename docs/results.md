@@ -30,6 +30,7 @@ newer than it is.
 | 9. Fine-tuned classifier | Current | Does not depend on the LLM provider |
 | 10. Pending Gemini experiments | **Pending** | Work still to run |
 | 11. First live Gemini runs | **Preliminary** | `gemini-3.6-flash`. Incomplete, and under the old token limit |
+| 12. Planted issues on Gemini | Current | `gemini-3.6-flash`, all four configurations in one group |
 
 ## 1. Planted-issue benchmark
 
@@ -402,9 +403,9 @@ limit is 20 requests per day, per project, per model, so these runs take several
 | Key and model check | Done on `gemini-3.6-flash` (section 11) | `python -m marl_agents.cli check` |
 | Live provider test | Pending | `pytest -m llm tests/integration/test_gemini_live.py` |
 | Full review time by file size | Preliminary only (section 11) | `python -m marl_agents.evaluation.benchmark_runtime --config configs/gemini.yaml --repeats 5 --per-category 1 --max-llm-calls 65` |
-| Ablation A-D on Gemini | Pending | `python -m marl_agents.cli eval ablation --config configs/gemini.yaml` |
-| Planted issues on Gemini | Pending | `python -m marl_agents.cli eval planted --configuration static_llm_rag --config configs/gemini.yaml` |
-| Classifier off, prioritize and gate, dev samples only | Pending | `python -m marl_agents.cli eval classifier-ablation --model-dir data/models/change_cls --limit 15 --max-llm-calls 45 --config configs/gemini.yaml` |
+| Planted issues on Gemini, A-D | **Done** (section 12) | `python -m marl_agents.cli eval ablation --benchmark planted --configurations static_only,llm_only,static_llm,static_llm_rag --config configs/gemini.yaml` |
+| Comment generation on Gemini, A-D | Pending | `python -m marl_agents.cli eval ablation --benchmark codereviewer --task msg --limit 40 --seed 42 --configurations static_only,llm_only,static_llm,static_llm_rag --reuse-llm-cache --config configs/gemini.yaml` (repeat daily) |
+| Classifier off, prioritize and gate, dev samples only | Started: 2 of 15 samples (section 12) | `python -m marl_agents.cli eval classifier-ablation --model-dir data/models/change_cls --limit 15 --max-llm-calls 45 --config configs/gemini.yaml` |
 
 Earlier Groq results (sections 5 and 7) are a different provider and are no estimate for Gemini.
 
@@ -441,3 +442,33 @@ input, 4,919 output, 43,796 reasoning. Public standard-library files, RAG on, on
 - **Replies were cut off on larger units.** On `shlex.py`, output plus reasoning reached 4,091 tokens per
   successful call, with reasoning about 93% of that. All 3 units failed, and failed units are not
   cached, so its warm run called the LLM again (0% hit rate).
+
+## 12. Planted issues on Gemini, all four configurations
+
+Group `abl-20261108T055008Z`, 2026-11-08, `gemini-3.6-flash`, temperature 0, `llm.max_tokens = 16384`,
+free tier. All four configurations ran together on the same fixture and answer key, and every fairness
+check passed. Runs: `20261108T055008Z_planted_static_only`, `20261108T055018Z_planted_llm_only`,
+`20261108T055101Z_planted_static_llm`, `20261108T055201Z_planted_static_llm_rag`; comparison
+`20261108T055341Z_ablation_planted`. 12 LLM requests, 0 failed units.
+
+| Configuration | Issue recall | Found | Rule-detectable recall | Semantic recall | Defect precision | Correct / defect findings | Mean line error |
+|---|---:|---:|---:|---:|---:|---:|---:|
+| A. Static Only | 0.941 | 16 | 1.000 | 0.000 | 1.000 | 13 / 13 | 0.00 |
+| B. LLM Only | 0.706 | 12 | 0.688 | 1.000 | 1.000 | 11 / 11 | 1.25 |
+| C. Static + LLM | 1.000 | 17 | 1.000 | 1.000 | 0.933 | 14 / 15 | 0.53 |
+| D. Static + LLM + RAG | 1.000 | 17 | 1.000 | 1.000 | 1.000 | 14 / 14 | 0.53 |
+
+- **What it shows:** static analysis finds every rule-detectable issue but not the semantic one, and the
+  LLM finds the semantic one but misses rule-detectable issues on its own. Together (C and D) they find
+  all 17. This matches the Groq runs in sections 1 and 5, which used other models and are kept apart.
+- **C's one false positive** is "Missing request timeout in requests.get", not in the answer key. D did
+  not report it. With one run each, that single difference is not evidence that RAG raises precision.
+- **No clean-file false positives** in any configuration.
+- **Limits:** 17 issues written by the project team, one run per configuration, one model.
+- **Timing** from these single runs is in the run summaries; it is not the timing benchmark.
+- **Commit:** the tree was clean at `ff1b67c` when the group started. The saved runs say `-dirty`
+  because the recorder then counted its own new output folder; that was fixed in the next commit.
+
+**Classifier ablation, started.** Run `20261108T055537Z_classifier_ablation_valid_n15`: 2 of 15
+development samples complete in all three modes before the daily quota. No result is reported until the
+run finishes; continue it with `--resume`.

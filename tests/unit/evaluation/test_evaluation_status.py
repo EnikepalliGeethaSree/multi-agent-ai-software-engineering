@@ -420,3 +420,29 @@ def test_building_the_dashboard_changes_no_saved_file(tmp_path: Path) -> None:
     before = digests()
     summary_md(build_summary(tmp_path))
     assert digests() == before
+
+
+def test_a_comparison_that_reused_cached_replies_says_so(tmp_path: Path) -> None:
+    from marl_agents.evaluation.comparison.detection import planted_table
+
+    for name, cfg, reused in (("static_llm", "C", False), ("static_llm_rag", "D", True)):
+        save(tmp_path, f"20260101T00000{1 if cfg == 'D' else 0}Z_planted_{name}",
+             {"detection": detection(14, 0, 17),
+              "experiment": {"configuration": {"key": name}, "llm": {"provider": "gemini", "model": "m"},
+                             "llm_cache_reused": reused}},
+             meta={"llm_provider": "gemini", "llm_model": "m"}, config=llm_cfg(cfg))  # fmt: skip
+    check = next(
+        f for f in planted_table(load_runs(tmp_path)).fairness if f.name == "Fresh LLM calls"
+    )
+    assert (
+        check.ok is False
+        and "Static + LLM + RAG" in check.detail
+        and "times do not" in check.detail
+    )
+
+
+def test_pending_comment_comparison_uses_the_cache_flag(tmp_path: Path) -> None:
+    status = build_summary(tmp_path).status
+    assert status is not None
+    item = next(i for i in status.items if i.name == "Comment generation on Gemini")
+    assert "--reuse-llm-cache" in (item.command or "")

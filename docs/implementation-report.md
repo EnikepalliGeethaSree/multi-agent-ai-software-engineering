@@ -238,8 +238,8 @@ No paid API or paid hosting was added. Cerebras is not used.
 
 | Check | Result |
 |---|---|
-| Backend tests (`pytest`) | 561 passed, 2 deselected (tests that call a real API or need the datasets) |
-| Frontend tests (`npm test`) | 62 passed |
+| Backend tests (`pytest`) | 739 passed, 2 deselected (tests that call a real API or need the datasets) |
+| Frontend tests (`npm test`) | 65 passed |
 | Types (`mypy src`) | Clean |
 | Lint and format (`ruff`) | Clean |
 | Frontend build | Succeeded |
@@ -357,17 +357,27 @@ Continue on later days by adding `--resume experiments/results/<run>`. The first
 python -m marl_agents.cli eval classifier-ablation --model-dir data/models/change_cls --limit 15 --max-llm-calls 45 --config configs/gemini.yaml
 ```
 
-Continue with `--resume experiments/results/<run>`. Together these need about 110 requests, so at least
-six days. That is a plan, not a measurement: retries and larger units can raise it.
+Started on 8 November: 2 of 15 samples done. Continue with
+`--resume experiments/results/20261108T055537Z_classifier_ablation_valid_n15` (same command).
+Together with the benchmark this needs about 110 requests, so several days. That is a plan, not a
+measurement: retries and larger units can raise it.
 
-**3. Other work:**
+**3. Run comment generation, all four configurations,** and repeat the same command each day until it
+finishes. `--reuse-llm-cache` carries finished work forward, so the last run is complete; its quality
+metrics compare, its times do not:
+
+```bash
+python -m marl_agents.cli eval ablation --benchmark codereviewer --task msg --limit 40 --seed 42 --configurations static_only,llm_only,static_llm,static_llm_rag --reuse-llm-cache --config configs/gemini.yaml
+```
+
+**4. Other work:**
 
 - Retry `gemini-3.8-flash` with `python -m marl_agents.cli check --config configs/gemini.yaml` when
   demand falls, using `GEMINI_MODEL=gemini-3.8-flash`. Results from different models must not be mixed.
-- Run the Gemini versions of the planted and comment benchmarks (`docs/results.md`, section 10).
+- The Gemini planted benchmark is done (`docs/results.md`, section 12).
 - Run `pytest -m llm tests/integration/test_gemini_live.py`. It was not run, because the quota was spent.
 - Complete the human rating kit.
-- Commit the code. Runs still show `git_commit: uncommitted`.
+- Runs made before 8 November show `uncommitted` or `-dirty`; the recorder now stamps the real commit.
 
-**Not started, by design:** the Bug Detection, Security, Test Generation and Documentation agents, and
-LangGraph orchestration.
+**Not started, by design:** the Security, Test Generation and Documentation agents, and LangGraph
+orchestration. The Bug Detection Agent is separate work (decision D31).

@@ -28,8 +28,8 @@ LIMITATIONS = [
     "not a defect label.",
     "Every LLM comparison so far uses Groq-hosted models. No Gemini result exists for detection or "
     "comment quality, and results from different models must not be combined.",
-    "The Gemini free tier allows 20 requests per day per model, and `eval ablation` has no resume, "
-    "so a 40-sample comparison cannot finish on the free tier as it stands.",
+    "The Gemini free tier allows 20 requests per day per model, so larger comparisons run over "
+    "several days with --reuse-llm-cache. Their quality metrics compare; their times do not.",
     "All runs come from an uncommitted working tree, so none can be traced to a commit.",
     "This evaluates the Code Review Agent alone, not the five-agent platform.",
 ]
@@ -243,10 +243,10 @@ def _pending(runs: list[SavedRun]) -> list[StatusItem]:
             StatusItem(
                 name="Comment generation on Gemini",
                 status="pending",
-                detail="All four configurations on identical samples. About 120 requests or more, "
-                "so it needs a higher quota or a resume option.",
+                detail="All four configurations on identical samples. About 120 requests, so "
+                "repeat the command each day: cached replies carry the run forward.",
                 command=f"{CMD} ablation --benchmark codereviewer --task msg --limit 40 --seed 42 "
-                f"--configurations {ALL_CONFIGS} {LLM_CONFIG}",
+                f"--configurations {ALL_CONFIGS} --reuse-llm-cache {LLM_CONFIG}",
             )
         )
     if not [r for r in runs if r.kind == "classifier" and r.rest.startswith("ablation")]:

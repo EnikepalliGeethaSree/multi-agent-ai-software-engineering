@@ -1,0 +1,74 @@
+{
+  "benchmark": "classifier_ablation",
+  "provider": "gemini",
+  "model": "gemini-3.6-flash",
+  "seed": 42,
+  "split": "dev (cls valid, dev projects only)",
+  "paired_samples": 2,
+  "status_counts": {
+    "disabled": {
+      "complete": 2,
+      "quota": 1,
+      "skipped": 12
+    },
+    "prioritize": {
+      "complete": 2,
+      "skipped": 13
+    },
+    "gate": {
+      "complete": 3,
+      "skipped": 12
+    }
+  },
+  "modes": {
+    "disabled": {
+      "samples": 2,
+      "units_total": 2,
+      "units_skipped": 0,
+      "units_protected": 0,
+      "llm_calls": 2,
+      "input_tokens": 12397,
+      "output_tokens": 1604,
+      "total_sec": 44.08,
+      "findings": 2
+    },
+    "prioritize": {
+      "samples": 2,
+      "units_total": 2,
+      "units_skipped": 0,
+      "units_protected": 0,
+      "llm_calls": 2,
+      "input_tokens": 12397,
+      "output_tokens": 1604,
+      "total_sec": 35.94,
+      "findings": 2,
+      "baseline_findings": 2,
+      "findings_retained": 2,
+      "useful_baseline": 0,
+      "useful_retained": 0,
+      "important_baseline": 0,
+      "important_missed": 0,
+      "important_missed_detail": [],
+      "static_high_lost_in_skipped_units": 0
+    },
+    "gate": {
+      "samples": 2,
+      "units_total": 2,
+      "units_skipped": 1,
+      "units_protected": 0,
+      "llm_calls": 1,
+      "input_tokens": 5704,
+      "output_tokens": 817,
+      "total_sec": 15.48,
+      "findings": 1,
+      "baseline_findings": 2,
+      "findings_retained": 1,
+      "useful_baseline": 0,
+      "useful_retained": 0,
+      "important_baseline": 0,
+      "important_missed": 0,
+      "important_missed_detail": [],
+      "static_high_lost_in_skipped_units": 0
+    }
+  }
+}

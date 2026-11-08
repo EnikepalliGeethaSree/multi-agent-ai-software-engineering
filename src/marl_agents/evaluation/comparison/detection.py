@@ -484,9 +484,9 @@ def codereviewer_tables(runs: list[SavedRun], task: str) -> list[ComparisonTable
                      "Static + LLM + RAG changes two things at once.")  # fmt: skip
     limit = ref_limit or len(ref_ids)
     notes.append(f"Gemini: set GEMINI_MODEL=gemini-3.6-flash first. Three LLM configurations on "
-                 f"{limit} samples need at least {3 * limit} requests. The free tier allows 20 per "
-                 "day per model and `eval ablation` has no resume, so a larger run cannot finish "
-                 "on the free tier as it stands.")  # fmt: skip
+                 f"{limit} samples need at least {3 * limit} requests, and the free tier allows 20 "
+                 "per day per model. Add --reuse-llm-cache and repeat the command each day: cached "
+                 "replies carry it forward, and the run that finishes is complete.")  # fmt: skip
     if task == "cls":
         notes.append("That command reads the CodeReviewer cls test split, which contains the "
                      "CodeBERT classifier's held-out samples. It does not run the classifier, but "

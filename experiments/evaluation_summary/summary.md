@@ -6,7 +6,7 @@
 
 ## Evaluation status
 
-- **complete**: Planted-issue benchmark. 4 of 4 configurations on 17 issues, run with openai/gpt-oss-120b. Small benchmark.
+- **complete**: Planted-issue benchmark. 4 of 4 configurations on 17 issues, run with gemini-3.6-flash. Small benchmark.
 - **preliminary**: CodeReviewer classification, paired. 3 of 10 requested samples paired; no scored samples for Static + LLM + RAG.
 - **incomplete**: Review comment generation, paired. 36 of 40 requested samples paired; no scored samples for LLM Only, Static + LLM.
 - **complete**: CodeReviewer classification, static only. Full Python test split, n = 4195. Not paired with the LLM runs.
@@ -19,13 +19,11 @@
 - **complete**: Fine-tuned change classifier. Held-out test, n = 1771, used once. Predicts human comments, not review quality.
 - **complete**: Gemini smoke test. Live checks on gemini-3.6-flash. Failed on: gemini-3.8-flash
 - **preliminary**: Comment usefulness (LLM judge). Supplementary. One judge model, not yet checked against human ratings.
-- **pending**: Planted issues on Gemini. All four configurations in one group; set GEMINI_MODEL=gemini-3.6-flash first.
-- **pending**: Comment generation on Gemini. All four configurations on identical samples. About 120 requests or more, so it needs a higher quota or a resume option.
-- **pending**: Classifier off, prioritize and gate. Development samples only. The classifier test split is not read.
+- **pending**: Comment generation on Gemini. All four configurations on identical samples. About 120 requests, so repeat the command each day: cached replies carry the run forward.
 
 ### Code Review evaluation summary
 
-Status: Historical: Groq (openai/gpt-oss-120b)
+Status: Gemini: gemini-3.6-flash
 
 > **Small benchmark: 17 issues written by the project team. It is a regression check, and a score of 1.000 is not evidence of 100% bug detection in real code.**
 
@@ -38,9 +36,9 @@ Detection quality of each configuration. Planted issues: ROC-AUC is not applicab
 | Configuration | Static | LLM | RAG | Planted issues (n = 17) Issue recall | Planted issues (n = 17) Defect precision | Planted issues (n = 17) F1 (mixed basis) | CodeReviewer classification (raw) Precision | CodeReviewer classification (raw) Recall | CodeReviewer classification (raw) F1 | CodeReviewer classification (raw) ROC-AUC | model |
 |---|---|---|---|---|---|---|---|---|---|---|---|
 | Static Only | ✓ | ✗ | ✗ | 0.941 | 1.000 | 0.970 | N/A | N/A | N/A | N/A | - |
-| LLM Only | ✗ | ✓ | ✗ | 0.588 | 1.000 | 0.741 | N/A | N/A | N/A | N/A | openai/gpt-oss-120b |
-| Static + LLM | ✓ | ✓ | ✗ | 1.000 | 1.000 | 1.000 | N/A | N/A | N/A | N/A | openai/gpt-oss-120b |
-| Static + LLM + RAG | ✓ | ✓ | ✓ | 1.000 | 1.000 | 1.000 | N/A | N/A | N/A | N/A | openai/gpt-oss-120b |
+| LLM Only | ✗ | ✓ | ✗ | 0.706 | 1.000 | 0.828 | N/A | N/A | N/A | N/A | gemini-3.6-flash |
+| Static + LLM | ✓ | ✓ | ✗ | 1.000 | 0.933 | 0.966 | N/A | N/A | N/A | N/A | gemini-3.6-flash |
+| Static + LLM + RAG | ✓ | ✓ | ✓ | 1.000 | 1.000 | 1.000 | N/A | N/A | N/A | N/A | gemini-3.6-flash |
 
 N/A:
 - Static Only / CodeReviewer classification (raw) (all): paired CodeReviewer sample too small for a headline (n = 3 < 30); see section 2
@@ -50,13 +48,13 @@ N/A:
 
 - Model, sample counts, failures and the exact runs behind every cell are in the benchmark sections below.
 
-Source runs: `20261012T161020Z_planted_static_only`, `20261012T161026Z_planted_llm_only`, `20261012T161133Z_planted_static_llm`, `20261012T161434Z_planted_static_llm_rag`
+Source runs: `20261108T055008Z_planted_static_only`, `20261108T055018Z_planted_llm_only`, `20261108T055101Z_planted_static_llm`, `20261108T055201Z_planted_static_llm_rag`
 
 ## 1. Planted issues
 
 ### Planted-issue benchmark: detection by configuration
 
-Status: Complete | Small benchmark (n = 17) | Historical: Groq (openai/gpt-oss-120b)
+Status: Complete | Small benchmark (n = 17) | Gemini: gemini-3.6-flash
 
 > **Small benchmark: 17 issues written by the project team. It is a regression check, and a score of 1.000 is not evidence of 100% bug detection in real code.**
 
@@ -70,9 +68,9 @@ Status: Complete | Small benchmark (n = 17) | Historical: Groq (openai/gpt-oss-1
 | Configuration | Static | LLM | RAG | Labelled issues Issue recall | Labelled issues Found | Labelled issues Missed | Labelled issues Rule-detectable recall | Labelled issues Semantic recall | Defect findings Precision | Defect findings Correct | Defect findings False positives | Defect findings FP in clean file | Other F1 (mixed basis) | Other ROC-AUC | Other Mean line error | n | failed | runs | model |
 |---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|
 | Static Only | ✓ | ✗ | ✗ | 0.941 | 16 | 1 | 1.000 | 0.000 | 1.000 | 13 | 0 | 0 | 0.970 | N/A | 0.00 | 17 | 0 | 1 | - |
-| LLM Only | ✗ | ✓ | ✗ | 0.588 | 10 | 7 | 0.562 | 1.000 | 1.000 | 10 | 0 | 0 | 0.741 | N/A | 0.90 | 17 | 0 | 1 | openai/gpt-oss-120b |
-| Static + LLM | ✓ | ✓ | ✗ | 1.000 | 17 | 0 | 1.000 | 1.000 | 1.000 | 14 | 0 | 0 | 1.000 | N/A | 0.00 | 17 | 0 | 1 | openai/gpt-oss-120b |
-| Static + LLM + RAG | ✓ | ✓ | ✓ | 1.000 | 17 | 0 | 1.000 | 1.000 | 1.000 | 14 | 0 | 0 | 1.000 | N/A | 0.06 | 17 | 0 | 1 | openai/gpt-oss-120b |
+| LLM Only | ✗ | ✓ | ✗ | 0.706 | 12 | 5 | 0.688 | 1.000 | 1.000 | 11 | 0 | 0 | 0.828 | N/A | 1.25 | 17 | 0 | 1 | gemini-3.6-flash |
+| Static + LLM | ✓ | ✓ | ✗ | 1.000 | 17 | 0 | 1.000 | 1.000 | 0.933 | 14 | 1 | 0 | 0.966 | N/A | 0.53 | 17 | 0 | 1 | gemini-3.6-flash |
+| Static + LLM + RAG | ✓ | ✓ | ✓ | 1.000 | 17 | 0 | 1.000 | 1.000 | 1.000 | 14 | 0 | 0 | 1.000 | N/A | 0.53 | 17 | 0 | 1 | gemini-3.6-flash |
 
 N/A:
 - Static Only / Other ROC-AUC: not applicable: the planted suite labels positives only (no scored negative cases), so a ROC curve is undefined
@@ -82,25 +80,24 @@ N/A:
 
 Fairness checks:
 - ✓ Same samples (answer key): one fixture repository and answer key for every configuration
-- ✓ Same LLM model: openai/gpt-oss-120b
+- ✓ Same LLM model: gemini-3.6-flash
 - ✓ Same temperature: 0.0
 - ✓ Same prompt versions: {'system': '1.0', 'review': '1.0'}
 - ✓ Same confidence threshold: 0.3
 - ✓ Same evaluation rules: {'line_tolerance': 2, 'match': 'same file, start within +-2 lines, compatible category', 'precision_over': 'defect findings (bug, security, error_handling, edge_case)'}
-- ✓ Run together (one ablation group): abl-20261012T161020Z
+- ✓ Run together (one ablation group): abl-20261108T055008Z
 
 Observations (computed from the numbers above):
 - Static + LLM has a higher recall than Static Only (1.000 vs 0.941).
 - Static + LLM and Static + LLM + RAG have the same recall (1.000).
-- Static Only has a higher recall than LLM Only (0.941 vs 0.588).
-- Static Only and Static + LLM have the same precision (1.000).
-- Static + LLM and Static + LLM + RAG have the same precision (1.000).
+- Static Only has a higher recall than LLM Only (0.941 vs 0.706).
+- Static Only has a higher precision than Static + LLM (1.000 vs 0.933).
+- Static + LLM + RAG has a higher precision than Static + LLM (1.000 vs 0.933).
 - Static Only and LLM Only have the same precision (1.000).
 - Static Only: semantic (LLM-only) issue recall 0.000 (the suite has a single such issue, so this is 0 or 1 per run).
 - LLM Only: semantic (LLM-only) issue recall 1.000 (the suite has a single such issue, so this is 0 or 1 per run).
 - Static + LLM: semantic (LLM-only) issue recall 1.000 (the suite has a single such issue, so this is 0 or 1 per run).
 - Static + LLM + RAG: semantic (LLM-only) issue recall 1.000 (the suite has a single such issue, so this is 0 or 1 per run).
-- Static + LLM + RAG on openai/gpt-oss-120b varies between complete runs (20260929: 17/17, 20261012: 16/17, 20261012: 17/17). The table shows the latest, so 1.000 is not a stable result.
 
 - Why 14 correct findings can sit beside 17 issues found: the answer key has 14 defect-class issues and 3 others (quality, maintainability, standards). Found counts issues of every category. Correct counts findings of the defect classes only. They are separate counts, so Correct + Missed need not equal the number of issues.
 - Rule-detectable recall covers 16 issues. Semantic recall covers 1, so it can only be 0 or 1 in a run.
@@ -108,7 +105,7 @@ Observations (computed from the numbers above):
 - Precision is N/A, not 1.0, when a configuration reports no defect findings at all.
 - Run all four together: python -m marl_agents.cli eval ablation --benchmark planted --configurations static_only,llm_only,static_llm,static_llm_rag --config configs/gemini.yaml
 
-Source runs: `20261012T161020Z_planted_static_only`, `20261012T161026Z_planted_llm_only`, `20261012T161133Z_planted_static_llm`, `20261012T161434Z_planted_static_llm_rag`
+Source runs: `20261108T055008Z_planted_static_only`, `20261108T055018Z_planted_llm_only`, `20261108T055101Z_planted_static_llm`, `20261108T055201Z_planted_static_llm_rag`
 
 ## 2. CodeReviewer classification
 
@@ -162,7 +159,7 @@ Fairness checks:
 - n = 3: far too few samples for any conclusion; this table only shows that the pipeline runs end to end. ROC-AUC is not reported. Each run's saved scores are unchanged in its predictions.jsonl.
 - Static + LLM: 7 of 10 samples failed (llm: 7).
 - Static + LLM + RAG: 10 of 10 samples failed (llm: 10).
-- Gemini: set GEMINI_MODEL=gemini-3.6-flash first. Three LLM configurations on 10 samples need at least 30 requests. The free tier allows 20 per day per model and `eval ablation` has no resume, so a larger run cannot finish on the free tier as it stands.
+- Gemini: set GEMINI_MODEL=gemini-3.6-flash first. Three LLM configurations on 10 samples need at least 30 requests, and the free tier allows 20 per day per model. Add --reuse-llm-cache and repeat the command each day: cached replies carry it forward, and the run that finishes is complete.
 - That command reads the CodeReviewer cls test split, which contains the CodeBERT classifier's held-out samples. It does not run the classifier, but use --split valid for new work so that test set is not reused.
 
 Source runs: `20261012T161828Z_codereviewer_cls_test_static_only_n10`, `20261012T161832Z_codereviewer_cls_test_llm_only_n10`, `20261012T162634Z_codereviewer_cls_test_static_llm_n10`, `20261012T163034Z_codereviewer_cls_test_static_llm_rag_n10`
@@ -229,7 +226,7 @@ Fairness checks:
 - n = 36: differences of a few points are within sampling noise (see the bootstrap CIs in each run's summary).
 - Static + LLM + RAG: 4 of 40 samples failed (llm: 4).
 - The effect of RAG on comment quality cannot be judged here: it needs Static + LLM and Static + LLM + RAG on the same samples. Static Only vs Static + LLM + RAG changes two things at once.
-- Gemini: set GEMINI_MODEL=gemini-3.6-flash first. Three LLM configurations on 40 samples need at least 120 requests. The free tier allows 20 per day per model and `eval ablation` has no resume, so a larger run cannot finish on the free tier as it stands.
+- Gemini: set GEMINI_MODEL=gemini-3.6-flash first. Three LLM configurations on 40 samples need at least 120 requests, and the free tier allows 20 per day per model. Add --reuse-llm-cache and repeat the command each day: cached replies carry it forward, and the run that finishes is complete.
 
 Source runs: `20261005T120433Z_codereviewer_msg_test_full_n40`, `20261012T163624Z_codereviewer_msg_test_static_only_n1403`
 
@@ -455,7 +452,7 @@ Source runs: `20261012T090910Z_timing_r3`
 
 ### Time per review in the planted-benchmark runs (seconds)
 
-Status: Historical: Groq (openai/gpt-oss-120b)
+Status: Gemini: gemini-3.6-flash
 
 The same repository reviewed under each configuration (the runs in section 1). One measurement per run; repeated runs show the mean.
 
@@ -463,10 +460,10 @@ The same repository reviewed under each configuration (the runs in section 1). O
 
 | Configuration | Static | LLM | RAG | Total | Static | RAG | LLM | Validation | Reports | Other | Active (total - quota wait) | n | failed | runs | model |
 |---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|
-| Static Only | ✓ | ✗ | ✗ | 5.62 | 5.60 | 0.00 | 0.00 | 0.001 | N/A | 0.02 | 5.62 | - | - | 1 | - |
-| LLM Only | ✗ | ✓ | ✗ | 67.61 | 0.00 | 0.00 | 15.98 | 0.003 | N/A | 51.63 | 16.00 | - | - | 1 | openai/gpt-oss-120b |
-| Static + LLM | ✓ | ✓ | ✗ | 180.88 | 5.88 | 0.00 | 16.80 | 0.003 | N/A | 158.20 | 22.69 | - | - | 1 | openai/gpt-oss-120b |
-| Static + LLM + RAG | ✓ | ✓ | ✓ | 190.31 | 5.27 | 0.18 | 19.52 | 0.004 | N/A | 165.34 | 26.53 | - | - | 1 | openai/gpt-oss-120b |
+| Static Only | ✓ | ✗ | ✗ | 9.75 | 9.68 | 0.00 | 0.00 | 0.002 | N/A | 0.06 | 9.75 | - | - | 1 | - |
+| LLM Only | ✗ | ✓ | ✗ | 42.82 | 0.00 | 0.00 | 42.78 | 0.005 | N/A | 0.03 | 42.82 | - | - | 1 | gemini-3.6-flash |
+| Static + LLM | ✓ | ✓ | ✗ | 60.56 | 5.79 | 0.00 | 54.73 | 0.005 | N/A | 0.03 | 60.56 | - | - | 1 | gemini-3.6-flash |
+| Static + LLM + RAG | ✓ | ✓ | ✓ | 99.50 | 5.76 | 0.33 | 90.44 | 0.005 | N/A | 2.96 | 99.50 | - | - | 1 | gemini-3.6-flash |
 
 N/A:
 - Static Only / Reports: benchmark runs do not write reports
@@ -478,10 +475,10 @@ Fairness checks:
 - ✓ Same input: planted fixture repository for every row
 
 Observations (computed from the numbers above):
-- RAG overhead +16.9% on active time (n = 1 run(s) per configuration; a single run is noisy, the timing benchmark is the fair measure).
-- Of that difference, retrieval itself took 0.18s; LLM inference took +2.72s more with RAG (longer prompts carrying the context).
+- RAG overhead +64.3% on active time (n = 1 run(s) per configuration; a single run is noisy, the timing benchmark is the fair measure).
+- Of that difference, retrieval itself took 0.33s; LLM inference took +35.71s more with RAG (longer prompts carrying the context).
 
-Source runs: `20261012T161020Z_planted_static_only`, `20261012T161026Z_planted_llm_only`, `20261012T161133Z_planted_static_llm`, `20261012T161434Z_planted_static_llm_rag`
+Source runs: `20261108T055008Z_planted_static_only`, `20261108T055018Z_planted_llm_only`, `20261108T055101Z_planted_static_llm`, `20261108T055201Z_planted_static_llm_rag`
 
 ## Supplementary
 
@@ -538,12 +535,21 @@ Generated from saved runs only (`python -m marl_agents.cli eval summary`).
 
 | Evaluation | Benchmark | Configuration | n | Metric | Result |
 |---|---|---|---:|---|---:|
+| Planted issues | Planted issues | LLM only (gemini-3.6-flash) | 17 | precision | 1.000 |
+| Planted issues | Planted issues | LLM only (gemini-3.6-flash) | 17 | recall | 0.706 |
+| Planted issues | Planted issues | LLM only (gemini-3.6-flash) | 17 | f1 | 0.828 |
 | Planted issues | Planted issues | LLM only (openai/gpt-oss-120b) | 17 | precision | 1.000 |
 | Planted issues | Planted issues | LLM only (openai/gpt-oss-120b) | 17 | recall | 0.588 |
 | Planted issues | Planted issues | LLM only (openai/gpt-oss-120b) | 17 | f1 | 0.741 |
+| Planted issues | Planted issues | static + LLM (gemini-3.6-flash), no RAG | 17 | precision | 0.933 |
+| Planted issues | Planted issues | static + LLM (gemini-3.6-flash), no RAG | 17 | recall | 1.000 |
+| Planted issues | Planted issues | static + LLM (gemini-3.6-flash), no RAG | 17 | f1 | 0.966 |
 | Planted issues | Planted issues | static + LLM (openai/gpt-oss-120b), no RAG | 17 | precision | 1.000 |
 | Planted issues | Planted issues | static + LLM (openai/gpt-oss-120b), no RAG | 17 | recall | 1.000 |
 | Planted issues | Planted issues | static + LLM (openai/gpt-oss-120b), no RAG | 17 | f1 | 1.000 |
+| Planted issues | Planted issues | static + LLM + RAG (gemini-3.6-flash) | 17 | precision | 1.000 |
+| Planted issues | Planted issues | static + LLM + RAG (gemini-3.6-flash) | 17 | recall | 1.000 |
+| Planted issues | Planted issues | static + LLM + RAG (gemini-3.6-flash) | 17 | f1 | 1.000 |
 | Planted issues | Planted issues | static + LLM + RAG (openai/gpt-oss-120b) | 17 | precision | 1.000 |
 | Planted issues | Planted issues | static + LLM + RAG (openai/gpt-oss-120b) | 17 | recall | 1.000 |
 | Planted issues | Planted issues | static + LLM + RAG (openai/gpt-oss-120b) | 17 | f1 | 1.000 |
@@ -633,8 +639,11 @@ Generated from saved runs only (`python -m marl_agents.cli eval summary`).
 
 ## Notes
 
+- Planted issues / LLM only (gemini-3.6-flash): precision over defect findings (bug, security, error handling, edge case)
 - Planted issues / LLM only (openai/gpt-oss-120b): precision over defect findings (bug, security, error handling, edge case)
+- Planted issues / static + LLM (gemini-3.6-flash), no RAG: precision over defect findings (bug, security, error handling, edge case)
 - Planted issues / static + LLM (openai/gpt-oss-120b), no RAG: precision over defect findings (bug, security, error handling, edge case)
+- Planted issues / static + LLM + RAG (gemini-3.6-flash): precision over defect findings (bug, security, error handling, edge case)
 - Planted issues / static + LLM + RAG (openai/gpt-oss-120b): precision over defect findings (bug, security, error handling, edge case)
 - Planted issues / static + LLM + RAG (openai/gpt-oss-120b): earlier run 20260929T194203Z_planted_full: precision 1.0, recall 1.0, f1 1.0
 - Planted issues / static + LLM + RAG (openai/gpt-oss-120b): earlier run 20261012T090444Z_planted_full: precision 1.0, recall 0.941, f1 0.97
@@ -644,6 +653,7 @@ Generated from saved runs only (`python -m marl_agents.cli eval summary`).
 - Planted issues / static only: earlier run 20260929T193007Z_planted_static_only: precision 1.0, recall 0.941, f1 0.97
 - Planted issues / static only: earlier run 20261005T115337Z_planted_static_only: precision 1.0, recall 0.941, f1 0.97
 - Planted issues / static only: earlier run 20261012T084950Z_planted_static_only: precision 1.0, recall 0.941, f1 0.97
+- Planted issues / static only: earlier run 20261012T161020Z_planted_static_only: precision 1.0, recall 0.941, f1 0.97
 - CodeReviewer / LLM only (openai/gpt-oss-120b): random subset: n=10 (seed 42), 0 failed
 - CodeReviewer / static + LLM (openai/gpt-oss-120b), no RAG: random subset: n=10 (seed 42), 7 failed
 - CodeReviewer / static + LLM + RAG (openai/gpt-oss-120b): random subset: n=10 (seed 42), 10 failed
@@ -666,7 +676,6 @@ Generated from saved runs only (`python -m marl_agents.cli eval summary`).
 - `20260929T194832Z_planted_full`
 - `20261005T120433Z_codereviewer_msg_test_full_n40`
 - `20261012T090910Z_timing_r3`
-- `20261012T161020Z_planted_static_only`
 - `20261012T161026Z_planted_llm_only`
 - `20261012T161133Z_planted_static_llm`
 - `20261012T161434Z_planted_static_llm_rag`
@@ -677,3 +686,7 @@ Generated from saved runs only (`python -m marl_agents.cli eval summary`).
 - `20261012T163153Z_codereviewer_cls_test_static_only_n4196`
 - `20261012T163624Z_codereviewer_msg_test_static_only_n1403`
 - `20261012T163944Z_hunkrisk_cls_test_n4196`
+- `20261108T055008Z_planted_static_only`
+- `20261108T055018Z_planted_llm_only`
+- `20261108T055101Z_planted_static_llm`
+- `20261108T055201Z_planted_static_llm_rag`

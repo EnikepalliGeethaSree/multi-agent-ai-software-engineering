@@ -127,7 +127,7 @@ class CodeReviewAgent(BaseAgent):
         cache_root = PROJECT_ROOT / review.cache_dir
         self._unit_cache = (
             UnitCache(cache_root / "llm_units", review.cache_ttl_hours)
-            if review.unit_cache and review.mode == "full"
+            if review.unit_cache and review.mode != "static_only"
             else None
         )
         self._analysis_cache = (

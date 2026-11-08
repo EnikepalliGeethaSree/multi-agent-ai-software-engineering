@@ -2,19 +2,19 @@
 
 | Benchmark | Metric | Original | Improved | n | Note |
 |---|---|---:|---:|---:|---|
-| Planted issues | Precision | 1.000 | N/A | - | improved run missing: python -m marl_agents.cli eval planted --configuration static_llm_rag --config configs/gemini.yaml |
-| Planted issues | Recall | 1.000 | N/A | - | improved run missing: python -m marl_agents.cli eval planted --configuration static_llm_rag --config configs/gemini.yaml |
-| Planted issues | False positives in the clean file | 0.000 | N/A | - | improved run missing: python -m marl_agents.cli eval planted --configuration static_llm_rag --config configs/gemini.yaml |
+| Planted issues | Precision | 1.000 | 1.000 | - |  |
+| Planted issues | Recall | 1.000 | 1.000 | - |  |
+| Planted issues | False positives in the clean file | 0.000 | 0.000 | - |  |
 | CodeReviewer comments | Comment coverage | 0.778 | N/A | 36 | improved run missing: python -m marl_agents.cli eval codereviewer --task msg --limit 40 --seed 42 --configuration static_llm_rag --workers 1 --config configs/gemini.yaml |
 | CodeReviewer comments | BLEU-4 | 2.136 | N/A | 36 | improved run missing: python -m marl_agents.cli eval codereviewer --task msg --limit 40 --seed 42 --configuration static_llm_rag --workers 1 --config configs/gemini.yaml |
 | CodeReviewer comments | ROUGE-L | 6.909 | N/A | 36 | improved run missing: python -m marl_agents.cli eval codereviewer --task msg --limit 40 --seed 42 --configuration static_llm_rag --workers 1 --config configs/gemini.yaml |
 | CodeReviewer comments | chrF | 13.595 | N/A | 36 | improved run missing: python -m marl_agents.cli eval codereviewer --task msg --limit 40 --seed 42 --configuration static_llm_rag --workers 1 --config configs/gemini.yaml |
-| Needs-review classification | Accuracy | 0.500 | 0.665 | 1771 |  |
-| Needs-review classification | Precision | 0.674 | 0.707 | 1771 |  |
-| Needs-review classification | Recall | 0.184 | 0.672 | 1771 |  |
-| Needs-review classification | F1-score | 0.289 | 0.689 | 1771 |  |
-| Needs-review classification | False positive rate | 0.110 | 0.345 | 1771 |  |
-| Needs-review classification | ROC-AUC | 0.541 | 0.723 | 1771 |  |
+| Needs-review classification | Accuracy | N/A | N/A | - |  |
+| Needs-review classification | Precision | N/A | N/A | - |  |
+| Needs-review classification | Recall | N/A | N/A | - |  |
+| Needs-review classification | F1-score | N/A | N/A | - |  |
+| Needs-review classification | False positive rate | N/A | N/A | - |  |
+| Needs-review classification | ROC-AUC | N/A | N/A | - |  |
 | LLM work per sample (Gemini, without vs with classifier) | Average LLM calls | N/A | N/A | - | improved run missing: python -m marl_agents.cli eval classifier-ablation --model-dir data/models/change_cls --limit 15 --max-llm-calls 45 --config configs/gemini.yaml |
 | LLM work per sample (Gemini, without vs with classifier) | Average input tokens | N/A | N/A | - | improved run missing: python -m marl_agents.cli eval classifier-ablation --model-dir data/models/change_cls --limit 15 --max-llm-calls 45 --config configs/gemini.yaml |
 | LLM work per sample (Gemini, without vs with classifier) | Average output tokens | N/A | N/A | - | improved run missing: python -m marl_agents.cli eval classifier-ablation --model-dir data/models/change_cls --limit 15 --max-llm-calls 45 --config configs/gemini.yaml |

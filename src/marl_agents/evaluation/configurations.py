@@ -191,6 +191,7 @@ def experiment_metadata(
         "include_info": settings.review.include_info,
         "evaluation_rules": evaluation_rules or {},
         "prompt_versions": prompt_versions() if config.llm else {},
+        "llm_cache_reused": bool(settings.review.unit_cache) if config.llm else None,
         "group_id": group_id,
         "repeat": repeat,
         "repeats": repeats,

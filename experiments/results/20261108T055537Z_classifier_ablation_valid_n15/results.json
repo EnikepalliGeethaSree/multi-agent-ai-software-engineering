@@ -1,0 +1,503 @@
+[
+  {
+    "sample_id": "cls-valid-23104-27812",
+    "mode": "disabled",
+    "label": 1,
+    "status": "complete",
+    "units_total": 1,
+    "units_scored": 0,
+    "units_skipped": 0,
+    "units_protected": 0,
+    "units_failed": 0,
+    "llm_calls": 1,
+    "input_tokens": 5704,
+    "output_tokens": 817,
+    "total_sec": 23.1277,
+    "llm_inference_sec": 14.0251,
+    "findings_count": 1,
+    "findings": [
+      {
+        "severity": "low",
+        "category": "standards",
+        "confidence": 0.72,
+        "rule": null,
+        "sources": [
+          "llm"
+        ],
+        "lines": [
+          182,
+          189
+        ],
+        "title": "Unindented module comment and PascalCase local variable naming"
+      }
+    ],
+    "message": ""
+  },
+  {
+    "sample_id": "cls-valid-23104-27812",
+    "mode": "prioritize",
+    "label": 1,
+    "status": "complete",
+    "units_total": 1,
+    "units_scored": 1,
+    "units_skipped": 0,
+    "units_protected": 0,
+    "units_failed": 0,
+    "llm_calls": 1,
+    "input_tokens": 5704,
+    "output_tokens": 817,
+    "total_sec": 16.1996,
+    "llm_inference_sec": 12.6304,
+    "findings_count": 1,
+    "findings": [
+      {
+        "severity": "low",
+        "category": "standards",
+        "confidence": 0.72,
+        "rule": null,
+        "sources": [
+          "llm"
+        ],
+        "lines": [
+          182,
+          189
+        ],
+        "title": "Unindented module comment and PascalCase local variable naming"
+      }
+    ],
+    "message": ""
+  },
+  {
+    "sample_id": "cls-valid-23104-27812",
+    "mode": "gate",
+    "label": 1,
+    "status": "complete",
+    "units_total": 1,
+    "units_scored": 1,
+    "units_skipped": 0,
+    "units_protected": 0,
+    "units_failed": 0,
+    "llm_calls": 1,
+    "input_tokens": 5704,
+    "output_tokens": 817,
+    "total_sec": 14.1996,
+    "llm_inference_sec": 11.2139,
+    "findings_count": 1,
+    "findings": [
+      {
+        "severity": "low",
+        "category": "standards",
+        "confidence": 0.72,
+        "rule": null,
+        "sources": [
+          "llm"
+        ],
+        "lines": [
+          182,
+          189
+        ],
+        "title": "Unindented module comment and PascalCase local variable naming"
+      }
+    ],
+    "message": ""
+  },
+  {
+    "sample_id": "cls-valid-12552-6564",
+    "mode": "prioritize",
+    "label": 0,
+    "status": "complete",
+    "units_total": 1,
+    "units_scored": 1,
+    "units_skipped": 0,
+    "units_protected": 0,
+    "units_failed": 0,
+    "llm_calls": 1,
+    "input_tokens": 6693,
+    "output_tokens": 787,
+    "total_sec": 19.744,
+    "llm_inference_sec": 17.8517,
+    "findings_count": 1,
+    "findings": [
+      {
+        "severity": "low",
+        "category": "quality",
+        "confidence": 0.76,
+        "rule": null,
+        "sources": [
+          "llm"
+        ],
+        "lines": [
+          22,
+          22
+        ],
+        "title": "Unused import `unidecode`"
+      }
+    ],
+    "message": "[mypy] mypy failed (2): "
+  },
+  {
+    "sample_id": "cls-valid-12552-6564",
+    "mode": "gate",
+    "label": 0,
+    "status": "complete",
+    "units_total": 1,
+    "units_scored": 1,
+    "units_skipped": 1,
+    "units_protected": 0,
+    "units_failed": 0,
+    "llm_calls": 0,
+    "input_tokens": 0,
+    "output_tokens": 0,
+    "total_sec": 1.2831,
+    "llm_inference_sec": 0.0,
+    "findings_count": 0,
+    "findings": [],
+    "message": "[mypy] mypy failed (2): ; classifier: 1 low-risk unit(s) were not sent to the LLM; static analysis still covered them"
+  },
+  {
+    "sample_id": "cls-valid-12552-6564",
+    "mode": "disabled",
+    "label": 0,
+    "status": "complete",
+    "units_total": 1,
+    "units_scored": 0,
+    "units_skipped": 0,
+    "units_protected": 0,
+    "units_failed": 0,
+    "llm_calls": 1,
+    "input_tokens": 6693,
+    "output_tokens": 787,
+    "total_sec": 20.951,
+    "llm_inference_sec": 19.6883,
+    "findings_count": 1,
+    "findings": [
+      {
+        "severity": "low",
+        "category": "quality",
+        "confidence": 0.76,
+        "rule": null,
+        "sources": [
+          "llm"
+        ],
+        "lines": [
+          22,
+          22
+        ],
+        "title": "Unused import `unidecode`"
+      }
+    ],
+    "message": "[mypy] mypy failed (2): "
+  },
+  {
+    "sample_id": "cls-valid-10854-16290",
+    "mode": "gate",
+    "label": 1,
+    "status": "complete",
+    "units_total": 1,
+    "units_scored": 1,
+    "units_skipped": 0,
+    "units_protected": 1,
+    "units_failed": 0,
+    "llm_calls": 1,
+    "input_tokens": 4376,
+    "output_tokens": 433,
+    "total_sec": 29.8595,
+    "llm_inference_sec": 15.6462,
+    "findings_count": 1,
+    "findings": [
+      {
+        "severity": "medium",
+        "category": "quality",
+        "confidence": 0.76,
+        "rule": null,
+        "sources": [
+          "llm"
+        ],
+        "lines": [
+          344,
+          344
+        ],
+        "title": "Unused parameter `column_names` in `_InternalFrame.__init__`"
+      }
+    ],
+    "message": ""
+  },
+  {
+    "sample_id": "cls-valid-10854-16290",
+    "mode": "disabled",
+    "label": 1,
+    "status": "quota",
+    "units_total": 1,
+    "units_scored": 0,
+    "units_skipped": 0,
+    "units_protected": 0,
+    "units_failed": 1,
+    "llm_calls": 0,
+    "input_tokens": 0,
+    "output_tokens": 0,
+    "total_sec": 10.7625,
+    "llm_inference_sec": 0.5693,
+    "findings_count": 0,
+    "findings": [],
+    "message": "[changed_file.py:339-442] LLM review failed: gemini quota reached for model gemini-3.6-flash. Daily quotas reset at 2026-11-08T08:00:00+00:00 (midnight Pacific). Finished review units are saved, so th"
+  },
+  {
+    "sample_id": "cls-valid-10854-16290",
+    "mode": "prioritize",
+    "label": 1,
+    "status": "skipped",
+    "message": "LLM quota reached in an earlier sample"
+  },
+  {
+    "sample_id": "cls-valid-26843-7136",
+    "mode": "disabled",
+    "label": 0,
+    "status": "skipped",
+    "message": "LLM quota reached in an earlier sample"
+  },
+  {
+    "sample_id": "cls-valid-26843-7136",
+    "mode": "prioritize",
+    "label": 0,
+    "status": "skipped",
+    "message": "LLM quota reached in an earlier sample"
+  },
+  {
+    "sample_id": "cls-valid-26843-7136",
+    "mode": "gate",
+    "label": 0,
+    "status": "skipped",
+    "message": "LLM quota reached in an earlier sample"
+  },
+  {
+    "sample_id": "cls-valid-15460-29382",
+    "mode": "prioritize",
+    "label": 1,
+    "status": "skipped",
+    "message": "LLM quota reached in an earlier sample"
+  },
+  {
+    "sample_id": "cls-valid-15460-29382",
+    "mode": "gate",
+    "label": 1,
+    "status": "skipped",
+    "message": "LLM quota reached in an earlier sample"
+  },
+  {
+    "sample_id": "cls-valid-15460-29382",
+    "mode": "disabled",
+    "label": 1,
+    "status": "skipped",
+    "message": "LLM quota reached in an earlier sample"
+  },
+  {
+    "sample_id": "cls-valid-15153-24037",
+    "mode": "gate",
+    "label": 1,
+    "status": "skipped",
+    "message": "LLM quota reached in an earlier sample"
+  },
+  {
+    "sample_id": "cls-valid-15153-24037",
+    "mode": "disabled",
+    "label": 1,
+    "status": "skipped",
+    "message": "LLM quota reached in an earlier sample"
+  },
+  {
+    "sample_id": "cls-valid-15153-24037",
+    "mode": "prioritize",
+    "label": 1,
+    "status": "skipped",
+    "message": "LLM quota reached in an earlier sample"
+  },
+  {
+    "sample_id": "cls-valid-14832-7129",
+    "mode": "disabled",
+    "label": 1,
+    "status": "skipped",
+    "message": "LLM quota reached in an earlier sample"
+  },
+  {
+    "sample_id": "cls-valid-14832-7129",
+    "mode": "prioritize",
+    "label": 1,
+    "status": "skipped",
+    "message": "LLM quota reached in an earlier sample"
+  },
+  {
+    "sample_id": "cls-valid-14832-7129",
+    "mode": "gate",
+    "label": 1,
+    "status": "skipped",
+    "message": "LLM quota reached in an earlier sample"
+  },
+  {
+    "sample_id": "cls-valid-13182-18457",
+    "mode": "prioritize",
+    "label": 1,
+    "status": "skipped",
+    "message": "LLM quota reached in an earlier sample"
+  },
+  {
+    "sample_id": "cls-valid-13182-18457",
+    "mode": "gate",
+    "label": 1,
+    "status": "skipped",
+    "message": "LLM quota reached in an earlier sample"
+  },
+  {
+    "sample_id": "cls-valid-13182-18457",
+    "mode": "disabled",
+    "label": 1,
+    "status": "skipped",
+    "message": "LLM quota reached in an earlier sample"
+  },
+  {
+    "sample_id": "cls-valid-26795-5003",
+    "mode": "gate",
+    "label": 1,
+    "status": "skipped",
+    "message": "LLM quota reached in an earlier sample"
+  },
+  {
+    "sample_id": "cls-valid-26795-5003",
+    "mode": "disabled",
+    "label": 1,
+    "status": "skipped",
+    "message": "LLM quota reached in an earlier sample"
+  },
+  {
+    "sample_id": "cls-valid-26795-5003",
+    "mode": "prioritize",
+    "label": 1,
+    "status": "skipped",
+    "message": "LLM quota reached in an earlier sample"
+  },
+  {
+    "sample_id": "cls-valid-12298-29749",
+    "mode": "disabled",
+    "label": 0,
+    "status": "skipped",
+    "message": "LLM quota reached in an earlier sample"
+  },
+  {
+    "sample_id": "cls-valid-12298-29749",
+    "mode": "prioritize",
+    "label": 0,
+    "status": "skipped",
+    "message": "LLM quota reached in an earlier sample"
+  },
+  {
+    "sample_id": "cls-valid-12298-29749",
+    "mode": "gate",
+    "label": 0,
+    "status": "skipped",
+    "message": "LLM quota reached in an earlier sample"
+  },
+  {
+    "sample_id": "cls-valid-24814-12775",
+    "mode": "prioritize",
+    "label": 0,
+    "status": "skipped",
+    "message": "LLM quota reached in an earlier sample"
+  },
+  {
+    "sample_id": "cls-valid-24814-12775",
+    "mode": "gate",
+    "label": 0,
+    "status": "skipped",
+    "message": "LLM quota reached in an earlier sample"
+  },
+  {
+    "sample_id": "cls-valid-24814-12775",
+    "mode": "disabled",
+    "label": 0,
+    "status": "skipped",
+    "message": "LLM quota reached in an earlier sample"
+  },
+  {
+    "sample_id": "cls-valid-26837-13928",
+    "mode": "gate",
+    "label": 0,
+    "status": "skipped",
+    "message": "LLM quota reached in an earlier sample"
+  },
+  {
+    "sample_id": "cls-valid-26837-13928",
+    "mode": "disabled",
+    "label": 0,
+    "status": "skipped",
+    "message": "LLM quota reached in an earlier sample"
+  },
+  {
+    "sample_id": "cls-valid-26837-13928",
+    "mode": "prioritize",
+    "label": 0,
+    "status": "skipped",
+    "message": "LLM quota reached in an earlier sample"
+  },
+  {
+    "sample_id": "cls-valid-35849-27630",
+    "mode": "disabled",
+    "label": 1,
+    "status": "skipped",
+    "message": "LLM quota reached in an earlier sample"
+  },
+  {
+    "sample_id": "cls-valid-35849-27630",
+    "mode": "prioritize",
+    "label": 1,
+    "status": "skipped",
+    "message": "LLM quota reached in an earlier sample"
+  },
+  {
+    "sample_id": "cls-valid-35849-27630",
+    "mode": "gate",
+    "label": 1,
+    "status": "skipped",
+    "message": "LLM quota reached in an earlier sample"
+  },
+  {
+    "sample_id": "cls-valid-19978-4280",
+    "mode": "prioritize",
+    "label": 0,
+    "status": "skipped",
+    "message": "LLM quota reached in an earlier sample"
+  },
+  {
+    "sample_id": "cls-valid-19978-4280",
+    "mode": "gate",
+    "label": 0,
+    "status": "skipped",
+    "message": "LLM quota reached in an earlier sample"
+  },
+  {
+    "sample_id": "cls-valid-19978-4280",
+    "mode": "disabled",
+    "label": 0,
+    "status": "skipped",
+    "message": "LLM quota reached in an earlier sample"
+  },
+  {
+    "sample_id": "cls-valid-12059-18516",
+    "mode": "gate",
+    "label": 0,
+    "status": "skipped",
+    "message": "LLM quota reached in an earlier sample"
+  },
+  {
+    "sample_id": "cls-valid-12059-18516",
+    "mode": "disabled",
+    "label": 0,
+    "status": "skipped",
+    "message": "LLM quota reached in an earlier sample"
+  },
+  {
+    "sample_id": "cls-valid-12059-18516",
+    "mode": "prioritize",
+    "label": 0,
+    "status": "skipped",
+    "message": "LLM quota reached in an earlier sample"
+  }
+]

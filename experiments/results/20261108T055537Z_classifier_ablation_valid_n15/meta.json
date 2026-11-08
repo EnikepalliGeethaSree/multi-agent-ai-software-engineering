@@ -1,0 +1,44 @@
+{
+  "name": "classifier_ablation_valid_n15",
+  "started_at": "2026-11-08T05:55:37.658580+00:00",
+  "git_commit": "522805c6afde36cb57d86ab2e84d1548bdd61678",
+  "python": "3.11.7",
+  "platform": "Windows-10-10.0.26300-SP0",
+  "packages": {
+    "marl-agents": "0.1.0",
+    "pydantic": "2.13.5",
+    "ruff": "0.16.9",
+    "radon": "6.0.1",
+    "chromadb": "1.5.9",
+    "openai": "3.21.0",
+    "sentence-transformers": "6.1.0"
+  },
+  "benchmark": "classifier_ablation",
+  "dataset": "CodeReviewer",
+  "task": "cls",
+  "split": "dev",
+  "languages": [
+    "py"
+  ],
+  "llm_provider": "gemini",
+  "llm_model": "gemini-3.6-flash",
+  "sample_ids": [
+    "cls-valid-23104-27812",
+    "cls-valid-12552-6564",
+    "cls-valid-10854-16290",
+    "cls-valid-26843-7136",
+    "cls-valid-15460-29382",
+    "cls-valid-15153-24037",
+    "cls-valid-14832-7129",
+    "cls-valid-13182-18457",
+    "cls-valid-26795-5003",
+    "cls-valid-12298-29749",
+    "cls-valid-24814-12775",
+    "cls-valid-26837-13928",
+    "cls-valid-35849-27630",
+    "cls-valid-19978-4280",
+    "cls-valid-12059-18516"
+  ],
+  "finished_at": "2026-11-08T05:59:26.104818+00:00",
+  "errors": 0
+}

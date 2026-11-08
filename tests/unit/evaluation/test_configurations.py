@@ -213,3 +213,125 @@ def test_a_runs_own_output_does_not_count_as_uncommitted_code(
     from marl_agents.evaluation.recorder import source_changes
 
     assert source_changes(porcelain) == changed
+
+
+def test_cache_reuse_is_off_unless_asked_and_recorded_when_on(settings: Settings) -> None:
+    from marl_agents.cli import apply_cache_choice
+    from marl_agents.evaluation.configurations import experiment_metadata
+
+    settings.review.mode = "full"
+    settings.review.unit_cache = False
+    apply_cache_choice(settings, False)
+    assert settings.review.unit_cache is False
+    exp = experiment_metadata(settings, benchmark="planted", llm_used=True)
+    assert exp["llm_cache_reused"] is False
+    apply_cache_choice(settings, True)
+    assert settings.review.unit_cache is True
+    assert settings.review.cache_ttl_hours >= 720  # outlasts a multi-day free-tier run
+    exp = experiment_metadata(settings, benchmark="planted", llm_used=True)
+    assert exp["llm_cache_reused"] is True
+
+
+def test_static_only_runs_record_no_cache_choice(settings: Settings) -> None:
+    from marl_agents.evaluation.configurations import experiment_metadata
+
+    settings.review.mode = "static_only"
+    assert (
+        experiment_metadata(settings, benchmark="planted", llm_used=False)["llm_cache_reused"]
+        is None
+    )
+
+
+def test_the_cli_flag_reaches_the_settings(monkeypatch: pytest.MonkeyPatch) -> None:
+    from marl_agents import cli
+
+    seen: dict[str, bool] = {}
+
+    def fake(args, s):  # type: ignore[no-untyped-def]
+        seen["unit_cache"] = s.review.unit_cache
+        return 0
+
+    monkeypatch.setattr(cli, "_eval_ablation", fake)
+    assert cli.main(["eval", "ablation", "--reuse-llm-cache"]) == 0
+    assert seen["unit_cache"] is True
+    assert cli.main(["eval", "ablation"]) == 0
+    assert seen["unit_cache"] is False
+
+
+def _cr_samples(n: int):  # type: ignore[no-untyped-def]
+    from marl_agents.evaluation.datasets.codereviewer import CodeReviewerSample
+
+    old = "def f(a):\n    return a\n"
+    return [
+        CodeReviewerSample(
+            sample_id=f"s{i}", task="cls", split="test", label=i % 2, oldf=old,
+            patch=f"@@ -1,2 +1,2 @@\n def f(a):\n-    return a\n+    return a + {i}\n",
+        )
+        for i in range(n)
+    ]  # fmt: skip
+
+
+class _QuotaAfter(MockLLMProvider):
+    """Answers `budget` requests, then behaves like a spent daily quota."""
+
+    def __init__(self, budget: int) -> None:
+        super().__init__(default=llm_json())
+        self.budget = budget
+
+    def generate(self, messages, config=None):  # type: ignore[no-untyped-def]
+        from marl_agents.llm.base import QuotaExhaustedError
+
+        if len(self.calls) >= self.budget:
+            raise QuotaExhaustedError("daily quota")
+        return super().generate(messages, config)
+
+
+def test_a_quota_stopped_comparison_finishes_later_without_repeating_calls(
+    settings: Settings, tmp_path: Path
+) -> None:
+    from marl_agents.cli import apply_cache_choice
+
+    settings.review.cache_dir = str(tmp_path / "cache")
+    apply_cache_choice(settings, True)
+    samples = _cr_samples(4)
+    configs = ["llm_only", "static_llm", "static_llm_rag"]
+
+    def run(llm: MockLLMProvider) -> dict:  # type: ignore[type-arg]
+        _folder, m = run_ablation(
+            "codereviewer", settings, llm, configs, samples=samples, task="cls",
+            split="test", seed=42, limit=4, workers=1, results_dir=tmp_path / "results",
+        )  # fmt: skip
+        out = {}
+        for key, names in m["runs"].items():
+            metrics = json.loads((tmp_path / "results" / names[0] / "metrics.json").read_text())
+            out[key] = (metrics["n_evaluated"], metrics["n_failed"], metrics["experiment"])
+        return out
+
+    day1 = _QuotaAfter(budget=5)
+    first = run(day1)
+    assert sum(n_failed for _, n_failed, _ in first.values()) > 0  # the quota stopped it
+    assert len(day1.calls) == 5
+
+    day2 = _QuotaAfter(budget=100)
+    second = run(day2)
+    assert all(n_failed == 0 and n == 4 for n, n_failed, _ in second.values())  # complete
+    assert len(day2.calls) == 12 - 5  # only the work that day one did not finish
+    assert all(exp["llm_cache_reused"] is True for _, _, exp in second.values())
+
+    day3 = _QuotaAfter(budget=0)
+    assert all(n_failed == 0 for _, n_failed, _ in run(day3).values())  # all from the cache
+    assert day3.calls == []
+
+
+def test_without_the_flag_every_run_calls_the_model_again(
+    settings: Settings, tmp_path: Path
+) -> None:
+    settings.review.cache_dir = str(tmp_path / "cache")
+    settings.review.unit_cache = False
+    llm = MockLLMProvider(default=llm_json())
+    for _ in range(2):
+        run_ablation(
+            "codereviewer", settings, llm, ["llm_only"], samples=_cr_samples(2), task="cls",
+            split="test", seed=42, limit=2, workers=1, results_dir=tmp_path / "results",
+        )  # fmt: skip
+    assert len(llm.calls) == 4

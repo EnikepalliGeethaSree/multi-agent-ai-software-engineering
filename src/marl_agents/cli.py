@@ -314,6 +314,7 @@ def cmd_eval(args: argparse.Namespace) -> int:
     s = settings
     # A benchmark measures real work: nothing is reused from an earlier run.
     s.review.unit_cache = s.review.analysis_cache = False
+    apply_cache_choice(s, getattr(args, "reuse_llm_cache", False))
     if args.repeats is None:
         args.repeats = 1 if args.suite == "ablation" else 3
     if args.suite == "ablation":
@@ -465,6 +466,21 @@ def _eval_before_after() -> int:
     print(md)
     print(f"saved: {out}")
     return 0
+
+
+CACHE_TTL_FOR_RESUME_HOURS = 720
+
+
+def apply_cache_choice(s: Settings, reuse: bool) -> None:
+    """Let a quota-stopped evaluation continue on a later day from cached LLM replies.
+
+    Off by default, because a benchmark normally measures real work. When on, the run records it,
+    its quality metrics stay comparable, and its times do not. Replies are kept for 30 days, longer
+    than a free-tier comparison takes to finish.
+    """
+    if reuse:
+        s.review.unit_cache = True
+        s.review.cache_ttl_hours = max(s.review.cache_ttl_hours, CACHE_TTL_FOR_RESUME_HOURS)
 
 
 def _eval_ablation(args: argparse.Namespace, s: Settings) -> int:
@@ -1024,6 +1040,12 @@ def main(argv: list[str] | None = None) -> int:
     )
     p_eval.add_argument(
         "--with-fixes", action="store_true", help="timing / ablation: keep LLM fix suggestions"
+    )
+    p_eval.add_argument(
+        "--reuse-llm-cache",
+        action="store_true",
+        help="codereviewer / ablation: reuse LLM replies cached by earlier runs, so a run stopped "
+        "by the quota can continue on a later day. Quality metrics stay comparable; times do not",
     )
     p_eval.add_argument("--kit-size", type=int, default=40, help="usefulness: diffs in the kit")
     p_eval.add_argument("--model-dir", help="classifier: the trained model folder")

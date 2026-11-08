@@ -128,6 +128,20 @@ def fairness_checks(
                 "prompt versions",
             )
         )
+        reused = [r for r in llm_runs if r.experiment.get("llm_cache_reused") is True]
+        recorded = [r for r in llm_runs if r.experiment.get("llm_cache_reused") is not None]
+        if recorded:
+            checks.append(
+                FairnessCheck(
+                    name="Fresh LLM calls",
+                    ok=not reused,
+                    detail="replies reused from the cache in "
+                    + ", ".join(sorted({r.configuration.label for r in reused if r.configuration}))
+                    + ": quality metrics compare, times do not"
+                    if reused
+                    else "every LLM run called the model",
+                )
+            )
     checks.append(
         _same([r.confidence_threshold for r in runs], "Same confidence threshold", "threshold")
     )
