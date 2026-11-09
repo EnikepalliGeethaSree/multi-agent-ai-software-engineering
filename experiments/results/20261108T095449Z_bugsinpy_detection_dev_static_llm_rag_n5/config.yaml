@@ -1,0 +1,94 @@
+llm:
+  provider: ollama
+  model: qwen2.5-coder:7b
+  temperature: 0.0
+  max_tokens: 4096
+  seed: 42
+  base_url: http://localhost:11434
+  api_key_env: null
+  requests_per_minute: null
+  tokens_per_minute: null
+  requests_per_day: null
+  tokens_per_day: null
+  max_input_tokens: null
+  context_window: 16384
+  max_retries: 1
+  timeout_s: 900.0
+  json_mode: true
+  extra_params: {}
+ingestion:
+  max_zip_bytes: 104857600
+  max_uncompressed_bytes: 524288000
+  max_files: 20000
+  max_file_bytes: 2097152
+  include_extensions:
+  - .py
+  - .md
+  - .rst
+  - .txt
+  - .yaml
+  - .yml
+  - .json
+  - .toml
+  - .cfg
+  - .ini
+  ignore_dirs:
+  - .git
+  - .venv
+  - venv
+  - env
+  - __pycache__
+  - node_modules
+  - .idea
+  - .vscode
+  - dist
+  - build
+  - .mypy_cache
+  - .pytest_cache
+  - .ruff_cache
+  workspace_dir: data/workspaces
+rag:
+  enabled: true
+  vector_store: memory
+  persist_dir: null
+  embedding_model: hashing
+  top_k: 6
+  guideline_k: 2
+  structural_context: true
+  max_context_chars: 12000
+review:
+  mode: full
+  min_confidence: 0.3
+  require_llm_evidence: true
+  max_unit_lines: 200
+  max_units: 200
+  include_info: true
+  llm_triage_static: true
+  scope_slack: 3
+  include_tests: false
+  concurrency: 1
+  type_check: false
+  drop_vague: true
+  suggest_fixes: false
+  max_llm_fixes: 8
+  max_impact_checks: 15
+  unit_cache: false
+  analysis_cache: false
+  cache_dir: data/cache
+  cache_ttl_hours: 168
+  resume_ttl_hours: 72
+datasets:
+  root: capstone-datasets
+  cache_dir: data/cache
+classifier:
+  enabled: false
+  model_dir: null
+  mode: prioritize
+  threshold: null
+bugs:
+  max_units: 12
+  max_candidates: 40
+  candidate_lines: 30
+  max_prompt_chars: 40000
+  retrieval_k: 20
+  require_trigger: true

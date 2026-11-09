@@ -1,0 +1,98 @@
+{
+  "name": "bugsinpy_detection_dev_static_llm_n5",
+  "started_at": "2026-11-08T09:54:49.226729+00:00",
+  "git_commit": "a54c6c9f2e33452493c99e6f3f8a8838bf2201a9-dirty",
+  "python": "3.11.7",
+  "platform": "Windows-10-10.0.26300-SP0",
+  "packages": {
+    "marl-agents": "0.1.0",
+    "pydantic": "2.13.5",
+    "ruff": "0.16.9",
+    "radon": "6.0.1",
+    "chromadb": "1.5.9",
+    "openai": "3.21.0",
+    "sentence-transformers": "6.1.0"
+  },
+  "audit": {
+    "split": "dev",
+    "seed": 42,
+    "bugs_total": 501,
+    "small_fix_total": 305,
+    "pool": 32,
+    "checked": 5,
+    "usable": 5,
+    "ineligible": {},
+    "sample_ids": [
+      "PySnooper-3",
+      "black-10",
+      "cookiecutter-3",
+      "httpie-3",
+      "sanic-3"
+    ]
+  },
+  "sample_ids": [
+    "PySnooper-3",
+    "black-10",
+    "cookiecutter-3",
+    "httpie-3",
+    "sanic-3"
+  ],
+  "pending": 0,
+  "stopped": null,
+  "ledger": "detection_dev_26f53045d54e.jsonl",
+  "experiment": {
+    "configuration": {
+      "key": "static_llm",
+      "letter": "C",
+      "label": "Static + LLM",
+      "static": true,
+      "llm": true,
+      "rag": false,
+      "mode": "full"
+    },
+    "benchmark": "bugsinpy_detection",
+    "dataset": "BugsInPy",
+    "split": "dev",
+    "sampling_seed": 42,
+    "limit": 5,
+    "sample_count": 5,
+    "sample_fingerprint": "14a18f9716970cac",
+    "n_evaluated": 10,
+    "n_failed": 0,
+    "llm": {
+      "provider": "ollama",
+      "model": "qwen2.5-coder:7b",
+      "temperature": 0.0,
+      "seed": 42,
+      "max_tokens": 4096
+    },
+    "rag": null,
+    "static_analyzers": [
+      "ruff",
+      "ast",
+      "flow",
+      "loop"
+    ],
+    "classifier": null,
+    "confidence_threshold": 0.3,
+    "include_info": true,
+    "evaluation_rules": {
+      "pool": "one source file, at most 10 changed lines, change inside a function",
+      "failed_samples": "counted as wrong, never dropped (D22)",
+      "line_tolerance": 2
+    },
+    "prompt_versions": {
+      "bug_system": "1.0",
+      "bug_review": "1.1",
+      "bug_localize": "1.0"
+    },
+    "llm_cache_reused": false,
+    "group_id": null,
+    "repeat": null,
+    "repeats": null,
+    "timestamp": "2026-11-08T09:54:49.433700+00:00",
+    "agent": "bug_detection"
+  },
+  "finished_at": "2026-11-08T09:54:49.434704+00:00",
+  "errors": 0
+}

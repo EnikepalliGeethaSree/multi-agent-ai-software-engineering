@@ -1,0 +1,93 @@
+{
+  "n_functions": 10,
+  "n_bugs": 5,
+  "n_failed": 0,
+  "function_level": {
+    "n": 10,
+    "tp": 0,
+    "fp": 0,
+    "tn": 5,
+    "fn": 5,
+    "accuracy": 0.5,
+    "precision": 0.0,
+    "recall": 0.0,
+    "f1": 0.0,
+    "positive_rate": 0.0
+  },
+  "at_gold_lines": {
+    "n": 10,
+    "tp": 0,
+    "fp": 0,
+    "tn": 5,
+    "fn": 5,
+    "accuracy": 0.5,
+    "precision": 0.0,
+    "recall": 0.0,
+    "f1": 0.0,
+    "positive_rate": 0.0
+  },
+  "ci_f1": [
+    0.0,
+    0.0
+  ],
+  "auc": 0.5,
+  "pairs": {
+    "n": 5,
+    "both_flagged": 0,
+    "only_buggy": 0,
+    "only_fixed": 0,
+    "neither": 5,
+    "discrimination": 0.0
+  },
+  "llm_calls": 10,
+  "llm_rejected": 0,
+  "complete": true,
+  "experiment": {
+    "configuration": {
+      "key": "llm_only",
+      "letter": "B",
+      "label": "LLM Only",
+      "static": false,
+      "llm": true,
+      "rag": false,
+      "mode": "llm_only"
+    },
+    "benchmark": "bugsinpy_detection",
+    "dataset": "BugsInPy",
+    "split": "dev",
+    "sampling_seed": 42,
+    "limit": 5,
+    "sample_count": 5,
+    "sample_fingerprint": "14a18f9716970cac",
+    "n_evaluated": 10,
+    "n_failed": 0,
+    "llm": {
+      "provider": "ollama",
+      "model": "qwen2.5-coder:7b",
+      "temperature": 0.0,
+      "seed": 42,
+      "max_tokens": 4096
+    },
+    "rag": null,
+    "static_analyzers": [],
+    "classifier": null,
+    "confidence_threshold": 0.3,
+    "include_info": true,
+    "evaluation_rules": {
+      "pool": "one source file, at most 10 changed lines, change inside a function",
+      "failed_samples": "counted as wrong, never dropped (D22)",
+      "line_tolerance": 2
+    },
+    "prompt_versions": {
+      "bug_system": "1.0",
+      "bug_review": "1.1",
+      "bug_localize": "1.0"
+    },
+    "llm_cache_reused": false,
+    "group_id": null,
+    "repeat": null,
+    "repeats": null,
+    "timestamp": "2026-11-08T09:54:49.215719+00:00",
+    "agent": "bug_detection"
+  }
+}

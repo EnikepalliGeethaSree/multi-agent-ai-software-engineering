@@ -1,0 +1,247 @@
+{
+  "detection": {
+    "expected": 17,
+    "matched": 16,
+    "tp": 13,
+    "fp": 1,
+    "fn": 1,
+    "precision": 0.9285714285714286,
+    "f1": 0.9348314606741573,
+    "recall": 0.9411764705882353,
+    "recall_static": 1.0,
+    "recall_llm": 0.0,
+    "defect_findings": 14,
+    "defect_true_positives": 13,
+    "defect_precision": 0.9285714285714286,
+    "negative_file_false_positives": 0,
+    "mean_line_error": 0.0,
+    "missed": [
+      "P13"
+    ],
+    "false_positive_titles": [
+      "Comparison to `None` should use `is None`"
+    ]
+  },
+  "pipeline": {
+    "mode": "full",
+    "static_enabled": true,
+    "llm_enabled": true,
+    "rag_enabled": true,
+    "review_id": "8c09e1a93128",
+    "source_name": "planted",
+    "bytes_reviewed": 3460,
+    "files_total": 8,
+    "python_files": 6,
+    "files_reviewed": 5,
+    "lines_reviewed": 146,
+    "syntax_errors": 0,
+    "has_tests": true,
+    "static_findings_raw": {
+      "ruff": 14,
+      "radon": 1,
+      "ast": 6,
+      "design": 0,
+      "secrets": 1,
+      "test_gap": 5,
+      "mypy": 0
+    },
+    "rag_index": {
+      "chunks": 31,
+      "by_source_type": {
+        "doc": 3,
+        "config": 1,
+        "code": 23,
+        "test": 4
+      }
+    },
+    "units_total": 4,
+    "units_failed": 0,
+    "units_failed_list": [],
+    "units_not_attempted": 0,
+    "units_from_cache": 0,
+    "units_deduplicated": 0,
+    "context_refs_cited": 14,
+    "context_refs_invalid": 0,
+    "units_skipped": 0,
+    "rag_errors": 0,
+    "llm_repaired": 0,
+    "llm_findings_raw": 13,
+    "llm_findings_valid": 12,
+    "vague_dropped": 0,
+    "vague_downgraded": 0,
+    "llm_rejected_by_reason": {
+      "evidence_not_found": 1
+    },
+    "llm_rejection_rate": 0.0769,
+    "static_assessments": {
+      "confirm": 23,
+      "false_positive": 2,
+      "uncertain": 1
+    },
+    "context_items_by_reason": {
+      "readme": 4,
+      "similar": 14,
+      "guideline": 8,
+      "test": 3
+    },
+    "avg_context_items_per_unit": 7.25,
+    "llm_usage": {
+      "calls": 4,
+      "input_tokens": 8309,
+      "output_tokens": 3188,
+      "parse_retries": 0,
+      "failed_calls": 0,
+      "thinking_tokens": 0,
+      "calls_without_token_usage": 0
+    },
+    "static_rejected": 0,
+    "dedup_merged": 15,
+    "filtered_low_confidence": 2,
+    "fixes_available": 3,
+    "final_findings": 22,
+    "run_type": "cold",
+    "review_status": "complete",
+    "llm_calls": [
+      {
+        "label": "shop/auth.py:1-28",
+        "latency_s": 268.52845299997716,
+        "input_tokens": 1971,
+        "output_tokens": 1062,
+        "ok": true,
+        "retry": false,
+        "error_kind": null
+      },
+      {
+        "label": "shop/db.py:1-36",
+        "latency_s": 249.96482969998033,
+        "input_tokens": 2151,
+        "output_tokens": 1071,
+        "ok": true,
+        "retry": false,
+        "error_kind": null
+      },
+      {
+        "label": "shop/pricing.py:1-59",
+        "latency_s": 242.27846490000957,
+        "input_tokens": 2362,
+        "output_tokens": 999,
+        "ok": true,
+        "retry": false,
+        "error_kind": null
+      },
+      {
+        "label": "shop/utils.py:1-22",
+        "latency_s": 53.780200999986846,
+        "input_tokens": 1825,
+        "output_tokens": 56,
+        "ok": true,
+        "retry": false,
+        "error_kind": null
+      }
+    ],
+    "timings_s": {
+      "ingest_parse": 0.016,
+      "static_analysis": 5.622,
+      "rag_index": 2.446,
+      "llm_review": 814.638,
+      "postprocess": 0.002
+    }
+  },
+  "timing": {
+    "total_sec": 822.7292,
+    "static_analysis_sec": 5.6217,
+    "static_tools_sec": {
+      "ruff": 0.068,
+      "radon": 0.0141,
+      "ast": 0.0056,
+      "design": 0.0057,
+      "secrets": 0.0011,
+      "test_gap": 0.0004,
+      "mypy": 5.5268
+    },
+    "rag_index_sec": 0.329,
+    "rag_retrieval_sec": 0.081,
+    "rag_queries": 8,
+    "llm_inference_sec": 814.5519,
+    "llm_calls": 4,
+    "llm_rate_limit_wait_sec": null,
+    "validation_sec": 0.0049,
+    "report_generation_sec": null,
+    "ingestion_parsing_sec": 0.0162,
+    "other_sec": 2.1406,
+    "concurrency": 1,
+    "file_ingestion_sec": 0.0086,
+    "parsing_sec": 0.0075,
+    "ast_call_graph_sec": 0.0002,
+    "prompt_construction_sec": 0.0019,
+    "evidence_validation_sec": 0.0018,
+    "dedup_severity_sec": 0.0023,
+    "fix_generation_sec": null,
+    "classifier_sec": null,
+    "failed_stages": []
+  },
+  "final_findings": 22,
+  "complete": true,
+  "llm_units_failed": 0,
+  "experiment": {
+    "configuration": {
+      "key": "static_llm_rag",
+      "letter": "D",
+      "label": "Static + LLM + RAG",
+      "static": true,
+      "llm": true,
+      "rag": true,
+      "mode": "full"
+    },
+    "benchmark": "planted",
+    "dataset": "planted-issue fixture (tests/fixtures/repos/planted)",
+    "split": null,
+    "sampling_seed": null,
+    "limit": null,
+    "sample_count": 17,
+    "sample_fingerprint": "0001417736134671",
+    "n_evaluated": 17,
+    "n_failed": 0,
+    "llm": {
+      "provider": "ollama",
+      "model": "qwen2.5-coder:7b",
+      "temperature": 0.0,
+      "seed": 42,
+      "max_tokens": 4096
+    },
+    "rag": {
+      "top_k": 6,
+      "guideline_k": 2,
+      "embedding_model": "hashing",
+      "vector_store": "chroma",
+      "structural_context": true,
+      "max_context_chars": 12000
+    },
+    "static_analyzers": [
+      "ruff",
+      "radon",
+      "ast",
+      "design",
+      "secrets",
+      "test_gap",
+      "mypy"
+    ],
+    "classifier": null,
+    "confidence_threshold": 0.3,
+    "include_info": true,
+    "evaluation_rules": {
+      "line_tolerance": 2,
+      "match": "same file, start within +-2 lines, compatible category",
+      "precision_over": "defect findings (bug, security, error_handling, edge_case)"
+    },
+    "prompt_versions": {
+      "system": "1.0",
+      "review": "1.1"
+    },
+    "llm_cache_reused": false,
+    "group_id": "abl-20261108T074047Z",
+    "repeat": 1,
+    "repeats": 1,
+    "timestamp": "2026-11-08T08:12:30.155880+00:00"
+  }
+}

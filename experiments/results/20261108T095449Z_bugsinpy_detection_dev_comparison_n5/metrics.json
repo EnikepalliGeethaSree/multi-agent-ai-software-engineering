@@ -1,0 +1,67 @@
+{
+  "comparison": {
+    "correct": [
+      {
+        "a": "static_only",
+        "b": "llm_only",
+        "n": 10,
+        "only_a_correct": 1,
+        "only_b_correct": 0,
+        "p_value": 1.0
+      },
+      {
+        "a": "static_only",
+        "b": "static_llm",
+        "n": 10,
+        "only_a_correct": 0,
+        "only_b_correct": 0,
+        "p_value": 1.0
+      },
+      {
+        "a": "static_only",
+        "b": "static_llm_rag",
+        "n": 10,
+        "only_a_correct": 0,
+        "only_b_correct": 0,
+        "p_value": 1.0
+      },
+      {
+        "a": "llm_only",
+        "b": "static_llm",
+        "n": 10,
+        "only_a_correct": 0,
+        "only_b_correct": 1,
+        "p_value": 1.0
+      },
+      {
+        "a": "llm_only",
+        "b": "static_llm_rag",
+        "n": 10,
+        "only_a_correct": 0,
+        "only_b_correct": 1,
+        "p_value": 1.0
+      },
+      {
+        "a": "static_llm",
+        "b": "static_llm_rag",
+        "n": 10,
+        "only_a_correct": 0,
+        "only_b_correct": 0,
+        "p_value": 1.0
+      }
+    ]
+  },
+  "configurations": [
+    "static_only",
+    "llm_only",
+    "static_llm",
+    "static_llm_rag"
+  ],
+  "finished_configurations": [
+    "static_only",
+    "llm_only",
+    "static_llm",
+    "static_llm_rag"
+  ],
+  "bug_types": {}
+}

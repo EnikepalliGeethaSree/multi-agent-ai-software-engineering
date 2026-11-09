@@ -1,0 +1,74 @@
+{
+  "name": "planted_static_llm",
+  "started_at": "2026-11-08T07:47:55.271073+00:00",
+  "git_commit": "a54c6c9f2e33452493c99e6f3f8a8838bf2201a9-dirty",
+  "python": "3.11.7",
+  "platform": "Windows-10-10.0.26300-SP0",
+  "packages": {
+    "marl-agents": "0.1.0",
+    "pydantic": "2.13.5",
+    "ruff": "0.16.9",
+    "radon": "6.0.1",
+    "chromadb": "1.5.9",
+    "openai": "3.21.0",
+    "sentence-transformers": "6.1.0"
+  },
+  "llm_provider": "ollama",
+  "llm_model": "qwen2.5-coder:7b",
+  "experiment": {
+    "configuration": {
+      "key": "static_llm",
+      "letter": "C",
+      "label": "Static + LLM",
+      "static": true,
+      "llm": true,
+      "rag": false,
+      "mode": "full"
+    },
+    "benchmark": "planted",
+    "dataset": "planted-issue fixture (tests/fixtures/repos/planted)",
+    "split": null,
+    "sampling_seed": null,
+    "limit": null,
+    "sample_count": 17,
+    "sample_fingerprint": "0001417736134671",
+    "n_evaluated": 17,
+    "n_failed": 0,
+    "llm": {
+      "provider": "ollama",
+      "model": "qwen2.5-coder:7b",
+      "temperature": 0.0,
+      "seed": 42,
+      "max_tokens": 4096
+    },
+    "rag": null,
+    "static_analyzers": [
+      "ruff",
+      "radon",
+      "ast",
+      "design",
+      "secrets",
+      "test_gap",
+      "mypy"
+    ],
+    "classifier": null,
+    "confidence_threshold": 0.3,
+    "include_info": true,
+    "evaluation_rules": {
+      "line_tolerance": 2,
+      "match": "same file, start within +-2 lines, compatible category",
+      "precision_over": "defect findings (bug, security, error_handling, edge_case)"
+    },
+    "prompt_versions": {
+      "system": "1.0",
+      "review": "1.1"
+    },
+    "llm_cache_reused": false,
+    "group_id": "abl-20261108T074047Z",
+    "repeat": 1,
+    "repeats": 1,
+    "timestamp": "2026-11-08T07:58:47.138543+00:00"
+  },
+  "finished_at": "2026-11-08T07:58:47.138543+00:00",
+  "errors": 0
+}

@@ -1,0 +1,25 @@
+{
+  "name": "bugsinpy_localization_dev_comparison_n5",
+  "started_at": "2026-11-08T09:18:28.085154+00:00",
+  "git_commit": "a54c6c9f2e33452493c99e6f3f8a8838bf2201a9-dirty",
+  "python": "3.11.7",
+  "platform": "Windows-10-10.0.26300-SP0",
+  "packages": {
+    "marl-agents": "0.1.0",
+    "pydantic": "2.13.5",
+    "ruff": "0.16.9",
+    "radon": "6.0.1",
+    "chromadb": "1.5.9",
+    "openai": "3.21.0",
+    "sentence-transformers": "6.1.0"
+  },
+  "sample_ids": [
+    "PySnooper-3",
+    "black-10",
+    "cookiecutter-3",
+    "httpie-3",
+    "sanic-3"
+  ],
+  "finished_at": "2026-11-08T09:18:28.266949+00:00",
+  "errors": 0
+}
