@@ -339,3 +339,23 @@ statistics, and their counts are always shown.
 - The planted table took the latest run of each configuration separately, so a later stand-alone
   static run, or another model's ablation, could replace one row of a group. Rows are now aligned on
   the group of the newest LLM run. Local-model groups are reported in their own section.
+
+## D37 - Gemini continuation runs use the prompt-1.0 code, commit a54c6c9 (accepted, 2026-11-09)
+- The team chose to keep Gemini on prompt version 1.0, so every Gemini experiment matches the official
+  planted results (section 12) and the classifier ablation checkpoint. More than the prompt file
+  changed after a54c6c9: context rendering (D33), the guidance collection (D34) and the static
+  analyzers (D35) all change what the model sees. Pinning only `review.md` would not reproduce the
+  1.0 requests or reuse their cache.
+- The Gemini runs therefore use a git worktree at **a54c6c9** (`git worktree add --detach
+  ../marl-agents-gemini-p10 a54c6c9`). Its `data/`, `capstone-datasets/` and `experiments/results/`
+  are directory junctions to the main project, so it shares the quota ledger, caches and checkpoints,
+  and runs are saved with the others. A local launcher (`data/gemini_p10/run.py`, not tracked) puts the
+  worktree's `src` first on the path and loads the main `.env` into the environment. Runs record
+  commit `a54c6c9...` and prompts system 1.0, review 1.0 (bug: system, review and localize 1.0).
+- Consequence: the Gemini numbers measure the a54c6c9 agents, without the D33-D35 additions. Ollama
+  runs, the dashboard and the tests use the current code. The two sets of results are reported
+  apart (D36) and never merged.
+- Cleanup when the Gemini work ends: remove the three junctions first (`cmd /c rmdir <junction>`,
+  which deletes only the link), then `git worktree remove`. Never run a git command in the worktree that
+  rewrites files under `experiments/results/`: it would reach the main project's results through the
+  junction.

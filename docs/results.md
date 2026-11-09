@@ -404,10 +404,24 @@ limit is 20 requests per day, per project, per model, so these runs take several
 | Live provider test | Pending | `pytest -m llm tests/integration/test_gemini_live.py` |
 | Full review time by file size | Preliminary only (section 11) | `python -m marl_agents.evaluation.benchmark_runtime --config configs/gemini.yaml --repeats 5 --per-category 1 --max-llm-calls 65` |
 | Planted issues on Gemini, A-D | **Done** (section 12) | `python -m marl_agents.cli eval ablation --benchmark planted --configurations static_only,llm_only,static_llm,static_llm_rag --config configs/gemini.yaml` |
-| Comment generation on Gemini, A-D | Pending | `python -m marl_agents.cli eval ablation --benchmark codereviewer --task msg --limit 40 --seed 42 --configurations static_only,llm_only,static_llm,static_llm_rag --reuse-llm-cache --config configs/gemini.yaml` (repeat daily) |
+| Comment generation on Gemini, A-D | **In progress.** B complete, 40/40 samples, 0 failed: run `20261109T083055Z_codereviewer_msg_test_llm_only_n40` (2026-11-09). A, C, D not run yet. Not final until all four finish on the same 40 samples | `python -m marl_agents.cli eval ablation --benchmark codereviewer --task msg --limit 40 --seed 42 --configurations static_only,llm_only,static_llm,static_llm_rag --reuse-llm-cache --config configs/gemini.yaml` (repeat daily) |
 | Classifier off, prioritize and gate, dev samples only | Started: 2 of 15 samples (section 12) | `python -m marl_agents.cli eval classifier-ablation --model-dir data/models/change_cls --limit 15 --max-llm-calls 45 --config configs/gemini.yaml` |
 
 Earlier Groq results (sections 5 and 7) are a different provider and are no estimate for Gemini.
+
+**Since 2026-11-09 these runs use the prompt-1.0 code (commit a54c6c9, D37),** so they match section 12
+and the classifier checkpoint. Progress on the comment-generation experiment:
+
+- `20261109T065441Z_codereviewer_msg_test_llm_only_n40`: first attempt at B. 20 of 40 samples scored, and
+  20 failed when the daily quota ran out (counted, never dropped). Superseded; do not quote it.
+- `20261109T083055Z_codereviewer_msg_test_llm_only_n40`: B resumed after the quota reset. It reused the 20
+  cached replies, and all 40 samples are complete. Times are not comparable, because replies came from
+  the cache. Its one-configuration comparison is `20261109T083536Z_ablation_codereviewer_msg`.
+- B's metrics are left out of this file until A, C and D finish on the same samples: one configuration
+  alone answers none of the experiment's questions.
+- Requests still needed: about 40 each for C and D, so at least 4 more free-tier days. A uses no requests.
+  The final step reruns all four configurations together with `--reuse-llm-cache`, which makes one
+  comparison group on identical inputs.
 
 ## 11. First live Gemini runs
 
