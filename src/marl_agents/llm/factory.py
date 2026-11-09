@@ -17,6 +17,7 @@ _DEFAULT_KEY_ENV = {
     "openai": "OPENAI_API_KEY",
     "groq": "GROQ_API_KEY",
     "gemini": "GEMINI_API_KEY",
+    "ollama": "",  # local: no key is read or sent
     "local": "",
 }
 
@@ -70,6 +71,18 @@ def create_provider(settings: LLMSettings) -> LLMProvider:
             name=settings.provider,
             rate_limiter=RateLimiter(rpm, tpm),
             extra_params=settings.extra_params,
+        )
+    if settings.provider == "ollama":
+        from marl_agents.llm.ollama import DEFAULT_CONTEXT, OllamaProvider
+
+        return OllamaProvider(
+            model=settings.model,
+            base_url=settings.base_url or os.environ.get("OLLAMA_BASE_URL"),
+            config=config,
+            timeout=settings.timeout_s,
+            context_window=settings.context_window or DEFAULT_CONTEXT,
+            json_mode=settings.json_mode,
+            extra_options=settings.extra_params,
         )
     if settings.provider == "gemini":
         from marl_agents.llm.gemini import GeminiProvider

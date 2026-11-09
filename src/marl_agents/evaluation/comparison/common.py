@@ -40,7 +40,18 @@ def provider_badge(runs: Iterable[SavedRun]) -> str | None:
     providers = {provider for provider, _ in pairs}
     if providers == {"gemini"}:
         return f"Gemini: {models}"
+    if providers <= LOCAL_PROVIDERS:
+        return f"Local: {', '.join(sorted(p.title() for p in providers))} ({models})"
     return f"Historical: {', '.join(sorted(p.title() for p in providers))} ({models})"
+
+
+# Models run on this machine (development). Their runs are reported in their own section and
+# never enter the official (Gemini) comparison tables.
+LOCAL_PROVIDERS = {"ollama", "local"}
+
+
+def is_local(run: SavedRun) -> bool:
+    return run.provider in LOCAL_PROVIDERS
 
 
 def is_mock(run: SavedRun) -> bool:

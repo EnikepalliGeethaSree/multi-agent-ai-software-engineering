@@ -40,7 +40,7 @@ def test_breakdown_is_complete_and_consistent(settings: Settings) -> None:
     t = TimingBreakdown.model_validate(result.stats["timing"])  # type: ignore[attr-defined]
     units = result.stats["units_total"]  # type: ignore[attr-defined]
     assert units >= 1
-    assert set(t.static_tools_sec) == {"ruff", "radon", "ast", "secrets", "test_gap"}
+    assert set(t.static_tools_sec) == {"ruff", "radon", "ast", "design", "secrets", "test_gap"}
     assert t.llm_calls == units  # one review call per unit, measured by the provider
     assert t.rag_queries == 2 * units  # similar code + guidelines per unit
     assert t.rag_index_sec > 0 and t.validation_sec > 0

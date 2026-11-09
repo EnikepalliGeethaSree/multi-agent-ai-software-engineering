@@ -13,7 +13,12 @@ from marl_agents.evaluation.comparison.baselines import (
     timing_tables,
     usefulness_table,
 )
-from marl_agents.evaluation.comparison.common import MIN_PAIRED_N, config_row, is_mock
+from marl_agents.evaluation.comparison.common import (
+    MIN_PAIRED_N,
+    config_row,
+    is_local,
+    is_mock,
+)
 from marl_agents.evaluation.comparison.detection import codereviewer_tables, planted_table
 from marl_agents.evaluation.comparison.models import (
     DEFINITIONS,
@@ -115,8 +120,34 @@ def master_table(planted: ComparisonTable, cls: ComparisonTable) -> ComparisonTa
     )
 
 
+def local_planted_table(local: list[SavedRun]) -> ComparisonTable | None:
+    """Planted-issue results of a local model (Ollama), apart from the official tables."""
+    if not any(r.kind == "planted" for r in local):
+        return None
+    table = planted_table(local)
+    return table.model_copy(
+        update={
+            "id": "planted_local",
+            "section": "Local model: planted issues",
+            "title": "Planted-issue benchmark on a local model (development runs)",
+            "warning": "Local development runs. They are reported apart and are not comparable "
+            "with, or merged into, the Gemini results above. " + (table.warning or ""),
+            "notes": [
+                *table.notes[:-1],
+                "Run: python -m marl_agents.cli eval ablation --benchmark planted "
+                "--config configs/ollama.yaml --provider ollama",
+            ],
+        }
+    )
+
+
 def build_summary(results_dir: Path) -> EvaluationSummary:
-    runs = load_runs(results_dir)
+    every = load_runs(results_dir)
+    # The official tables never mix in a local model's runs (the static configuration of a local
+    # ablation is excluded too, so each table's runs share one group and provider).
+    local_groups = {r.group_id for r in every if is_local(r) and r.group_id}
+    local = [r for r in every if is_local(r) or (r.group_id and r.group_id in local_groups)]
+    runs = [r for r in every if r not in local]
     planted = planted_table(runs)
     cls_tables = codereviewer_tables(runs, "cls")
     msg_tables = codereviewer_tables(runs, "msg")
@@ -133,10 +164,17 @@ def build_summary(results_dir: Path) -> EvaluationSummary:
     useful = usefulness_table(runs)
     if useful is not None:
         tables.append(useful)
+    local_table = local_planted_table(local)
+    if local_table is not None:
+        tables.append(local_table)
     mock = [r.name for r in runs if r.kind in {"planted", "codereviewer"} and is_mock(r)]
     master = master_table(planted, cls_tables[0])
     if mock:
         master.notes.append(f"{len(mock)} mock-LLM run(s) ignored (pipeline tests, not results).")
+    if local:
+        master.notes.append(
+            f"{len(local)} local-model run(s) are reported in their own section, not here."
+        )
     return EvaluationSummary(
         generated_at=datetime.now(UTC).isoformat(),
         master=master,

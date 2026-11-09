@@ -350,3 +350,43 @@ def test_review_options_reach_the_agent_settings(client: TestClient) -> None:
     assert (s.review.suggest_fixes, s.review.include_tests, s.review.mode) == (False, True, "full")
     default = manager.settings.review.suggest_fixes  # not given -> server config
     assert manager._job_settings(ReviewOptions()).review.suggest_fixes is default
+
+
+# ---- provider chosen per review --------------------------------------------------------------------
+
+
+def test_llm_status_for_ollama_reports_a_local_provider(
+    client: TestClient, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    from marl_agents.llm.ollama import OllamaProvider
+
+    monkeypatch.setattr(OllamaProvider, "ensure_model", lambda self: None)
+    body = client.get("/api/llm/status?provider=ollama").json()
+    assert body["provider"] == "ollama" and body["server_provider"] == "mock"
+    assert body["ready"] is True and body["local"] is True and body["data_notice"] is None
+    assert body["selectable_providers"] == ["gemini", "ollama"]
+
+
+def test_llm_status_for_ollama_explains_a_missing_model(
+    client: TestClient, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    from marl_agents.llm.base import LLMError
+    from marl_agents.llm.ollama import OllamaProvider
+
+    def missing(self: OllamaProvider) -> None:
+        raise LLMError("Ollama model 'qwen2.5-coder:7b' is not installed.")
+
+    monkeypatch.setattr(OllamaProvider, "ensure_model", missing)
+    body = client.get("/api/llm/status?provider=ollama").json()
+    assert body["ready"] is False and "not installed" in body["error"]
+
+
+def test_unknown_provider_is_rejected(client: TestClient) -> None:
+    assert client.get("/api/llm/status?provider=openai").status_code == 422
+
+
+def test_review_options_choose_the_provider(settings: Settings, paths: dict[str, Path]) -> None:
+    manager = JobManager(settings, paths["jobs"])
+    s = manager._job_settings(ReviewOptions(provider="ollama", model="gemini-3.6-flash"))
+    assert (s.llm.provider, s.llm.model) == ("ollama", "qwen2.5-coder:7b")  # foreign id replaced
+    assert manager._job_settings(ReviewOptions()).llm.provider == settings.llm.provider

@@ -126,6 +126,34 @@ describe("findings", () => {
     expect(screen.getByText(/not run/)).toBeInTheDocument();
   });
 
+  it("shows the code, the evidence basis, cited context, root cause and why the fix works", async () => {
+    const bug = finding({
+      id: "BD-002",
+      snippet: "    return total / len(values)",
+      evidence_basis: "llm_with_context",
+      context_refs: ["guideline: Division by zero (bug_patterns.md)"],
+      bug: {
+        bug_type: "boundary",
+        trigger: "values is empty",
+        expected: null,
+        actual: null,
+        root_cause: "len(values) can be 0.",
+        fix_explanation: "The guard returns before dividing.",
+        repro_steps: [],
+        involved_names: ["values"],
+      },
+    });
+    render(<FindingsTable findings={[bug, finding({ id: "CR-009", evidence_basis: "static_confirmed" })]} />);
+    await userEvent.click(screen.getByRole("button", { name: "Expand BD-002" }));
+    expect(screen.getByText("return total / len(values)", { exact: false })).toBeInTheDocument();
+    expect(screen.getByText("Basis").nextElementSibling).toHaveTextContent("LLM + retrieved context");
+    expect(screen.getByText("guideline: Division by zero (bug_patterns.md)")).toBeInTheDocument();
+    expect(screen.getByText("len(values) can be 0.")).toBeInTheDocument();
+    expect(screen.getByText("The guard returns before dividing.")).toBeInTheDocument();
+    await userEvent.selectOptions(screen.getByLabelText("Filter by evidence basis"), "static_confirmed");
+    expect(screen.getByText("Showing 1 of 2 findings")).toBeInTheDocument();
+  });
+
   it("ranks suspects and says when the LLM could not", () => {
     const suspect = { rank: 1, file: "shop/cart.py", symbol: "total", start_line: 4, end_line: 5, score: 1, reasons: ["called by the test: total"], signals: [] };
     const found = { suspects: [suspect], candidates_considered: 3, candidates_shown: 0, ranked_by: "static", hypothesis: null, llm_failed: true, errors: [] };

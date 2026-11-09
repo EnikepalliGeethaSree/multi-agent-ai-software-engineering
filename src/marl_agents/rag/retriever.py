@@ -16,7 +16,8 @@ from marl_agents.rag.store import VectorStore, Where
 
 logger = logging.getLogger(__name__)
 
-GUIDELINES_COLLECTION = "guidelines_v1"
+# v2 adds bug patterns and review examples; a new name makes old stores index them.
+GUIDELINES_COLLECTION = "guidelines_v2"
 
 
 class RetrievedChunk(BaseModel):
@@ -134,9 +135,12 @@ class Retriever:
         self._results[cache_key] = out
         return list(out)
 
-    def retrieve_guidelines(self, query: str, k: int = 3) -> list[RetrievedChunk]:
+    def retrieve_guidelines(
+        self, query: str, k: int = 3, files: frozenset[str] | None = None
+    ) -> list[RetrievedChunk]:
+        """Top-k guidance chunks; `files` limits them to some knowledge files (one agent's set)."""
         vector = self.embedder.embed_query(query)
-        return [
-            RetrievedChunk(chunk=c, score=s, reason="guideline")
-            for c, s in self.store.query(GUIDELINES_COLLECTION, vector, k)
-        ]
+        pool = self.store.query(GUIDELINES_COLLECTION, vector, k if files is None else k * 6)
+        if files is not None:
+            pool = [(c, s) for c, s in pool if c.file.rsplit("/", 1)[-1] in files]
+        return [RetrievedChunk(chunk=c, score=s, reason="guideline") for c, s in pool[:k]]

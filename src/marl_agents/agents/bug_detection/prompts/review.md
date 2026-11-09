@@ -1,4 +1,4 @@
-version: 1.0
+version: 1.1
 ---
 ## Repository file
 `{file}` (excerpt: lines {start_line}-{end_line} of {total_lines}{scope_note})
@@ -34,8 +34,10 @@ Return JSON exactly in this shape. Use an empty `findings` list if the code is c
       "evidence": ["<exact code line(s) copied from the excerpt>"],
       "repro_steps": ["<short steps a developer can follow to see the failure>"],
       "recommendation": "<concrete fix>",
+      "fix_explanation": "<why that fix removes the bug>",
       "test_recommendation": "<a test that fails today and passes after the fix>",
-      "confidence": <0.0-1.0>
+      "confidence": <0.0-1.0>,
+      "context_refs": ["<ids (C1, C2, ...) of project context items that support this finding; [] if none>"]
     }}
   ],
   "static_assessments": [

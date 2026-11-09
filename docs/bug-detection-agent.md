@@ -60,11 +60,28 @@ severity table decides severity, as for every tool.
 | `BUG-DIV-BY-LEN` | Division by `len(x)` or a numeric parameter with no check before it |
 | `BUG-OFF-BY-ONE` | `x[len(x)]`, `range(len(x) + 1)`, or `x[i + 1]` over the whole of `x` |
 | `BUG-MUTATE-WHILE-ITERATING` | A collection changed by the loop that iterates over it |
+| `BUG-INFINITE-LOOP` | `while True` with no break, return or raise of its own, or a `while` whose condition names nothing the loop changes (`static_analysis/loop_checks.py`; conservative: a name passed to a call counts as changed) |
 
 The None check is a may-analysis. It tracks which locals may be None, narrows that along branch
 edges (`if x`, `is None`, `isinstance`, `and` / `or`, `assert`) and respects short-circuit evaluation.
 These checks are hints, not proof: they cannot see what callers really pass. `FlowAnalyzer` is not in
 `default_analyzers()`, so saved Code Review baselines stay comparable.
+
+### What each finding carries
+
+Besides the shared fields (ID, category, title, description, file, lines, evidence, severity,
+confidence, recommendation), every finding has:
+
+- `snippet`: the finding's own lines, read from the file (never from the LLM);
+- `evidence_basis`: `static_confirmed` (a rule produced or agreed with it), `llm_with_context` (the
+  LLM cited retrieved context it was really shown, listed in `context_refs`) or `llm_inferred`
+  (the LLM alone). It is provenance, not a probability (D33);
+- `bug`: bug type, root cause, trigger, expected and actual behaviour, repro steps (suggested, never
+  run), involved names and `fix_explanation` (why the fix removes the bug).
+
+The agent never runs the analyzed code, so no finding claims it was executed. Guidance is retrieved
+from `bug_patterns.md`, `error_handling_testing.md` and `security_owasp_cwe.md` only (D34). It runs on
+Gemini or, for development, on a local Ollama model (docs/llm-ollama.md).
 
 ### Claim checks
 

@@ -1,5 +1,5 @@
 import { Fragment, useMemo, useState } from "react";
-import type { Category, Finding, Severity, SuggestedFix } from "../api/types";
+import type { Category, EvidenceBasis, Finding, Severity, SuggestedFix } from "../api/types";
 import { SEVERITIES } from "../api/types";
 import { CATEGORY_LABEL, SEVERITY_LABEL, SOURCE_LABEL, location } from "../lib/format";
 import { DiffView } from "./DiffView";
@@ -14,6 +14,7 @@ export interface Filters {
   category: Category | "";
   source: string;
   file: string;
+  basis?: EvidenceBasis | "";
 }
 
 export const EMPTY_FILTERS: Filters = { query: "", severities: new Set(), category: "", source: "", file: "" };
@@ -26,6 +27,7 @@ export function applyFilters(findings: Finding[], f: Filters, sort: SortKey = "p
       (!f.category || x.category === f.category) &&
       (!f.source || x.sources.includes(f.source as Finding["sources"][number])) &&
       (!f.file || x.file === f.file) &&
+      (!f.basis || x.evidence_basis === f.basis) &&
       (!q ||
         [x.title, x.description, x.file, x.rule_id ?? "", x.symbol ?? "", x.cwe ?? ""]
           .join(" ")
@@ -94,9 +96,21 @@ function FixView({ fix }: { fix: SuggestedFix }) {
   );
 }
 
+export const BASIS_LABEL: Record<EvidenceBasis, { label: string; text: string }> = {
+  static_confirmed: { label: "Static rule", text: "A static analysis rule produced or agreed with this finding." },
+  llm_with_context: { label: "LLM + retrieved context", text: "The LLM cited project context it was shown." },
+  llm_inferred: { label: "LLM only", text: "The LLM inferred this from the code alone; check it." },
+};
+
 function BugDetailView({ bug }: { bug: NonNullable<Finding["bug"]> }) {
   return (
     <div className="space-y-3">
+      {bug.root_cause && (
+        <div>
+          <p className="mb-1 text-xs font-medium text-ink-3">Root cause</p>
+          <p className="leading-relaxed text-ink">{bug.root_cause}</p>
+        </div>
+      )}
       {bug.trigger && (
         <div>
           <p className="mb-1 text-xs font-medium text-ink-3">Fails when</p>
@@ -129,6 +143,12 @@ function BugDetailView({ bug }: { bug: NonNullable<Finding["bug"]> }) {
           </ol>
         </div>
       )}
+      {bug.fix_explanation && (
+        <div>
+          <p className="mb-1 text-xs font-medium text-ink-3">Why the fix works</p>
+          <p className="leading-relaxed text-ink-2">{bug.fix_explanation}</p>
+        </div>
+      )}
     </div>
   );
 }
@@ -138,7 +158,17 @@ function FindingDetail({ f }: { f: Finding }) {
     <div className="grid gap-4 px-4 pb-4 pt-1 text-sm lg:grid-cols-2">
       <div className="space-y-3">
         <p className="whitespace-pre-line leading-relaxed text-ink-2">{f.description}</p>
-        {f.evidence.length > 0 && (
+        {f.snippet && (
+          <div>
+            <p className="mb-1 text-xs font-medium text-ink-3">
+              Code (lines {f.start_line}–{f.end_line})
+            </p>
+            <pre className="overflow-x-auto rounded-lg bg-code p-3 font-mono text-xs leading-relaxed text-ink">
+              {f.snippet}
+            </pre>
+          </div>
+        )}
+        {f.evidence.length > 0 && !f.snippet && (
           <div>
             <p className="mb-1 text-xs font-medium text-ink-3">Evidence</p>
             <pre className="overflow-x-auto rounded-lg bg-code p-3 font-mono text-xs leading-relaxed text-ink">
@@ -151,6 +181,18 @@ function FindingDetail({ f }: { f: Finding }) {
             <p className="mb-1 text-xs font-medium text-ink-3">Related locations</p>
             <ul className="space-y-0.5 font-mono text-xs text-ink-2">
               {f.related.map((r) => (
+                <li key={r} className="break-words">
+                  {r}
+                </li>
+              ))}
+            </ul>
+          </div>
+        )}
+        {f.context_refs && f.context_refs.length > 0 && (
+          <div>
+            <p className="mb-1 text-xs font-medium text-ink-3">Retrieved context cited</p>
+            <ul className="space-y-0.5 font-mono text-xs text-ink-2">
+              {f.context_refs.map((r) => (
                 <li key={r} className="break-words">
                   {r}
                 </li>
@@ -175,6 +217,14 @@ function FindingDetail({ f }: { f: Finding }) {
           </div>
         )}
         <dl className="grid grid-cols-[auto_1fr] gap-x-4 gap-y-1 text-xs">
+          {f.evidence_basis && (
+            <>
+              <dt className="text-ink-3">Basis</dt>
+              <dd className="text-ink-2" title={BASIS_LABEL[f.evidence_basis].text}>
+                {BASIS_LABEL[f.evidence_basis].label}
+              </dd>
+            </>
+          )}
           {f.symbol && (
             <>
               <dt className="text-ink-3">Symbol</dt>
@@ -323,6 +373,21 @@ export function FindingsTable({ findings }: { findings: Finding[] }) {
             </option>
           ))}
         </select>
+        {findings.some((x) => x.evidence_basis) && (
+          <select
+            aria-label="Filter by evidence basis"
+            className={selectCls}
+            value={filters.basis ?? ""}
+            onChange={(e) => setFilters({ ...filters, basis: e.target.value as EvidenceBasis | "" })}
+          >
+            <option value="">Any basis</option>
+            {(Object.keys(BASIS_LABEL) as EvidenceBasis[]).map((b) => (
+              <option key={b} value={b}>
+                {BASIS_LABEL[b].label}
+              </option>
+            ))}
+          </select>
+        )}
         {files.length > 1 && (
           <select
             aria-label="Filter by file"

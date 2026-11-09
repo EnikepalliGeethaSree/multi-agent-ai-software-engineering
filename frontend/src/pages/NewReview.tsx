@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState, type DragEvent, type FormEvent } from "react";
 import { useNavigate, useOutletContext } from "react-router-dom";
 import { api, type ReviewInput } from "../api/client";
-import type { AgentName, LLMStatus, Mode, ReviewOptions } from "../api/types";
+import type { AgentName, LLMProviderName, LLMStatus, Mode, ReviewOptions } from "../api/types";
 import { ChangeForm, EMPTY_CHANGE, toChangeInput, type ChangeFormState } from "../components/ChangeForm";
 import { Button, Card, ErrorBanner, Spinner, StatusIcon, Toggle } from "../components/ui";
 
@@ -25,6 +25,11 @@ const MODES: { value: Mode; title: string; text: string; needsLLM: boolean }[] =
   { value: "llm_only", title: "LLM only", text: "LLM without static tools (ablation).", needsLLM: true },
 ];
 
+export const PROVIDERS: Record<LLMProviderName, { title: string; text: string }> = {
+  gemini: { title: "Gemini (free tier)", text: "Hosted by Google; the code is sent to Google. Official evaluation provider." },
+  ollama: { title: "Ollama (local)", text: "Runs on this machine; no code leaves it. About a minute per request." },
+};
+
 const AGENTS: { value: AgentName; title: string; text: string }[] = [
   { value: "code_review", title: "Code review", text: "Quality, maintainability, security and bugs." },
   { value: "bug_detection", title: "Bug detection", text: "Runtime and logic defects, with what triggers them." },
@@ -45,6 +50,7 @@ export default function NewReview() {
     agent: "code_review",
     failing_test: null,
     mode: "full",
+    provider: null,
     rag_enabled: true,
     structural_context: true,
     model: null,
@@ -57,10 +63,37 @@ export default function NewReview() {
   const [submitting, setSubmitting] = useState(false);
   const [probe, setProbe] = useState<{ state: "idle" | "running" | "ok" | "fail"; text?: string }>({ state: "idle" });
 
-  const llmReady = llm?.ready ?? false;
+  // The status of the provider this review will use: the server's, or the one picked below.
+  const [chosen, setChosen] = useState<LLMStatus | null>(null);
+  const active = options.provider ? chosen : llm;
   useEffect(() => {
-    if (llm && !llm.ready) setOptions((o) => (o.mode === "static_only" ? o : { ...o, mode: "static_only" }));
-  }, [llm]);
+    setChosen(null);
+    const provider = options.provider;
+    if (!provider) return;
+    let live = true;
+    api
+      .llmStatus(false, provider)
+      .then((s) => live && setChosen(s))
+      .catch(
+        (e) =>
+          live &&
+          setChosen({
+            provider,
+            model: null,
+            requests_per_minute: null,
+            tokens_per_minute: null,
+            ready: false,
+            error: e instanceof Error ? e.message : String(e),
+          }),
+      );
+    return () => {
+      live = false;
+    };
+  }, [options.provider]);
+  const llmReady = active?.ready ?? false;
+  useEffect(() => {
+    if (active && !active.ready) setOptions((o) => (o.mode === "static_only" ? o : { ...o, mode: "static_only" }));
+  }, [active]);
   useEffect(() => {
     api
       .health()
@@ -70,10 +103,10 @@ export default function NewReview() {
   useEffect(() => {
     if (!llmReady) return;
     api
-      .llmModels()
+      .llmModels(options.provider)
       .then((r) => setModels(r.models))
       .catch(() => setModels([]));
-  }, [llmReady]);
+  }, [llmReady, options.provider]);
 
   const pickFile = (f: File | null) => {
     setError(null);
@@ -96,7 +129,7 @@ export default function NewReview() {
   const testConnection = async () => {
     setProbe({ state: "running" });
     try {
-      const s = await api.llmStatus(true);
+      const s = await api.llmStatus(true, options.provider);
       if (s.probe?.ok) setProbe({ state: "ok", text: `Reachable (${s.probe.latency_ms} ms)` });
       else setProbe({ state: "fail", text: s.probe?.error ?? s.error ?? "Not reachable" });
     } catch (e) {
@@ -108,7 +141,7 @@ export default function NewReview() {
     e.preventDefault();
     setError(null);
     if (options.mode !== "static_only" && !llmReady) {
-      return setError("The LLM is not configured. Choose “Static only” or set GROQ_API_KEY in .env.");
+      return setError(`${active?.error ?? "The selected LLM is not available."} Choose “Static only” or another provider.`);
     }
     if (tab === "change") {
       const changeInput = toChangeInput(change, localGit);
@@ -324,16 +357,47 @@ export default function NewReview() {
               );
             })}
           </div>
-          {!llmReady && llm && (
+          {!llmReady && active && (
             <p className="mt-3 flex gap-2 text-xs text-ink-2">
               <StatusIcon kind="warning" />
-              <span>{llm.error ?? "LLM not configured."} Add GEMINI_API_KEY to .env and restart the server.</span>
+              <span>
+                {active.error ?? "LLM not configured."}{" "}
+                {active.provider === "ollama"
+                  ? "Start Ollama and pull the model, or pick another provider."
+                  : "Add GEMINI_API_KEY to .env and restart the server, or pick Ollama."}
+              </span>
             </p>
           )}
         </Card>
 
         <Card title="LLM">
-          <label className="block text-xs text-ink-3" htmlFor="model">
+          <label className="block text-xs text-ink-3" htmlFor="provider">
+            Provider
+          </label>
+          <select
+            id="provider"
+            value={options.provider ?? ""}
+            onChange={(e) => {
+              const value = (e.target.value || null) as LLMProviderName | null;
+              setProbe({ state: "idle" });
+              setModels([]);
+              setOptions((o) => ({ ...o, provider: value, model: null, mode: "full" }));
+            }}
+            className="mt-1 w-full rounded-lg border border-line bg-surface px-2 py-1.5 text-sm text-ink disabled:opacity-50"
+          >
+            <option value="">Server default ({llm?.provider ?? "none"})</option>
+            {(llm?.selectable_providers ?? (["gemini", "ollama"] as LLMProviderName[])).map((p) => (
+              <option key={p} value={p}>
+                {PROVIDERS[p]?.title ?? p}
+              </option>
+            ))}
+          </select>
+          {options.provider && (
+            <p className="mt-1 text-xs text-ink-3">
+              {chosen ? PROVIDERS[options.provider]?.text : "Checking the provider…"}
+            </p>
+          )}
+          <label className="mt-3 block text-xs text-ink-3" htmlFor="model">
             Model
           </label>
           <select
@@ -343,9 +407,9 @@ export default function NewReview() {
             onChange={(e) => set("model", e.target.value || null)}
             className="mt-1 w-full rounded-lg border border-line bg-surface px-2 py-1.5 text-sm text-ink disabled:opacity-50"
           >
-            <option value="">Default ({llm?.model ?? "none"})</option>
+            <option value="">Default ({active?.model ?? "none"})</option>
             {models
-              .filter((m) => m !== llm?.model)
+              .filter((m) => m !== active?.model)
               .map((m) => (
                 <option key={m} value={m}>
                   {m}
@@ -368,12 +432,12 @@ export default function NewReview() {
               </span>
             )}
           </div>
-          {llm?.data_notice && (
-            <p className="text-xs text-ink-3">{llm.data_notice}</p>
+          {active?.data_notice && (
+            <p className="text-xs text-ink-3">{active.data_notice}</p>
           )}
-          {llm?.tokens_per_minute ? (
+          {active?.tokens_per_minute ? (
             <p className="mt-2 text-xs text-ink-3">
-              Rate limit: {llm.requests_per_minute ?? "∞"} requests / {llm.tokens_per_minute.toLocaleString()} tokens per minute
+              Rate limit: {active.requests_per_minute ?? "∞"} requests / {active.tokens_per_minute.toLocaleString()} tokens per minute
             </p>
           ) : null}
         </Card>

@@ -52,7 +52,13 @@ from marl_agents.api.jobs import (
     ReviewOptions,
 )
 from marl_agents.api.performance import add_performance_routes
-from marl_agents.config import PROJECT_ROOT, Settings, load_settings
+from marl_agents.config import (
+    PROJECT_ROOT,
+    SELECTABLE_PROVIDERS,
+    Settings,
+    load_settings,
+    with_provider,
+)
 from marl_agents.core.schemas import AgentRequest, ReviewResult
 from marl_agents.ingestion.changes import (
     ChangeError,
@@ -295,11 +301,24 @@ def create_app(
             "local_git": allow_local_git,
         }
 
+    def settings_for(provider: str | None) -> Settings:
+        """Server settings, or a copy using a provider the dashboard picked for one review."""
+        if not provider:
+            return settings
+        try:
+            return with_provider(settings, provider)
+        except ValueError as exc:
+            raise HTTPException(422, str(exc)) from exc
+
     @app.get("/api/llm/status")
-    def llm_status(probe: bool = False) -> dict[str, Any]:
-        llm = settings.llm
+    def llm_status(probe: bool = False, provider: str | None = None) -> dict[str, Any]:
+        chosen = settings_for(provider)
+        llm = chosen.llm
         info: dict[str, Any] = {
             "provider": llm.provider,
+            "server_provider": settings.llm.provider,
+            "selectable_providers": sorted(SELECTABLE_PROVIDERS),
+            "local": llm.provider == "ollama",
             "model": llm.model,
             "requests_per_minute": llm.requests_per_minute,
             "tokens_per_minute": llm.tokens_per_minute,
@@ -307,23 +326,27 @@ def create_app(
             "tokens_per_day": llm.tokens_per_day,
             "free_tier": llm.provider == "gemini",
             "data_notice": GEMINI_DATA_NOTICE if llm.provider == "gemini" else None,
-            "classifier": classifier_info(settings),
+            "classifier": classifier_info(chosen),
             "quota": None,
             "ready": False,
             "error": None,
         }
         try:
-            provider = manager.provider_for(settings)
+            client = manager.provider_for(chosen)
             info["ready"] = llm.provider != "mock"
-            quota_status = getattr(provider, "quota_status", None)
+            ensure_model = getattr(client, "ensure_model", None)
+            if ensure_model is not None:  # Ollama: a local request, no quota
+                ensure_model()
+            quota_status = getattr(client, "quota_status", None)
             if quota_status is not None:
                 info["quota"] = quota_status()
             if llm.provider == "mock":
                 info["error"] = "No LLM configured (mock provider): only static analysis is useful."
-            limiter = getattr(provider, "limiter", None)
+            limiter = getattr(client, "limiter", None)
             if limiter is not None:
                 info["requests_per_minute"], info["tokens_per_minute"] = limiter.rpm, limiter.tpm
         except LLMError as exc:
+            info["ready"] = False
             info["error"] = str(exc)
             return info
         if probe and info["ready"]:
@@ -333,7 +356,7 @@ def create_app(
 
             started = time.perf_counter()
             try:
-                reply = provider.generate_structured(
+                reply = client.generate_structured(
                     [
                         Message(role="system", content="Reply with a JSON object only."),
                         Message(role="user", content='Return exactly this JSON: {"status": "ok"}'),
@@ -349,26 +372,28 @@ def create_app(
         return info
 
     @app.get("/api/llm/models")
-    def llm_models() -> dict[str, Any]:
-        cached = models_cache.get("value")
-        if cached and time.time() - models_cache["at"] < MODELS_CACHE_S:
-            return dict(cached)
+    def llm_models(provider: str | None = None) -> dict[str, Any]:
+        chosen = settings_for(provider)
+        cache_key = chosen.llm.provider
+        cached = models_cache.get(cache_key)
+        if cached and time.time() - cached["at"] < MODELS_CACHE_S:
+            return dict(cached["value"])
         try:
-            provider = manager.provider_for(settings)
+            llm_provider = manager.provider_for(chosen)
         except LLMError as exc:
             raise HTTPException(503, str(exc)) from exc
-        list_models = getattr(provider, "list_models", None)
+        list_models = getattr(llm_provider, "list_models", None)
         if list_models is None:
             return {
-                "models": [settings.llm.model] if settings.llm.model else [],
-                "default": settings.llm.model,
+                "models": [chosen.llm.model] if chosen.llm.model else [],
+                "default": chosen.llm.model,
             }
         try:
             models = list_models()
         except Exception as exc:
             raise HTTPException(502, f"Could not list models: {exc}") from exc
-        value = {"models": models, "default": settings.llm.model}
-        models_cache.update(value=value, at=time.time())
+        value = {"models": models, "default": chosen.llm.model}
+        models_cache[cache_key] = {"value": value, "at": time.time()}
         return value
 
     # ---- reviews --------------------------------------------------------------------------------

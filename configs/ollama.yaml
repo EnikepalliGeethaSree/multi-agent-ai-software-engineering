@@ -1,0 +1,24 @@
+# Local inference with Ollama (no API key, no quota, nothing leaves this machine).
+# Use it with --provider ollama, or LLM_PROVIDER=ollama. Gemini stays the official evaluation provider.
+#
+#   python -m marl_agents.cli models --provider ollama --config configs/ollama.yaml
+#   python -m marl_agents.cli check  --provider ollama --config configs/ollama.yaml
+
+llm:
+  provider: ollama
+  model: qwen2.5-coder:7b     # must match `ollama list`; OLLAMA_MODEL overrides it
+  base_url: http://localhost:11434   # OLLAMA_BASE_URL overrides it when this is empty
+  temperature: 0.0
+  seed: 42
+  max_tokens: 4096            # reply budget; at 2048 a code review reply was cut off
+  context_window: 16384       # Ollama's own default is smaller and it cuts long prompts silently
+  timeout_s: 900              # CPU inference: one review request can take a few minutes
+  max_retries: 1
+  json_mode: true
+  requests_per_minute: null
+  tokens_per_minute: null
+  requests_per_day: null
+  extra_params: {}            # extra Ollama options, e.g. {num_thread: 6}
+
+review:
+  concurrency: 1              # one local model answers one request at a time

@@ -472,3 +472,87 @@ check passed. Runs: `20261108T055008Z_planted_static_only`, `20261108T055018Z_pl
 **Classifier ablation, started.** Run `20261108T055537Z_classifier_ablation_valid_n15`: 2 of 15
 development samples complete in all three modes before the daily quota. No result is reported until the
 run finishes; continue it with `--resume`.
+
+## 13. Planted issues on a local model (Ollama), all four configurations
+
+**Local development run, reported apart from the Gemini results in section 12 and never merged with
+them** (D32, D36). A 7B quantized model on CPU and Gemini are different systems.
+
+Group `abl-20261108T074047Z`, 2026-11-08, Ollama 0.40.15, `qwen2.5-coder:7b` (Q4_K_M), temperature 0,
+seed 42, `max_tokens = 4096`, `num_ctx = 16384`, prompts system 1.0 / review 1.1. Working tree not committed
+(`a54c6c9-dirty`: the Phase 2-6 changes). Runs: `20261108T074047Z_planted_static_only`,
+`20261108T074052Z_planted_llm_only`, `20261108T074755Z_planted_static_llm`,
+`20261108T075847Z_planted_static_llm_rag`; comparison `20261108T081230Z_ablation_planted`. 12 LLM
+requests (4 review units per LLM configuration), 0 failed units, every fairness check passed.
+
+| Configuration | Issue recall | Found | Rule-detectable recall | Semantic recall | Defect precision | Correct / defect findings | LLM findings valid / raw | Time (s) |
+|---|---:|---:|---:|---:|---:|---:|---:|---:|
+| A. Static Only | 0.941 | 16 | 1.000 | 0.000 | 1.000 | 13 / 13 | - | 5.4 |
+| B. LLM Only | 0.294 | 5 | 0.312 | 0.000 | 1.000 | 5 / 5 | 6 / 7 | 422.1 |
+| C. Static + LLM | 0.941 | 16 | 1.000 | 0.000 | 0.929 | 13 / 14 | 11 / 12 | 651.7 |
+| D. Static + LLM + RAG | 0.941 | 16 | 1.000 | 0.000 | 0.929 | 13 / 14 | 12 / 13 | 822.7 |
+
+- **What it shows:** on this model the LLM adds no recall. It misses the one semantic issue (P13) in
+  every configuration, and alone it finds 5 of 17 issues. Static analysis carries the result.
+- **One false positive in C and D,** the same issue both times: "Comparison to None should use is None"
+  (D: "Comparison to `None` should use `is None`"), counted as a defect finding outside the answer key.
+- **Hallucination control worked:** one LLM finding per configuration was rejected because its
+  evidence was not in the file (`evidence_not_found`); none reached the results.
+- **Cited context:** in D the model cited 14 retrieved items, all of which it had been shown. In C, where
+  no context is shown, it cited 3 ids anyway; all 3 were dropped as invalid (D33).
+- **Time:** about 40-270 s per request on CPU; RAG made D's LLM time 169 s longer than C's (longer
+  prompts). One run per configuration, so the timing is indicative only.
+- **Labels in the saved comparison:** `20261108T081230Z_ablation_planted/summary.md` calls the provider
+  "Historical: Ollama". The run started before the "Local:" label existed; the run itself is unchanged,
+  and the dashboard and `eval summary` show it as "Local: Ollama".
+- **Limits:** 17 team-written issues, one run per configuration, one local model.
+
+## 14. Bug Detection on BugsInPy dev with a local model (Ollama), all four configurations
+
+**Local development run with very small n, reported apart from any Gemini result and never merged
+with one** (D32, D36). It only checks that the Bug Detection evaluation works end to end on Ollama.
+With n = 5 the confidence intervals are close to the whole 0-1 range. These are not benchmark results.
+
+2026-11-08, Ollama `qwen2.5-coder:7b`, temperature 0, seed 42, `max_tokens = 4096`. Prompts: bug_system
+1.0, bug_review 1.1, bug_localize 1.0. Working tree `a54c6c9-dirty`. BugsInPy **dev** split, sampling
+seed 42, n = 5: PySnooper-3, black-10, cookiecutter-3, httpie-3, sanic-3 (fingerprint `14a18f9716970cac`).
+Pool: one source file, at most 10 changed lines, change inside a function. Every saved run records
+`llm.provider = ollama`. 0 failed samples and 0 failed requests. The test split was not touched.
+
+**Localization** (rank the gold function, given the failing test). Runs: `20261108T091827Z_bugsinpy_localization_dev_{static_only,llm_only,static_llm,static_llm_rag}_n5`.
+Comparison: `20261108T091828Z_bugsinpy_localization_dev_comparison_n5`. 15 LLM calls.
+
+| Configuration | Function Top-1 | Top-3 | Top-5 | MRR | File Top-1 | LLM calls |
+|---|---:|---:|---:|---:|---:|---:|
+| A. Static Only | 0.200 | 0.400 | 0.400 | 0.332 | 0.600 | 0 |
+| B. LLM Only | 0.400 | 0.600 | 0.600 | 0.529 | 0.800 | 5 |
+| C. Static + LLM | 0.400 | 0.600 | 0.800 | 0.540 | 0.600 | 5 |
+| D. Static + LLM + RAG | 0.400 | 0.600 | 0.600 | 0.500 | 0.600 | 5 |
+
+Random-function baseline: Top-1 0.026, Top-5 0.120. The gold function was always among the candidates
+(about 85 per bug). It was among those shown to the LLM in 4 of 5 bugs. No pair differs significantly:
+McNemar p ≥ 0.5 for Top-1 and Top-5, uncorrected.
+
+**Detection** (paired: each bug's buggy and fixed function, in separate requests). Runs: `20261108T095448Z_bugsinpy_detection_dev_static_only_n5`,
+`20261108T095449Z_bugsinpy_detection_dev_{llm_only,static_llm,static_llm_rag}_n5`. Comparison:
+`20261108T095449Z_bugsinpy_detection_dev_comparison_n5`. 30 LLM calls.
+
+| Configuration | Precision | Recall | F1 | Accuracy | Told apart from the fix | LLM findings rejected |
+|---|---:|---:|---:|---:|---:|---:|
+| A. Static Only | 1.000 | 0.200 | 0.333 | 0.600 | 1 / 5 | - |
+| B. LLM Only | 0.000 | 0.000 | 0.000 | 0.500 | 0 / 5 | 0 |
+| C. Static + LLM | 1.000 | 0.200 | 0.333 | 0.600 | 1 / 5 | 0 |
+| D. Static + LLM + RAG | 1.000 | 0.200 | 0.333 | 0.600 | 1 / 5 | 0 |
+
+Scoring "any defect in the function" and "defect at the fixed lines" (±2 lines) give the same numbers.
+F1 95% CI for A, C and D is 0.000-0.750.
+
+- **Detection:** the 7B model reported no defect in any of the 10 functions. Each reply was an empty
+  list of about 35 output tokens. So B finds nothing, and C and D equal A. The one bug found in A, C
+  and D comes from a static rule. A fixed function may still hold another bug, so false positives are
+  an upper bound.
+- **Localization:** the LLM ranking raises Top-1 from 1 to 2 of 5 bugs. That is one bug, within noise.
+- **Not comparable** to the Gemini localization runs of 2026-11-06 (`20261106T194512Z_*_n5`). Those
+  ran on a different model and an older working tree, and only A and B.
+- **Next:** the official Bug Detection numbers need Gemini on the dev split (larger n), then one final
+  test-split run (D31). Those are pending the prompt-version decision and the free-tier quota.

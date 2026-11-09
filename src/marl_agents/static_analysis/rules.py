@@ -28,6 +28,13 @@ class RuleSpec:
 # baselines stay comparable. Confidence is lower than Ruff's: these are hints for the LLM and a
 # human, and the checks cannot see what callers really pass.
 FLOW_RULES: dict[str, RuleSpec] = {
+    "BUG-INFINITE-LOOP": RuleSpec(
+        C.BUG,
+        S.HIGH,
+        0.6,
+        "Change a variable the condition reads inside the loop, or add a break or return.",
+        "Add a test with a timeout that runs the loop on input where it should stop.",
+    ),
     "BUG-NONE-DEREF": RuleSpec(
         C.BUG,
         S.HIGH,

@@ -6,6 +6,7 @@ import type {
   ExperimentDetail,
   ExperimentRun,
   JobInfo,
+  LLMProviderName,
   LLMStatus,
   PerformanceRecord,
   ReviewDetail,
@@ -47,6 +48,12 @@ async function request<T>(path: string, init?: RequestInit): Promise<T> {
   return (await res.json()) as T;
 }
 
+/** "?a=1&b=2" from the non-empty values, or "" when there are none. */
+function query(params: Record<string, string | null | undefined>): string {
+  const pairs = Object.entries(params).filter((e): e is [string, string] => !!e[1]);
+  return pairs.length ? `?${new URLSearchParams(pairs).toString()}` : "";
+}
+
 export type ReviewInput =
   | { kind: "file"; file: File }
   | { kind: "snippet"; code: string; filename: string };
@@ -60,8 +67,10 @@ export type ReportFormat = "json" | "md" | "pdf" | "sarif";
 export const api = {
   health: () =>
     request<{ status: string; jobs: number; running: number; local_git?: boolean }>("/api/health"),
-  llmStatus: (probe = false) => request<LLMStatus>(`/api/llm/status${probe ? "?probe=true" : ""}`),
-  llmModels: () => request<{ models: string[]; default: string | null }>("/api/llm/models"),
+  llmStatus: (probe = false, provider?: LLMProviderName | null) =>
+    request<LLMStatus>(`/api/llm/status${query({ probe: probe ? "true" : null, provider })}`),
+  llmModels: (provider?: LLMProviderName | null) =>
+    request<{ models: string[]; default: string | null }>(`/api/llm/models${query({ provider })}`),
   listReviews: () => request<JobInfo[]>("/api/reviews"),
   getReview: (id: string) => request<ReviewDetail>(`/api/reviews/${encodeURIComponent(id)}`),
   deleteReview: (id: string) =>

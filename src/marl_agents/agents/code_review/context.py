@@ -9,6 +9,7 @@ Three sources, in priority order under a character budget:
 
 from __future__ import annotations
 
+import logging
 from contextlib import AbstractContextManager, nullcontext
 from dataclasses import dataclass
 
@@ -18,6 +19,8 @@ from marl_agents.ingestion.models import FileKind
 from marl_agents.parsing.python_ast import SymbolKind
 from marl_agents.parsing.repo_index import RepoIndex
 from marl_agents.rag.retriever import Retriever
+
+logger = logging.getLogger(__name__)
 
 MAX_ITEM_LINES = 60
 README_LINES = 40
@@ -37,14 +40,21 @@ class ContextItem:
     def key(self) -> tuple[str, int, int]:
         return (self.file, self.start_line, self.end_line)
 
-    def render(self) -> str:
-        where = (
-            f"{self.file}:{self.start_line}-{self.end_line}"
-            if self.reason != "guideline"
-            else self.file
-        )
+    def where(self) -> str:
+        if self.reason == "guideline":
+            return self.file
+        return f"{self.file}:{self.start_line}-{self.end_line}"
+
+    def render(self, ref: str = "") -> str:
         lang = "python" if self.file.endswith(".py") else ""
-        return f"### [{self.reason}] {self.label} ({where})\n```{lang}\n{self.text}\n```"
+        head = f"{ref} " if ref else ""
+        return (
+            f"### {head}[{self.reason}] {self.label} ({self.where()})\n```{lang}\n{self.text}\n```"
+        )
+
+    def citation(self) -> str:
+        """How a cited item is recorded on a finding: what it was and where it came from."""
+        return f"{self.reason}: {self.label} ({self.where()})"
 
 
 class ContextBuilder:
@@ -55,6 +65,7 @@ class ContextBuilder:
         structural: bool = True,
         top_k: int = 6,
         guideline_k: int = 2,
+        guideline_files: frozenset[str] | None = None,
         max_chars: int = 12_000,
         timer: RunTimer | None = None,
     ) -> None:
@@ -63,6 +74,9 @@ class ContextBuilder:
         self.structural = structural
         self.top_k = top_k
         self.guideline_k = guideline_k
+        self.guideline_files = guideline_files
+        # Retrieval that failed (e.g. a vector-store error). The review continues without it.
+        self.errors: list[str] = []
         self.max_chars = max_chars
         self.timer = timer
 
@@ -158,9 +172,15 @@ class ContextBuilder:
         names = " ".join(s.name for s in unit.symbols)
         query = f"{unit.file} {names}\n{code[:3000]}"
         with self._timed("similar_code"):
-            hits = self.retriever.retrieve(
-                query, k=self.top_k, exclude_ranges={unit.file: (unit.start_line, unit.end_line)}
-            )
+            try:
+                hits = self.retriever.retrieve(
+                    query,
+                    k=self.top_k,
+                    exclude_ranges={unit.file: (unit.start_line, unit.end_line)},
+                )
+            except Exception as exc:  # any store failure: review without similar code
+                self._retrieval_failed("similar code", exc)
+                return []
         return [
             ContextItem(
                 "similar",
@@ -174,12 +194,23 @@ class ContextBuilder:
             for h in hits
         ]
 
+    def _retrieval_failed(self, what: str, exc: Exception) -> None:
+        message = f"retrieval of {what} failed ({type(exc).__name__}); reviewed without it"
+        logger.warning(message)
+        self.errors.append(message)
+
     def guideline_items(self, code: str, hints: list[str]) -> list[ContextItem]:
         if self.retriever is None or self.guideline_k <= 0:
             return []
         query = "\n".join(hints) + "\n" + code[:2000]
         with self._timed("guidelines"):
-            hits = self.retriever.retrieve_guidelines(query, k=self.guideline_k)
+            try:
+                hits = self.retriever.retrieve_guidelines(
+                    query, k=self.guideline_k, files=self.guideline_files
+                )
+            except Exception as exc:  # any store failure: review without guidance
+                self._retrieval_failed("guidelines", exc)
+                return []
         return [
             ContextItem(
                 "guideline",
@@ -235,9 +266,16 @@ class ContextBuilder:
         return chosen
 
 
+def context_ref(i: int) -> str:
+    """The id an item is shown under, and must be cited by: C1, C2, ..."""
+    return f"C{i + 1}"
+
+
 def render_context(items: list[ContextItem]) -> str:
     if not items:
         return "## Project context\n(none provided)"
-    return "## Project context (for understanding only - do not review)\n\n" + "\n\n".join(
-        i.render() for i in items
+    return (
+        "## Project context (for understanding only - do not review)\n"
+        "Each item has an id (C1, C2, ...). If an item supports a finding, list its id in "
+        "`context_refs`.\n\n" + "\n\n".join(i.render(context_ref(n)) for n, i in enumerate(items))
     )

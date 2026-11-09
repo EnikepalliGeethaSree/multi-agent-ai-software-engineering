@@ -45,15 +45,19 @@ LangGraph (later): `graph.add_node("code_review", make_code_review_node(agent))`
 input (dir | zip | snippet | diff scope)
  -> ingestion      safe ZIP extraction (zip-slip, symlinks, zip bombs, size limits), file filter, temp workspace
  -> parsing        ast: symbols, imports, calls, line ranges; RepoIndex: call graph, callers, tests-by-name
- -> static         Ruff (isolated config, subprocess, timeout) | Radon CC/MI | AST checks | secrets | test gaps
+ -> static         Ruff (isolated config, subprocess, timeout) | Radon CC/MI | AST checks | design
+                   (duplicated functions, PEP 8 naming) | secrets | test gaps; a crashing tool -> partial
  -> units          files split at top-level definitions into <= 200-line review units (1 LLM call each)
  -> context (RAG)  structural (callees, callers, tests, README) + dense retrieval (ChromaDB) + guidelines
+                   (this agent's files only); items numbered C1, C2, ... for citation
  -> LLM review     versioned prompts; JSON findings + triage (confirm / false positive) of static findings
  -> validation     file exists, lines exist, evidence literally present; unambiguous relocation; scope
- -> dedup          rule-equivalence classes, LLM-vs-tool overlap, text similarity; merges keep all info
+ -> dedup          rule-equivalence classes, LLM-vs-tool overlap, text similarity; merges keep all info;
+                   a finding joins its closest duplicate (same category first)
  -> severity       documented rubric (docs/severity-rubric.md)
  -> confidence     calibration + agreement; threshold filter; ranking; IDs CR-001...
  -> redaction      secrets masked in evidence
+ -> finalize       evidence basis (static_confirmed | llm_with_context | llm_inferred) + code snippet
  -> reports        JSON / Markdown / PDF + dashboard summary (counts, issue density)
 ```
 
@@ -77,6 +81,11 @@ questions.
 | CR10 | **Test-gap analyzer disabled for CodeReviewer runs.** | A single patched file has no test context; the rule would fire on every sample. |
 | CR11 | **Lenient LLM output parsing, item by item.** | One malformed finding must not discard the whole response. |
 | CR12 | **Temporary workspaces deleted after each run.** | Uploaded code is untrusted and should not persist. |
+| CR13 | **Every finding states its evidence basis and carries its code snippet** (read from the file, at most 12 lines, secrets masked). | Readers can tell rule-confirmed findings from LLM inferences (D33). |
+| CR14 | **Cited context is verified.** The LLM may cite context ids; only ids it was shown are kept, with what each was. | A cited source is never invented; invalid citations are counted (`context_refs_invalid`). |
+| CR15 | **Agent-specific guidance** from one shared collection (`GUIDELINE_FILES`). | Code Review reads standards, error handling, security and review examples (D34). |
+| CR16 | **A crashing analyzer or retrieval failure degrades the review instead of aborting it**, and is recorded (`analyzers_failed`, `rag_errors`, `review_status: partial`). | One broken tool must not lose the whole review, and must never be silent (D35). |
+| CR17 | **Works on a local model.** `--provider ollama --config configs/ollama.yaml` (docs/llm-ollama.md). | Development without the 20-request daily quota; Gemini stays the provider of record (D32). |
 
 ## Metrics produced
 
@@ -97,6 +106,11 @@ questions.
   style/naming/design discussion), so a defect-oriented static baseline is expected to have low recall.
 - The test-gap analyzer matches identifiers; indirect coverage is not detected.
 - LLM-mode numbers must come from runs with a real provider; mock runs only verify the pipeline.
+- The behaviour suite (`tests/integration/test_agent_suites.py`) uses small synthetic fixtures and a
+  scripted LLM. It checks each detection end to end; it is not evidence of how well the agent
+  generalizes to real code.
+- An LLM finding filed under another category than the tool's (e.g. "maintainability" for Ruff's
+  `B006` mutable default, which is "bug") is not merged, so a report can show the issue twice.
 
 ## Tests
 

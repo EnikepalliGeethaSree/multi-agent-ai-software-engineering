@@ -138,7 +138,7 @@ def test_full_pipeline_with_scripted_llm(settings: Settings) -> None:
     assert set(tax.sources) == {FindingSource.RUFF, FindingSource.LLM}  # relocated 50 -> 59, merged
     disputed = [f for f in result.findings if "llm: false positive" in f.notes]
     assert len(disputed) == 1 and disputed[0].file == "shop/auth.py"
-    assert result.metadata.prompt_versions == {"system": "1.0", "review": "1.0"}
+    assert result.metadata.prompt_versions == {"system": "1.0", "review": "1.1"}
 
 
 def test_prompts_contain_context_but_never_ground_truth(settings: Settings) -> None:

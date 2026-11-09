@@ -49,13 +49,14 @@ class LLMBugFinding(LLMFinding):
     actual: str | None = None
     involved_names: list[str] = Field(default_factory=list)
     repro_steps: list[str] = Field(default_factory=list)
+    fix_explanation: str = ""
 
     @field_validator("bug_type", mode="before")
     @classmethod
     def _bug_type(cls, v: object) -> BugType:
         return parse_bug_type(v)
 
-    @field_validator("root_cause", "trigger", mode="before")
+    @field_validator("root_cause", "trigger", "fix_explanation", mode="before")
     @classmethod
     def _plain(cls, v: object) -> str:
         return _text(v)
@@ -78,6 +79,7 @@ class LLMBugFinding(LLMFinding):
             root_cause=self.root_cause,
             repro_steps=self.repro_steps,
             involved_names=self.involved_names,
+            fix_explanation=self.fix_explanation,
         )
         description = self.root_cause or finding.description
         return finding.model_copy(update={"bug": detail, "description": description})

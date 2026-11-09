@@ -117,6 +117,48 @@ describe("new review", () => {
     expect(options).toMatchObject({ agent: "bug_detection", failing_test: "tests/test_x.py::test_y" });
   });
 
+  it("runs a review on local Ollama when chosen, and checks Ollama first", async () => {
+    const ollama = { ...LLM_READY, provider: "ollama", model: "qwen2.5-coder:7b", local: true, tokens_per_minute: null, requests_per_minute: null };
+    const mock = mockFetch({
+      // listed first: the mock matches the first route whose path prefixes the URL
+      "GET /api/llm/status?provider=ollama": ollama,
+      "GET /api/llm/models?provider=ollama": { models: ["qwen2.5-coder:7b"], default: "qwen2.5-coder:7b" },
+      "GET /api/llm/status": { ...LLM_READY, provider: "gemini", model: "gemini-3.6-flash", selectable_providers: ["gemini", "ollama"] },
+      "GET /api/llm/models": { models: [], default: null },
+      "POST /api/reviews": job({ id: "fedcba654321", status: "queued", summary: null }),
+      "GET /api/reviews/fedcba654321": { job: job({ id: "fedcba654321", status: "running", summary: null }), result: null },
+    });
+    vi.stubGlobal("fetch", mock.fn);
+    renderAt("/");
+    await userEvent.click(await screen.findByRole("tab", { name: "Paste code" }));
+    await userEvent.type(screen.getByLabelText("Python code"), "x = 1");
+    await userEvent.selectOptions(await screen.findByLabelText("Provider"), "ollama");
+    expect(await screen.findByText(/no code leaves it/)).toBeInTheDocument();
+    expect(await screen.findByRole("option", { name: "Default (qwen2.5-coder:7b)" })).toBeInTheDocument();
+    await userEvent.click(screen.getByRole("button", { name: "Start review" }));
+
+    await screen.findByText(/Reviewing/);
+    expect(mock.calls.some((c) => c.url === "/api/llm/status?provider=ollama")).toBe(true);
+    const post = mock.calls.find((c) => c.method === "POST")!;
+    const options = JSON.parse(String((post.body as FormData).get("options")));
+    expect(options).toMatchObject({ provider: "ollama", model: null, mode: "full" });
+  });
+
+  it("explains how to fix an unavailable Ollama and falls back to static mode", async () => {
+    vi.stubGlobal(
+      "fetch",
+      mockFetch({
+        "GET /api/llm/status?provider=ollama": { ...LLM_MISSING, provider: "ollama", error: "Cannot reach Ollama at http://localhost:11434." },
+        "GET /api/llm/status": LLM_READY,
+        "GET /api/llm/models": { models: [], default: null },
+      }).fn,
+    );
+    renderAt("/");
+    await userEvent.selectOptions(await screen.findByLabelText("Provider"), "ollama");
+    expect(await screen.findByText(/Start Ollama and pull the model/)).toBeInTheDocument();
+    await waitFor(() => expect(screen.getByRole("radio", { name: /Static only/ })).toBeChecked());
+  });
+
   it("shows server-side rejections", async () => {
     vi.stubGlobal(
       "fetch",

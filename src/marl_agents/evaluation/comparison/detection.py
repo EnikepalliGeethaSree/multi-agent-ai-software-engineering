@@ -144,11 +144,24 @@ def planted_values(m: dict[str, Any]) -> dict[str, float | int | None]:
 
 
 def planted_chosen(runs: list[SavedRun]) -> dict[str, list[SavedRun]]:
+    """Latest valid run per configuration, then aligned on one ablation group: every configuration
+    that the newest LLM run's group covers is taken from that group, so a later stand-alone
+    static run (or another model's ablation) cannot replace one row of a group."""
     planted = [r for r in runs if r.kind == "planted" and r.configuration and not is_mock(r)]
-    return {
-        key: pick(planted, key, lambda r: planted_complete(r) and "detection" in r.metrics)
-        for key in ORDER
-    }
+
+    def valid(r: SavedRun) -> bool:
+        return planted_complete(r) and "detection" in r.metrics
+
+    chosen = {key: pick(planted, key, valid) for key in ORDER}
+    llm_runs = [rs[-1] for rs in chosen.values() if rs and rs[-1].configuration.llm]  # type: ignore[union-attr]
+    newest = max(llm_runs, key=lambda r: r.stamp, default=None)
+    if newest is not None and newest.group_id:
+        for key in ORDER:
+            same = [r for r in planted if r.configuration.key == key  # type: ignore[union-attr]
+                    and r.group_id == newest.group_id and valid(r)]  # fmt: skip
+            if same:
+                chosen[key] = same
+    return chosen
 
 
 def planted_table(runs: list[SavedRun]) -> ComparisonTable:

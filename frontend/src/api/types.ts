@@ -34,9 +34,13 @@ export interface BugDetail {
   expected: string | null;
   actual: string | null;
   root_cause: string;
+  fix_explanation?: string;
   repro_steps: string[];
   involved_names: string[];
 }
+
+/** Where a finding's support comes from. A provenance label, not a probability. */
+export type EvidenceBasis = "static_confirmed" | "llm_inferred" | "llm_with_context";
 
 export interface SuspectFunction {
   rank: number;
@@ -81,6 +85,9 @@ export interface Finding {
   related?: string[];
   suggested_fix?: SuggestedFix | null;
   bug?: BugDetail | null;
+  snippet?: string | null;
+  evidence_basis?: EvidenceBasis | null;
+  context_refs?: string[];
 }
 
 export interface RunMetadata {
@@ -130,10 +137,14 @@ export type JobStatus = "queued" | "running" | "done" | "failed";
 
 export type AgentName = "code_review" | "bug_detection";
 
+/** LLM providers a single review can pick; null = the server's provider. */
+export type LLMProviderName = "gemini" | "ollama";
+
 export interface ReviewOptions {
   agent?: AgentName;
   failing_test?: string | null;
   mode: Mode;
+  provider?: LLMProviderName | null;
   rag_enabled: boolean;
   structural_context: boolean;
   model: string | null;
@@ -295,6 +306,9 @@ export interface ReviewDetail {
 
 export interface LLMStatus {
   provider: string;
+  server_provider?: string;
+  selectable_providers?: LLMProviderName[];
+  local?: boolean;
   model: string | null;
   requests_per_minute: number | null;
   tokens_per_minute: number | null;

@@ -50,6 +50,9 @@ MAX_SUSPECTS = 20
 class BugDetectionAgent(CodeReviewAgent):
     name = "bug_detection"
     id_prefix = "BD"
+    GUIDELINE_FILES = frozenset(
+        {"bug_patterns.md", "error_handling_testing.md", "security_owasp_cwe.md"}
+    )
 
     # ---- what differs from code review ---------------------------------------------------------
 

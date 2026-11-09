@@ -1,4 +1,4 @@
-version: 1.0
+version: 1.1
 ---
 ## Repository file
 `{file}` (review unit: lines {start_line}-{end_line} of {total_lines}{scope_note})
@@ -30,7 +30,8 @@ Return JSON exactly in this shape:
       "recommendation": "<concrete fix>",
       "test_recommendation": "<concrete test to add>",
       "confidence": <0.0-1.0>,
-      "cwe": "<CWE-id or null>"
+      "cwe": "<CWE-id or null>",
+      "context_refs": ["<ids (C1, C2, ...) of project context items that support this finding; [] if none>"]
     }}
   ],
   "static_assessments": [

@@ -360,3 +360,47 @@ def test_group_runs_are_preferred_over_newer_runs_outside_the_group(tmp_path: Pa
     a = next(r for r in table.rows if r.configuration and r.configuration.key == "static_only")
     assert a.run_ids == ["20260101T000000Z_codereviewer_cls_test_static_only_n2"]
     assert next(f for f in table.fairness if f.name.startswith("Run together")).ok is True
+
+
+# ---- one ablation group per table; local models apart -------------------------------------------
+
+
+def _planted_group(root: Path, stamp_day: int, group: str, provider: str, model: str) -> None:
+    llm = {"provider": provider, "model": model, "temperature": 0.0}
+    for i, (key, letter) in enumerate((("static_only", "A"), ("llm_only", "B"),
+                                       ("static_llm", "C"), ("static_llm_rag", "D"))):  # fmt: skip
+        is_llm = key != "static_only"
+        exp = {"configuration": {"key": key, "llm": is_llm}, "group_id": group,
+               **({"llm": llm} if is_llm else {})}  # fmt: skip
+        meta = {
+            "experiment": exp,
+            **({"llm_provider": provider, "llm_model": model} if is_llm else {}),
+        }
+        save(root, f"202601{stamp_day:02d}T00000{i}Z_planted_{key}",
+             {"detection": detection(13, 0, 16 if is_llm else 15)}, meta=meta,
+             config={**CFG[letter], **({"llm": llm} if is_llm else {})})  # fmt: skip
+
+
+def test_a_local_model_ablation_never_replaces_the_gemini_rows(tmp_path: Path) -> None:
+    _planted_group(tmp_path, 1, "abl-gemini", "gemini", "gemini-3.6-flash")
+    _planted_group(tmp_path, 2, "abl-ollama", "ollama", "qwen2.5-coder:7b")  # newer
+    summary = build_summary(tmp_path)
+    official = next(t for t in summary.tables if t.id == "planted")
+    assert all(r.run_ids and r.run_ids[0].startswith("20260101") for r in official.rows)
+    assert "Gemini: gemini-3.6-flash" in official.badges
+    assert not any(f.ok is False for f in official.fairness)  # None = not recorded in the fixture
+    local = next(t for t in summary.tables if t.id == "planted_local")
+    assert all(r.run_ids and r.run_ids[0].startswith("20260102") for r in local.rows)
+    assert "Local: Ollama (qwen2.5-coder:7b)" in local.badges
+    assert "not comparable" in (local.warning or "")
+    assert any("local-model run(s)" in n for n in summary.master.notes)
+
+
+def test_a_later_stand_alone_static_run_does_not_split_the_group(tmp_path: Path) -> None:
+    _planted_group(tmp_path, 1, "abl-gemini", "gemini", "gemini-3.6-flash")
+    save(tmp_path, "20260105T000000Z_planted_static_only", {"detection": detection(13, 0, 15)},
+         meta={"experiment": {"configuration": {"key": "static_only"}}}, config=CFG["A"])  # fmt: skip
+    table = planted_table(load_runs(tmp_path))
+    static = next(r for r in table.rows if r.configuration and r.configuration.key == "static_only")
+    assert static.run_ids == ["20260101T000000Z_planted_static_only"]
+    assert next(f for f in table.fairness if f.name.startswith("Run together")).ok is True

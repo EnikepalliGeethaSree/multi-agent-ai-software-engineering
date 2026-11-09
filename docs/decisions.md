@@ -285,3 +285,57 @@ statistics, and their counts are always shown.
   the same command continues.
 - **D9 is still open,** but the localization harness is the cheap metric D9 proposed for SWE-bench Lite.
 - **Not built:** repro confirmation in Docker, and Fig. 3 stages 7-8 (bug-report store, learning loop).
+
+## D32 - Ollama for local development; Gemini stays the official provider (accepted)
+- **Why.** Gemini's free tier allows 20 requests a day, which is too few to develop and debug two agents.
+  Ollama runs `qwen2.5-coder:7b` on this machine: no key, no quota, and no code leaves the machine.
+- **Native API, not the OpenAI-compatible one.** `/api/chat` accepts `options.num_ctx`. The compatible
+  endpoint uses Ollama's small default window and cuts long prompts silently. `OllamaProvider` uses
+  urllib only (no new dependency), sets a 16K window, and refuses before sending a prompt that would
+  not fit (`RequestTooLargeError`, so the agent retries without context).
+- **Failures named for what they are.** An unreachable server, a model that is not installed, a
+  timeout, HTTP errors and malformed JSON each give their own message. A malformed reply is repaired
+  once; a reply cut off at `max_tokens` is not retried (the same request would be cut again).
+- **Reply budget 4096.** At 2048 a code review reply was cut off in a live run.
+- **Separation of results.** Every run records provider and model. The evaluation summary keeps local
+  runs, and every run of a local run's ablation group, out of the official tables and reports them
+  in their own section (D36). Gemini remains the provider of record for benchmark results.
+- **Switching.** `--provider ollama --config configs/ollama.yaml` on the CLI, or the Provider choice
+  per review in the dashboard (`ReviewOptions.provider`, built by `config.with_provider`). A model id
+  of the other provider is never sent (`config.model_for`).
+
+## D33 - Evidence basis, snippets and cited context on every finding (accepted)
+- **Evidence basis** (`static_confirmed`, `llm_with_context`, `llm_inferred`) says where a finding's
+  support comes from, after deduplication: any static source makes it `static_confirmed`. It is a
+  provenance label, never a probability.
+- **Cited context is checked.** Context items are shown with ids (C1, C2, ...). The LLM may list ids in
+  `context_refs`; the agent keeps only ids it really showed and records what each was. Invalid ids are
+  dropped and counted (`stats.context_refs_invalid`), so a cited source is never invented.
+- **Snippet** is read from the file at the finding's lines (at most 12), and masked for secret
+  findings. It is never taken from the LLM.
+- Both review prompts moved to version 1.1. Earlier runs record 1.0, so results stay attributable.
+
+## D34 - Agent-specific guidance in shared RAG (accepted)
+- One guidance collection (`guidelines_v2`, which adds `bug_patterns.md` and `review_examples.md`), filtered
+  per agent by `GUIDELINE_FILES`. Code Review reads standards, error handling, security and review
+  examples; Bug Detection reads bug patterns, error handling and security.
+- A retrieval failure (e.g. a vector-store error) is logged, recorded in `stats.rag_errors` and the
+  run's errors, and the unit is reviewed without that context.
+
+## D35 - A crashing static analyzer makes a review partial, not failed (accepted)
+- Before, one analyzer raising an exception aborted the whole review. Now it is logged, listed in
+  `stats.analyzers_failed`, timed as a failed stage, and the review is marked `partial`, with an
+  error saying its findings are missing. Evaluation runs can see this, so a lost tool is never silent.
+- New design checks (`design`: duplicated functions, PEP 8 naming) join `default_analyzers()`. The
+  static planted baseline was re-run after the change and is identical (22 findings, 16/17 matched,
+  precision 1.0, no false positive in the clean file).
+- The infinite-loop rule (`BUG-INFINITE-LOOP`, `loop`) is in `bug_analyzers()` only, like D31's flow rules.
+- **Deduplication picks the closest duplicate.** A finding that duplicates several clusters joins the
+  one with the same category, then equivalent rules, then most shared lines, then most similar
+  wording. Before it joined the first, and an LLM "swallowed exception" merged into a resource-leak
+  finding on the line above. Whether a finding merges, and the merge count, are unchanged.
+
+## D36 - One ablation group per comparison table (accepted)
+- The planted table took the latest run of each configuration separately, so a later stand-alone
+  static run, or another model's ablation, could replace one row of a group. Rows are now aligned on
+  the group of the newest LLM run. Local-model groups are reported in their own section.

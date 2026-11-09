@@ -160,7 +160,7 @@ def test_failed_calls_are_counted_in_llm_calls() -> None:
     assert record.llm_calls == 2 and record.llm_failed_calls == 1
 
 
-def test_timing_survives_a_run_that_crashes(settings: Settings) -> None:
+def test_a_crashing_analyzer_is_timed_as_a_failed_stage(settings: Settings) -> None:
     from marl_agents.static_analysis.base import StaticAnalyzer
 
     class Broken(StaticAnalyzer):
@@ -169,10 +169,24 @@ def test_timing_survives_a_run_that_crashes(settings: Settings) -> None:
         def analyze(self, repo, index, files, scope=None):  # type: ignore[no-untyped-def]
             raise RuntimeError("boom")
 
-    agent = CodeReviewAgent(MockLLMProvider(), settings=settings, analyzers=[Broken()])
+    settings.rag.enabled = False
+    result = CodeReviewAgent(MockLLMProvider(), settings=settings, analyzers=[Broken()]).run(
+        AgentRequest(snippet=CODE)
+    )  # the review goes on without the broken tool
+    assert result.stats["review_status"] == "partial"
+    assert result.stats["timing"]["failed_stages"] == ["broken"]
+
+
+def test_timing_survives_a_run_that_crashes(settings: Settings) -> None:
+    agent = CodeReviewAgent(MockLLMProvider(), settings=settings, analyzers=[])
+
+    def boom() -> None:
+        raise RuntimeError("boom")
+
+    agent._make_retriever = boom  # type: ignore[method-assign]
     with pytest.raises(RuntimeError):
         agent.run(AgentRequest(snippet=CODE))
     stats = agent.partial_stats()
     record = from_stats(stats, "r", "x.py", message="boom")
-    assert record.status == "failed" and record.failed_stages == ["broken"]
+    assert record.status == "failed"
     assert record.parsing_sec is not None

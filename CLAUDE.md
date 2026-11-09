@@ -52,6 +52,9 @@ LLM: **Google Gemini free tier** (`GEMINI_API_KEY` in `.env`, default model `gem
 `docs/llm-gemini.md` and D27). No paid APIs. Groq remains a legacy option (`LLM_PROVIDER=groq`).
 Never read or print `.env`. `cli models` lists models for the key, `cli check` verifies key + model
 with one tiny call. Free-tier content may be used by Google, so never send confidential code.
+Local development: **Ollama** `qwen2.5-coder:7b` (`--provider ollama --config configs/ollama.yaml`,
+`docs/llm-ollama.md`, D32): no key, no quota. Gemini stays the official evaluation provider; Ollama
+runs are reported in their own section and never mixed into Gemini tables (D36).
 
 Dashboard: `python -m marl_agents.cli serve` (FastAPI `src/marl_agents/api/` + React/TS/Tailwind
 `frontend/`, see docs/dashboard.md). Frontend: `cd frontend; npm test; npm run build`.

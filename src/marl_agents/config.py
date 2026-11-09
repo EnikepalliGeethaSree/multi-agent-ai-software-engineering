@@ -17,10 +17,11 @@ DEFAULT_CONFIG = PROJECT_ROOT / "configs" / "default.yaml"
 # Listed as free on Google's pricing page (checked 2026-11-06) but badged "New", not "Stable", so
 # `cli check` verifies it against the key and suggests a replacement if it is unavailable.
 DEFAULT_GEMINI_MODEL = "gemini-3.8-flash"
+DEFAULT_OLLAMA_MODEL = "qwen2.5-coder:7b"
 
 
 class LLMSettings(BaseModel):
-    provider: Literal["mock", "openai", "groq", "gemini", "local"] = "mock"
+    provider: Literal["mock", "openai", "groq", "gemini", "local", "ollama"] = "mock"
     model: str | None = None
     temperature: float = 0.0
     max_tokens: int = 2048
@@ -35,6 +36,8 @@ class LLMSettings(BaseModel):
     tokens_per_day: int | None = None
     # Refuse a request whose estimated input exceeds this; the agent retries it without context.
     max_input_tokens: int | None = None
+    # Ollama only: the context window it is asked to use. It cuts longer prompts silently.
+    context_window: int | None = None
     max_retries: int = 5
     timeout_s: float = 120.0
     json_mode: bool = True
@@ -178,14 +181,69 @@ def _apply_llm_env(data: dict[str, Any]) -> dict[str, Any]:
     provider = os.environ.get("LLM_PROVIDER", "").strip().lower()
     if provider:
         llm["provider"] = provider
-    if llm.get("provider") == "gemini":
-        model = str(llm.get("model") or "")
+    llm["model"] = model_for(str(llm.get("provider") or ""), llm.get("model"))
+    return {**data, "llm": llm}
+
+
+def _foreign_to_ollama(model: str) -> bool:
+    """Hosted model ids (Gemini, 'org/model') cannot be an Ollama model name."""
+    return not model or model.startswith(("gemini", "gemma", "models/")) or "/" in model
+
+
+def model_for(provider: str, model: str | None) -> str | None:
+    """The model a provider should use, so no run records another provider's model id.
+
+    GEMINI_MODEL and OLLAMA_MODEL win for their provider. A leftover id from another provider is
+    replaced by that provider's default.
+    """
+    current = str(model or "")
+    if provider == "gemini":
         explicit = os.environ.get("GEMINI_MODEL", "").strip()
         if explicit:
-            llm["model"] = explicit
-        elif not model.startswith(("gemini", "gemma", "models/")):
-            llm["model"] = DEFAULT_GEMINI_MODEL
-    return {**data, "llm": llm}
+            return explicit
+        return (
+            current if current.startswith(("gemini", "gemma", "models/")) else DEFAULT_GEMINI_MODEL
+        )
+    if provider == "ollama":
+        explicit = os.environ.get("OLLAMA_MODEL", "").strip()
+        if explicit:
+            return explicit
+        return DEFAULT_OLLAMA_MODEL if _foreign_to_ollama(current) else current
+    return model
+
+
+# Providers one request (a dashboard review) may switch to, and the file holding their settings.
+SELECTABLE_PROVIDERS: dict[str, Path] = {
+    "gemini": PROJECT_ROOT / "configs" / "gemini.yaml",
+    "ollama": PROJECT_ROOT / "configs" / "ollama.yaml",
+}
+
+
+def with_provider(settings: Settings, provider: str) -> Settings:
+    """A copy of `settings` that uses another LLM provider, configured as `--provider X --config
+    configs/X.yaml` would: default.yaml's llm section overlaid by the provider's file.
+
+    Only the LLM settings and review concurrency change; everything else stays as the server has it.
+    """
+    if provider not in SELECTABLE_PROVIDERS:
+        raise ValueError(
+            f"provider must be one of {sorted(SELECTABLE_PROVIDERS)}, not {provider!r}"
+        )
+    if provider == settings.llm.provider:
+        return settings.model_copy(deep=True)
+    data = _read_yaml(DEFAULT_CONFIG) if DEFAULT_CONFIG.exists() else {}
+    path = SELECTABLE_PROVIDERS[provider]
+    if path.exists():
+        data = _deep_merge(data, _read_yaml(path))
+    llm = dict(data.get("llm") or {})
+    llm["provider"] = provider
+    llm["model"] = model_for(provider, llm.get("model"))
+    out = settings.model_copy(deep=True)
+    out.llm = LLMSettings(**llm)
+    concurrency = (data.get("review") or {}).get("concurrency")
+    if concurrency is not None:
+        out.review.concurrency = int(concurrency)
+    return out
 
 
 def load_settings(config_path: Path | None = None) -> Settings:

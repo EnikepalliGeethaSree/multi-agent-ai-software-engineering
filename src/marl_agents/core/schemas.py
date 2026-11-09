@@ -55,6 +55,14 @@ class BugType(StrEnum):
     OTHER = "other"
 
 
+class EvidenceBasis(StrEnum):
+    """Where a finding's support comes from (set by findings.presentation.finalize)."""
+
+    STATIC_CONFIRMED = "static_confirmed"  # a static rule produced or agreed with it
+    LLM_INFERRED = "llm_inferred"  # the LLM, from the code alone
+    LLM_WITH_CONTEXT = "llm_with_context"  # the LLM, citing retrieved context it was shown
+
+
 class BugDetail(BaseModel):
     """What makes a bug finding more than a comment: how it fails, and how to see it fail.
 
@@ -67,6 +75,7 @@ class BugDetail(BaseModel):
     expected: str | None = Field(default=None, description="Correct behaviour for that trigger.")
     actual: str | None = Field(default=None, description="What the code does instead.")
     root_cause: str = Field(default="", description="Why the code misbehaves.")
+    fix_explanation: str = Field(default="", description="Why the suggested fix removes the bug.")
     repro_steps: list[str] = Field(default_factory=list)
     involved_names: list[str] = Field(
         default_factory=list, description="Identifiers the claim depends on; checked against code."
@@ -112,6 +121,16 @@ class Finding(BaseModel):
     rule_id: str | None = Field(default=None, description="Static-analysis rule, e.g. 'F401'.")
     cwe: str | None = Field(default=None, description="e.g. 'CWE-89' for security findings.")
     symbol: str | None = Field(default=None, description="Enclosing function/class, if any.")
+    snippet: str | None = Field(
+        default=None, description="The finding's own source lines, read from the file."
+    )
+    evidence_basis: EvidenceBasis | None = Field(
+        default=None, description="Static rule, LLM alone, or LLM citing retrieved context."
+    )
+    context_refs: list[str] = Field(
+        default_factory=list,
+        description="Retrieved context the LLM cited, checked against what it was shown.",
+    )
     proposed_severity: Severity | None = Field(
         default=None, description="Severity suggested by the source before the rubric applied."
     )

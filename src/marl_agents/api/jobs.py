@@ -28,7 +28,7 @@ from pydantic import BaseModel, Field
 
 from marl_agents.agents.bug_detection import BugDetectionAgent, FailingTestError
 from marl_agents.agents.code_review import CodeReviewAgent
-from marl_agents.config import Settings
+from marl_agents.config import Settings, model_for, with_provider
 from marl_agents.core.performance import PerformanceRecord, from_result, from_stats
 from marl_agents.core.schemas import AgentRequest, ReviewResult
 from marl_agents.ingestion.changes import (
@@ -76,6 +76,8 @@ class ReviewOptions(BaseModel):
     agent: Literal["code_review", "bug_detection"] = "code_review"
     failing_test: str | None = None  # bug detection: e.g. tests/test_x.py::test_y
     mode: Literal["full", "static_only", "llm_only"] = "full"
+    # None: the server's provider. "ollama" runs locally; nothing is sent to a hosted API.
+    provider: Literal["gemini", "ollama"] | None = None
     rag_enabled: bool = True
     structural_context: bool = True
     model: str | None = None
@@ -323,7 +325,11 @@ class JobManager:
         return job
 
     def _job_settings(self, options: ReviewOptions) -> Settings:
-        s = self.settings.model_copy(deep=True)
+        s = (
+            with_provider(self.settings, options.provider)
+            if options.provider
+            else self.settings.model_copy(deep=True)
+        )
         s.review.mode = options.mode
         s.review.min_confidence = options.min_confidence
         s.review.include_tests = options.include_tests
@@ -331,8 +337,8 @@ class JobManager:
             s.review.suggest_fixes = options.suggest_fixes
         s.rag.enabled = options.rag_enabled
         s.rag.structural_context = options.structural_context
-        if options.model:
-            s.llm.model = options.model
+        if options.model:  # a model id from another provider falls back to this one's default
+            s.llm.model = model_for(s.llm.provider, options.model)
         return s
 
     def provider_for(self, settings: Settings) -> LLMProvider:

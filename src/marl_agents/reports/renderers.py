@@ -8,7 +8,7 @@ from pathlib import Path
 from xml.sax.saxutils import escape
 
 from marl_agents.core.performance import from_result
-from marl_agents.core.schemas import BugDetail, ReviewResult, Severity
+from marl_agents.core.schemas import BugDetail, EvidenceBasis, ReviewResult, Severity
 from marl_agents.core.timing import TimingBreakdown
 from marl_agents.reports.sarif import to_sarif
 from marl_agents.reports.summary import ReviewSummary, summarize
@@ -87,6 +87,13 @@ def _default_title(result: ReviewResult) -> str:
     if result.agent == "bug_detection":
         return "Bug Detection Report"
     return "Change Review Report" if result.change else "Code Review Report"
+
+
+BASIS_LABEL = {
+    EvidenceBasis.STATIC_CONFIRMED: "confirmed by a static rule",
+    EvidenceBasis.LLM_INFERRED: "inferred by the LLM from the code",
+    EvidenceBasis.LLM_WITH_CONTEXT: "inferred by the LLM, citing retrieved context",
+}
 
 
 def _bug_markdown(bug: BugDetail) -> list[str]:
@@ -184,7 +191,8 @@ def to_markdown(result: ReviewResult, title: str | None = None) -> str:
             + (f" | **CWE:** {f.cwe}" if f.cwe else "")
             + (f" | **Rule:** {f.rule_id}" if f.rule_id else ""),
             f"- **Sources:** {', '.join(x.value for x in f.sources)} "
-            f"| **Confidence:** {f.confidence:.2f}",
+            f"| **Confidence:** {f.confidence:.2f}"
+            + (f" | **Basis:** {BASIS_LABEL[f.evidence_basis]}" if f.evidence_basis else ""),
             "",
             f.description,
             "",
@@ -193,10 +201,23 @@ def to_markdown(result: ReviewResult, title: str | None = None) -> str:
             out += _bug_markdown(f.bug)
         if f.evidence:
             out += ["**Evidence**", "", "```python", *[e for e in f.evidence[:3]], "```", ""]
+        if f.snippet and f.snippet.strip() not in {e.strip() for e in f.evidence}:
+            out += [
+                f"**Code** (lines {f.start_line}-{f.end_line})",
+                "",
+                "```python",
+                f.snippet,
+                "```",
+                "",
+            ]
+        if f.context_refs:
+            out += ["**Retrieved context cited:** " + "; ".join(f.context_refs), ""]
         if f.related:
             out += ["**Related:** " + "; ".join(f"`{r}`" for r in f.related), ""]
         if f.recommendation:
             out += [f"**Fix:** {f.recommendation}", ""]
+        if f.bug is not None and f.bug.fix_explanation:
+            out += [f"**Why this fixes it:** {f.bug.fix_explanation}", ""]
         if f.suggested_fix:
             fx = f.suggested_fix
             badge = "verified" if fx.verified else "review before applying"

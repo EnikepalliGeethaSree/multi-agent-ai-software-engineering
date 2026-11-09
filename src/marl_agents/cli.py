@@ -22,7 +22,7 @@ import sys
 from pathlib import Path
 from typing import Any
 
-from marl_agents.config import PROJECT_ROOT, Settings, load_settings
+from marl_agents.config import PROJECT_ROOT, Settings, load_settings, model_for
 from marl_agents.core.schemas import ReviewResult
 from marl_agents.llm.base import LLMError, LLMProvider
 from marl_agents.llm.classifier import ChangeClassifier, create_classifier
@@ -39,7 +39,7 @@ def _add_common(p: argparse.ArgumentParser) -> None:
         "--config", type=Path, default=None, help="YAML config (default configs/default.yaml)"
     )
     p.add_argument("--mode", choices=["full", "static_only", "llm_only"])
-    p.add_argument("--provider", choices=["mock", "openai", "groq", "gemini", "local"])
+    p.add_argument("--provider", choices=["mock", "openai", "groq", "gemini", "local", "ollama"])
     p.add_argument("--model")
     p.add_argument("--base-url")
     p.add_argument("--rpm", type=int, help="LLM requests per minute limit (your project's quota)")
@@ -62,6 +62,7 @@ def build_settings(args: argparse.Namespace) -> Settings:
         s.review.mode = args.mode
     if args.provider:
         s.llm.provider = args.provider
+        s.llm.model = model_for(args.provider, s.llm.model)
     if args.model:
         s.llm.model = args.model
     if args.base_url:
@@ -837,8 +838,10 @@ def cmd_eval_bugs(args: argparse.Namespace) -> int:
 def cmd_models(args: argparse.Namespace) -> int:
     """List models available to the configured key, and recommend a free Gemini model."""
     s = build_settings(args)
-    if s.llm.provider not in {"openai", "groq", "gemini", "local"}:
-        print(f"'models' works with gemini/openai/groq/local providers, not {s.llm.provider!r}")
+    if s.llm.provider not in {"openai", "groq", "gemini", "local", "ollama"}:
+        print(
+            f"'models' works with gemini/ollama/openai/groq/local providers, not {s.llm.provider!r}"
+        )
         return 2
     s.llm.model = s.llm.model or "unused"
     provider = create_provider(s.llm)
@@ -874,6 +877,8 @@ def cmd_check(args: argparse.Namespace) -> int:
                 hint = f"Set GEMINI_MODEL={best} in .env." if best else "See `cli models`."
                 print(f"FAILED: model {s.llm.model} is not available to this key. {hint}")
                 return 1
+        if s.llm.provider == "ollama":
+            llm.ensure_model()  # type: ignore[attr-defined]
         reply = llm.generate_structured(
             [
                 Message(role="system", content="Reply with a JSON object only."),

@@ -189,6 +189,7 @@ def merge(primary: Finding, other: Finding) -> Finding:
             **loc,
             "related": related,
             "sources": sources,
+            "context_refs": list(dict.fromkeys([*primary.context_refs, *other.context_refs])),
             "evidence": evidence,
             "confidence": confidence,
             "severity": worst.severity,
@@ -215,17 +216,28 @@ class DedupReport:
     merged: int
 
 
+def match_strength(existing: Finding, f: Finding) -> tuple[bool, bool, int, float]:
+    """How closely two duplicates match, to pick the best cluster when several qualify: same
+    category, then equivalent rules, then shared lines, then wording."""
+    shared = min(existing.end_line, f.end_line) - max(existing.start_line, f.start_line) + 1
+    sim = jaccard(
+        tokens(f"{existing.title} {existing.description}"), tokens(f"{f.title} {f.description}")
+    )
+    return (existing.category == f.category, rules_equivalent(existing, f), shared, sim)
+
+
 def deduplicate(findings: list[Finding], text_threshold: float = 0.25) -> DedupReport:
-    """Greedy clustering: each finding merges into the first existing cluster it duplicates."""
+    """Greedy clustering: each finding merges into the existing cluster it duplicates most closely
+    (an LLM "swallowed exception" joins the Ruff/AST one, not a resource leak on the line above)."""
     clusters: list[Finding] = []
     merged = 0
     ordered = sorted(findings, key=lambda f: (f.file, f.start_line, -f.severity.rank))
     for f in ordered:
-        for i, existing in enumerate(clusters):
-            if is_duplicate(existing, f, text_threshold):
-                clusters[i] = merge(existing, f)
-                merged += 1
-                break
+        matches = [i for i, c in enumerate(clusters) if is_duplicate(c, f, text_threshold)]
+        if matches:
+            best = max(matches, key=lambda i: match_strength(clusters[i], f))
+            clusters[best] = merge(clusters[best], f)
+            merged += 1
         else:
             clusters.append(f)
     return DedupReport(findings=clusters, merged=merged)

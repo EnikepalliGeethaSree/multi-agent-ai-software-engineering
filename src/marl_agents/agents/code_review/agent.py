@@ -19,7 +19,12 @@ from pathlib import Path
 from typing import Any
 
 from marl_agents.agents.base import BaseAgent
-from marl_agents.agents.code_review.context import ContextBuilder, ContextItem, render_context
+from marl_agents.agents.code_review.context import (
+    ContextBuilder,
+    ContextItem,
+    context_ref,
+    render_context,
+)
 from marl_agents.agents.code_review.fixes import FixGenerator
 from marl_agents.agents.code_review.llm_schema import (
     LLMFinding,
@@ -54,6 +59,7 @@ from marl_agents.findings import (
     validate_all,
 )
 from marl_agents.findings.actionability import filter_actionable
+from marl_agents.findings.presentation import finalize
 from marl_agents.findings.redaction import is_secret_finding, redact_finding
 from marl_agents.ingestion import Repository, load_files, load_repository, load_snippet
 from marl_agents.ingestion.models import FileKind
@@ -87,6 +93,8 @@ class UnitOutcome:
     static_refs: dict[str, int] = field(default_factory=dict)  # "S1" -> index into static list
     context: list[ContextItem] = field(default_factory=list)
     errors: list[str] = field(default_factory=list)
+    refs_cited: int = 0  # context ids the LLM cited that it was really shown
+    refs_invalid: int = 0  # cited ids that were never shown (dropped)
     failed: bool = False
     from_cache: bool = False
     not_attempted: bool = False  # the quota ran out before this unit's turn
@@ -195,6 +203,12 @@ class CodeReviewAgent(BaseAgent):
         """Last change to the ranked findings, before suggested fixes."""
         return findings
 
+    # Knowledge files this agent retrieves guidance from (src/marl_agents/rag/knowledge/).
+    GUIDELINE_FILES = frozenset(
+        {"python_standards.md", "error_handling_testing.md", "security_owasp_cwe.md",
+         "review_examples.md"}
+    )  # fmt: skip
+
     # ---- construction helpers ------------------------------------------------------------------
 
     def _make_retriever(self) -> Retriever | None:
@@ -296,17 +310,30 @@ class CodeReviewAgent(BaseAgent):
             static_files = targets + [
                 f.path for f in repo.files if f.language != "python" and f.kind is FileKind.CONFIG
             ]
+            failed_analyzers: list[str] = []
             for analyzer in self.analyzers:
                 cache = self._analysis_cache
-                with timer.span(analyzer.name, STATIC):
-                    cached = cache.get(repo, analyzer, static_files, scope) if cache else None
-                    out = cached or analyzer.analyze(repo, index, static_files, scope)
+                try:  # the span still times the failed tool and marks it failed
+                    with timer.span(analyzer.name, STATIC):
+                        cached = cache.get(repo, analyzer, static_files, scope) if cache else None
+                        out = cached or analyzer.analyze(repo, index, static_files, scope)
+                except Exception as exc:  # one broken tool must not stop the whole review
+                    logger.exception("static analyzer %s failed", analyzer.name)
+                    failed_analyzers.append(analyzer.name)
+                    errors.append(
+                        f"[{analyzer.name}] analyzer failed ({type(exc).__name__}: {exc}); "
+                        "its findings are missing from this review"
+                    )
+                    continue
                 if cache is not None and cached is None:
                     cache.put(repo, analyzer, static_files, scope, out)
                 static.extend(out.findings)
                 raw_by_analyzer[analyzer.name] = len(out.findings)
                 errors.extend(f"[{analyzer.name}] {e}" for e in out.errors)
             static = self._filter_static(static)
+            if failed_analyzers:
+                stats["analyzers_failed"] = failed_analyzers
+                stats["review_status"] = "partial"
         timings["static_analysis"] = time.perf_counter() - t
         stats["static_findings_raw"] = raw_by_analyzer
         self.progress(f"static analysis: {len(static)} raw findings")
@@ -337,6 +364,7 @@ class CodeReviewAgent(BaseAgent):
                     guideline_k=self.settings.rag.guideline_k,
                     max_chars=self.settings.rag.max_context_chars,
                     timer=timer,
+                    guideline_files=self.GUIDELINE_FILES,
                 )
             units = self._build_units(repo, index, targets, scope, request)
             units = self._select_units(units, repo, static, stats, errors)
@@ -362,6 +390,9 @@ class CodeReviewAgent(BaseAgent):
             outcomes = self._review_units(repo, units, plan, static, builder, run_usage, timer)
             timings["llm_review"] = time.perf_counter() - t
             self._record_unit_stats(stats, outcomes, plan, errors)
+            rag_errors = list(dict.fromkeys(builder.errors)) if builder is not None else []
+            stats["rag_errors"] = len(builder.errors) if builder is not None else 0
+            errors.extend(rag_errors)
             if self._quota_stats is not None:
                 stats["quota"] = self._quota_stats
                 self._quota_stats = None
@@ -425,7 +456,9 @@ class CodeReviewAgent(BaseAgent):
                 if passes_threshold(f, cfg.min_confidence)
                 and (cfg.include_info or f.severity is not Severity.INFO)
             ]
-            final = self._finish_findings(rank_and_number(kept, self.id_prefix), repo)
+            final = finalize(
+                self._finish_findings(rank_and_number(kept, self.id_prefix), repo), repo
+            )
         stats["dedup_merged"] = dedup.merged
         stats["filtered_low_confidence"] = len(ruled) - len(kept)
         timings["postprocess"] = time.perf_counter() - t
@@ -531,6 +564,8 @@ class CodeReviewAgent(BaseAgent):
         stats["units_not_attempted"] = sum(1 for oc in outcomes if oc.not_attempted)
         stats["units_from_cache"] = sum(1 for oc in outcomes if oc.from_cache)
         stats["units_deduplicated"] = len(plan.duplicates)
+        stats["context_refs_cited"] = sum(oc.refs_cited for oc in outcomes)
+        stats["context_refs_invalid"] = sum(oc.refs_invalid for oc in outcomes)
         gated = [oc for oc in outcomes if oc.gated]
         stats["units_skipped"] = stats["units_not_attempted"] + len(gated)
         if gated:
@@ -730,7 +765,12 @@ class CodeReviewAgent(BaseAgent):
                 ),
                 None,
             )
-            outcome.findings.append(item.to_finding(unit.file, sym))
+            finding = item.to_finding(unit.file, sym)
+            shown = {context_ref(n): c for n, c in enumerate(outcome.context)}
+            cited = [shown[r].citation() for r in dict.fromkeys(item.context_refs) if r in shown]
+            outcome.refs_cited += len(cited)
+            outcome.refs_invalid += len(set(item.context_refs) - set(shown))
+            outcome.findings.append(finding.model_copy(update={"context_refs": cited}))
         return outcome
 
     def partial_stats(self) -> dict[str, Any]:

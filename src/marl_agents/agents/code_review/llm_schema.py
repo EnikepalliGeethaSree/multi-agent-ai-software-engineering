@@ -84,6 +84,17 @@ class LLMFinding(BaseModel):
     test_recommendation: str | None = None
     confidence: float = 0.5
     cwe: str | None = None
+    # Ids ("C2") of the project-context items the model says support the finding. The agent keeps
+    # only ids it really showed, so a cited source is never invented.
+    context_refs: list[str] = Field(default_factory=list)
+
+    @field_validator("context_refs", mode="before")
+    @classmethod
+    def _refs(cls, v: object) -> list[str]:
+        if v is None:
+            return []
+        items = v if isinstance(v, list) else [v]
+        return [str(x).strip().strip("[]").upper() for x in items if str(x).strip()]
 
     @field_validator("category", mode="before")
     @classmethod
