@@ -918,6 +918,20 @@ def cmd_models(args: argparse.Namespace) -> int:
     return 0
 
 
+def cmd_estimate(args: argparse.Namespace) -> int:
+    """Calls, tokens and cost of the pending Groq experiments. Makes no API call."""
+    from marl_agents.evaluation.estimate import estimate, estimate_md, pending_plan
+
+    s = build_settings(args)
+    report = estimate(s.llm, pending_plan(bugs=args.bugs, runs=args.runs))
+    md = estimate_md(report)
+    out = PROJECT_ROOT / "experiments" / "evaluation_summary"
+    out.mkdir(parents=True, exist_ok=True)
+    (out / "groq-estimate.md").write_text(md, encoding="utf-8")
+    print(md)
+    return 0
+
+
 def cmd_check(args: argparse.Namespace) -> int:
     """One tiny JSON request: verifies key, model, JSON mode and parsing end to end."""
     from pydantic import BaseModel
@@ -1177,6 +1191,11 @@ def main(argv: list[str] | None = None) -> int:
     _add_common(p_models)
     p_models.set_defaults(func=cmd_models)
 
+    p_est = sub.add_parser("estimate", help="calls, tokens and cost of the pending Groq runs")
+    _add_common(p_est)
+    p_est.add_argument("--bugs", type=int, default=40, help="BugsInPy bugs (dev + test)")
+    p_est.add_argument("--runs", type=int, default=3, help="runs per LLM configuration")
+    p_est.set_defaults(func=cmd_estimate)
     p_check = sub.add_parser("check", help="verify the LLM key/model with one tiny request")
     _add_common(p_check)
     p_check.set_defaults(func=cmd_check)
