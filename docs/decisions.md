@@ -391,3 +391,12 @@ statistics, and their counts are always shown.
   cost computed separately from console prices; the provider refuses to start without a cap.
 - No limit, quota or price is hard-coded; all come from the Groq console through `.env`. The
   free-plan figures used in D38 are no longer applied.
+
+## D40 - Risk v2 stays the default hunk ranker; the classifier comparison is saved-score only (accepted, 2026-11-10)
+- The hunk-risk samples are the CodeReviewer cls test split, which holds the classifier's held-out test
+  set. The team decided that set is not used again for scoring, training, threshold tuning or model
+  selection. Part 3.8 therefore compares risk v2, change size and the classifier only from scores
+  already saved (`eval ranker-saved-scores`, report in `experiments/evaluation_summary/`), on the
+  1,771 repository-disjoint changes, labelled as a saved-score secondary analysis.
+- The classifier ranks better there, but a default chosen on test results would be tuned on test.
+  Risk v2 therefore stays the default. Changing it needs a comparison on data that is not the test set.

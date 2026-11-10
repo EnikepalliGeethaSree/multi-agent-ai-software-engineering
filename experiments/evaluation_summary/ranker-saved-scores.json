@@ -1,0 +1,50 @@
+{
+  "label": "saved-score secondary analysis (test changes already used to evaluate the classifier; nothing re-scored; not used to choose a default)",
+  "hunk_risk_run": "20261012T085812Z_hunkrisk_cls_test_n4196",
+  "classifier_run": "20261106T144800Z_classifier_cls_test_n1771",
+  "classifier_repo_disjoint_changes": 1771,
+  "scored_by_both": 1771,
+  "label_mismatches": 0,
+  "n": 1771,
+  "positives": 979,
+  "base_rate": 0.5527950310559007,
+  "rankers": {
+    "risk_v2": {
+      "auc": 0.6351977383642348,
+      "auc_ci95": [
+        0.6085,
+        0.6617
+      ],
+      "precision_at_top": {
+        "5%": 0.8068181818181818,
+        "10%": 0.8192090395480226,
+        "25%": 0.7307692307692307
+      }
+    },
+    "change_size": {
+      "auc": 0.63425431537025,
+      "auc_ci95": [
+        0.6056,
+        0.6591
+      ],
+      "precision_at_top": {
+        "5%": 0.8295454545454546,
+        "10%": 0.8135593220338984,
+        "25%": 0.7307692307692307
+      }
+    },
+    "classifier_saved_score": {
+      "auc": 0.7230347396333096,
+      "auc_ci95": [
+        0.6999,
+        0.7457
+      ],
+      "precision_at_top": {
+        "5%": 1.0,
+        "10%": 0.9378531073446328,
+        "25%": 0.8167420814479638
+      }
+    }
+  },
+  "default_ranker": "risk_v2 (unchanged)"
+}

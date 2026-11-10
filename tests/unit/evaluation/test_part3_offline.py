@@ -189,3 +189,28 @@ def test_bm25_ranks_the_lexically_closest_chunk_first() -> None:
     assert rank is not None
     ranked = rank(chunks[0])
     assert ranked[0] == "cfg" and "q" not in ranked
+
+
+# ---- 3.8 saved-score ranker comparison ----------------------------------------------------------------
+
+
+def test_saved_score_ranker_comparison_reads_only_saved_runs(tmp_path: Path) -> None:
+    from marl_agents.evaluation.saved_score_ranking import compare_md, compare_saved_rankers
+
+    labels = [1, 0, 1, 0, 1, 0]
+    hunk = [{"sample_id": f"s{i}", "label": y, "risk": float(i), "size": float(6 - i)}
+            for i, y in enumerate(labels)]  # fmt: skip
+    cls = [{"sample_id": f"s{i}", "label": y, "score": 0.9 if y else 0.1,
+            "repo_disjoint": i != 5} for i, y in enumerate(labels)]  # fmt: skip
+    cls.append({"sample_id": "only-cls", "label": 1, "score": 0.5, "repo_disjoint": True})
+    save(tmp_path, "20260101T000000Z_hunkrisk_cls_test_n6", {"n_evaluated": 6}, meta={},
+         config=CFG["A"], predictions=hunk)  # fmt: skip
+    save(tmp_path, "20260102T000000Z_classifier_cls_test_n7", {"threshold": 0.5}, meta={},
+         config=CFG["A"], predictions=cls)  # fmt: skip
+    runs = {r.name: r for r in load_runs(tmp_path)}
+    r = compare_saved_rankers(runs["20260101T000000Z_hunkrisk_cls_test_n6"],
+                              runs["20260102T000000Z_classifier_cls_test_n7"])  # fmt: skip
+    assert r["n"] == 5 and r["scored_by_both"] == 5  # s5 is not repo-disjoint; only-cls unmatched
+    assert r["rankers"]["classifier_saved_score"]["auc"] == 1.0
+    assert r["default_ranker"] == "risk_v2 (unchanged)"
+    assert "secondary analysis" in compare_md(r)

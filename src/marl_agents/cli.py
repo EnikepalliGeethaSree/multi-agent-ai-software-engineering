@@ -340,7 +340,7 @@ def cmd_eval(args: argparse.Namespace) -> int:
 
     if args.suite == "summary":
         return _eval_summary()
-    if args.suite in ("funnel", "classifier-metrics", "static-baseline"):
+    if args.suite in ("funnel", "classifier-metrics", "static-baseline", "ranker-saved-scores"):
         return _eval_report(args.suite)
     if args.suite == "classifier":
         return _eval_classifier(args, s)
@@ -462,6 +462,10 @@ def _eval_classifier_ablation(args: argparse.Namespace, s: Settings) -> int:
     return 0
 
 
+# The hunk-risk run cited in docs/results.md section 6a (line-ending fix applied).
+HUNK_RISK_REFERENCE_RUN = "20261012T085812Z_hunkrisk_cls_test_n4196"
+
+
 def _eval_report(kind: str) -> int:
     """Reports from saved runs only (no model call): funnel, classifier, static baseline."""
     import json as _json
@@ -481,6 +485,18 @@ def _eval_report(kind: str) -> int:
             return 1
         data = reanalysis.classifier_report(cls[-1])
         md = reanalysis.classifier_md(data)
+    elif kind == "ranker-saved-scores":
+        from marl_agents.evaluation.saved_score_ranking import compare_md, compare_saved_rankers
+
+        by_name = {r.name: r for r in runs}
+        hunk = by_name.get(HUNK_RISK_REFERENCE_RUN)
+        cls = [r for r in runs if r.name.split("_", 1)[-1].startswith("classifier_cls_test")]
+        if hunk is None or not cls:
+            print("error: saved hunk-risk or classifier test run missing; nothing is re-run "
+                  "(report TBD)", file=sys.stderr)  # fmt: skip
+            return 1
+        data = compare_saved_rankers(hunk, cls[-1])
+        md = compare_md(data)
     else:
         full = [r for r in runs if r.kind == "codereviewer" and r.task == "cls"
                 and r.split == "test" and r.configuration is not None
@@ -1044,6 +1060,7 @@ def main(argv: list[str] | None = None) -> int:
             "funnel",
             "classifier-metrics",
             "static-baseline",
+            "ranker-saved-scores",
         ],
         help="hunkrisk: risk ranking vs CodeReviewer cls labels; timing: efficiency benchmark "
         "(time per review and per component); summary: baseline comparison + five-component "
