@@ -93,6 +93,9 @@ class Row(BaseModel):
         default_factory=dict, description="[min, max] of repeated measurements (timing)."
     )
     na: dict[str, str] = Field(default_factory=dict, description="Metric -> why it is N/A.")
+    ci: dict[str, list[float | None]] = Field(
+        default_factory=dict, description="Metric -> [low, high] 95% interval (evaluation/stats)."
+    )
     n: int | None = None
     n_failed: int | None = None
     n_runs: int = 0
@@ -118,6 +121,9 @@ class ComparisonTable(BaseModel):
     conditions: dict[str, Any] = Field(default_factory=dict)
     fairness: list[FairnessCheck] = Field(default_factory=list)
     observations: list[str] = Field(default_factory=list)
+    statistics: list[str] = Field(
+        default_factory=list, description="Wilson intervals, McNemar and bootstrap tests."
+    )
     notes: list[str] = Field(default_factory=list)
     supplementary: bool = False
     show_counts: bool = Field(default=True, description="Render the n / failed / runs columns.")

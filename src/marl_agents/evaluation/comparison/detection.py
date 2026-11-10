@@ -31,6 +31,10 @@ from marl_agents.evaluation.comparison.common import (
     provider_badge,
 )
 from marl_agents.evaluation.comparison.models import Column, ComparisonTable, FairnessCheck, Row
+from marl_agents.evaluation.comparison.statistics import (
+    codereviewer_statistics,
+    planted_statistics,
+)
 from marl_agents.evaluation.configurations import ORDER
 from marl_agents.evaluation.metrics import binary_metrics, corpus_bleu_avg, roc_auc
 from marl_agents.evaluation.metrics.detection import DEFECT_CATEGORIES
@@ -235,6 +239,7 @@ def planted_table(runs: list[SavedRun]) -> ComparisonTable:
         },
         fairness=fairness_checks(chosen, same),
         observations=[*_planted_observations(rows), *_stability(planted, chosen)],
+        statistics=planted_statistics(rows, chosen),
         notes=[
             gap,
             f"Rule-detectable recall covers {key_counts.get('static', 16)} issues. Semantic recall "
@@ -517,6 +522,7 @@ def codereviewer_tables(runs: list[SavedRun], task: str) -> list[ComparisonTable
             conditions=conditions,
             fairness=checks,
             observations=_cr_observations(rows, task),
+            statistics=codereviewer_statistics(task, rows, preds, sorted(common)),
             notes=notes,
         )
     ]

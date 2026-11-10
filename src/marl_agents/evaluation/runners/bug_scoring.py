@@ -20,6 +20,7 @@ from marl_agents.evaluation.metrics.localization import (
     pair_outcomes,
     random_top_k,
 )
+from marl_agents.evaluation.stats import wilson
 
 Row = dict[str, Any]
 BOOT_DIGITS = 3
@@ -83,6 +84,10 @@ def score_localization(rows: list[Row]) -> dict[str, Any]:
         "ci_top_1": _rounded_ci(rows, lambda s: _mean([_hit(r, 1) for r in s])),
         "ci_top_5": _rounded_ci(rows, lambda s: _mean([_hit(r, 5) for r in s])),
         "ci_mrr": _rounded_ci(rows, lambda s: _mean([reciprocal(r) for r in s])),
+        "wilson": {
+            f"top_{k}": wilson(int(sum(_hit(r, k) for r in rows)), len(rows)).model_dump()
+            for k in TOP_KS
+        },
         "llm_calls": sum(int(r.get("llm_calls", 0) or 0) for r in rows),
         "by_project": _by_project(rows),
     }
@@ -149,9 +154,25 @@ def score_detection(rows: list[Row]) -> dict[str, Any]:
         "ci_f1": _rounded_ci(list(zip(y_true, loose, strict=True)), f1),
         "auc": roc_auc(y_true, scores),
         "pairs": {**outcome.model_dump(), "discrimination": round(outcome.discrimination, 4)},
+        "wilson": _detection_wilson(binary_metrics(y_true, loose), outcome.only_buggy, outcome.n),
         "llm_calls": sum(int(r.get("llm_calls", 0) or 0) for r in rows),
         "llm_rejected": sum(int(r.get("llm_rejected", 0) or 0) for r in rows),
     }
+
+
+def _detection_wilson(bm: BinaryMetrics, told_apart: int, n_pairs: int) -> dict[str, Any]:
+    """Wilson intervals: per-finding precision, per-bug recall, and bugs told apart from the fix."""
+    return {
+        "precision": wilson(bm.tp, bm.tp + bm.fp).model_dump(),
+        "recall": wilson(bm.tp, bm.tp + bm.fn).model_dump(),
+        "detection_rate": wilson(told_apart, n_pairs).model_dump(),
+    }
+
+
+def _wilson_text(d: dict[str, Any] | None) -> str:
+    if not d or d.get("value") is None:
+        return "N/A"
+    return f"{d['value']:.3f} ({d['k']}/{d['n']}; 95% CI {d['low']:.3f}-{d['high']:.3f})"
 
 
 def _correct_localization(rows: list[Row], k: int) -> dict[str, bool]:
@@ -285,6 +306,12 @@ def localization_summary(config: str, m: dict[str, Any], meta: dict[str, Any]) -
             else ""
         ),
         f"- Candidates per bug: {m['mean_candidates']}; LLM calls: {m['llm_calls']}",
+        *[
+            f"- Wilson 95% interval, function Top-{k}: "
+            f"{_wilson_text((m.get('wilson') or {}).get(f'top_{k}'))}"
+            for k in TOP_KS
+            if m.get("wilson")
+        ],
         "",
     ]
     return "\n".join(lines)
@@ -320,6 +347,16 @@ def detection_summary(config: str, m: dict[str, Any], meta: dict[str, Any]) -> s
         f"(only buggy {pairs['only_buggy']}, both {pairs['both_flagged']}, "
         f"neither {pairs['neither']}, only fixed {pairs['only_fixed']})",
         f"- LLM calls: {m['llm_calls']}; LLM findings rejected: {m['llm_rejected']}",
+        *(
+            [
+                "- Wilson 95% intervals (any defect in the function): precision "
+                f"{_wilson_text(m['wilson']['precision'])}; recall "
+                f"{_wilson_text(m['wilson']['recall'])}; told apart from the fix "
+                f"{_wilson_text(m['wilson']['detection_rate'])}"
+            ]
+            if m.get("wilson")
+            else []
+        ),
         "",
     ]
     return "\n".join(lines)

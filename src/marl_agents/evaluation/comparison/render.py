@@ -97,6 +97,9 @@ def table_md(t: ComparisonTable) -> str:
     if t.observations:
         lines += ["Observations (computed from the numbers above):"]
         lines += [f"- {o}" for o in t.observations] + [""]
+    if t.statistics:
+        lines += ["Statistics (Wilson 95% intervals, exact McNemar, paired bootstrap):"]
+        lines += [f"- {s}" for s in t.statistics] + [""]
     if t.notes:
         lines += [f"- {n}" for n in t.notes] + [""]
     sources = sorted({rid for r in t.rows for rid in r.run_ids})
