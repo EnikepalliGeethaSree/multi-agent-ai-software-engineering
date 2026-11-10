@@ -400,3 +400,17 @@ statistics, and their counts are always shown.
   1,771 repository-disjoint changes, labelled as a saved-score secondary analysis.
 - The classifier ranks better there, but a default chosen on test results would be tuned on test.
   Risk v2 therefore stays the default. Changing it needs a comparison on data that is not the test set.
+
+## D41 - The classifier gate is not re-evaluated on "unused train-split" changes (accepted, 2026-11-10)
+- Part 3.9 asked for a gate evaluation on Python train-split changes the classifier never trained on and
+  that development never used, verified by IDs, repositories and patch hashes, and said to stop if that
+  cannot be established. It cannot (`scripts/check_unused_train_holdout.py`, report in
+  `experiments/evaluation_summary/unused-train-holdout-check.json`):
+  1. The recipe comparison's "balanced only" recipe kept the whole minority class: all 15,813 Python
+     train negatives were used in development (31,626 = 2 x 15,813). No unused negative exists.
+  2. The unused records are positives only, and none of the 26,208 has a project name, so their
+     repository identity cannot be checked against the test projects.
+  3. The only other negatives (11,969 Python-tagged records that failed the content filter) would tie
+     the label to "parses as Python".
+- So the experiment was not run, and neither test nor dev samples were substituted. The classifier gate
+  result stays the existing dev-sample ablation, reported as tuning data, not an independent test.
