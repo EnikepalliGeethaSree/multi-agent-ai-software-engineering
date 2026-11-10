@@ -1,32 +1,40 @@
-# Groq overlay: loaded on top of configs/default.yaml with `--config configs/groq.yaml`.
-# The key comes from the environment: put GROQ_API_KEY=... in .env (never in this file).
+# Groq overlay (official evaluation provider since D38): loaded on top of configs/default.yaml with
+# `--config configs/groq.yaml`. Keys come from the environment only: GROQ_API_KEY_1 ... GROQ_API_KEY_10
+# in .env (never in this file). Absent keys are skipped; one key is enough. See docs/llm-groq.md.
 #
-#   python -m marl_agents.cli models --config configs/groq.yaml          # list models for your key
-#   python -m marl_agents.cli review path/to/repo --config configs/groq.yaml --model <model-id>
+#   python -m marl_agents.cli check  --config configs/groq.yaml     # one tiny call, per-key status
+#   python -m marl_agents.cli review path/to/repo --config configs/groq.yaml
 
 llm:
   provider: groq
-  # Chosen by benchmark on 2026-09-29 (docs/results.md): best precision, localization and speed of
-  # the chat models available to our key. Re-check `cli models` if Groq retires it.
+  # Chosen by benchmark on 2026-09-29 (docs/results.md). GROQ_MODEL in .env overrides it.
   model: openai/gpt-oss-120b
   temperature: 0.0
-  max_tokens: 2048
+  max_tokens: 4096          # gpt-oss reasoning + JSON reply; 2048 risked cut-off replies
   seed: 42
   json_mode: true           # Groq JSON mode; falls back automatically if the model rejects it
-  # Groq enforces per-model quotas (requests and tokens per minute, plus daily caps). Set these to
-  # the limits shown for your model at https://console.groq.com/settings/limits so the agent
-  # throttles itself instead of hitting HTTP 429. The values below are deliberately conservative.
+  key_rotation: true        # round-robin over GROQ_API_KEY_1..10 (D38)
+  # Limits per key. Groq's free plan for openai/gpt-oss-120b (rate-limits page, 2026-11): 30 RPM,
+  # 1K RPD, 8K TPM, 200K TPD. Check https://console.groq.com/settings/limits: it is authoritative.
   requests_per_minute: 30
-  tokens_per_minute: 6000
+  tokens_per_minute: 8000
+  requests_per_day: 1000
+  tokens_per_day: 200000
+  # Groq counts limits per organization. Keys of one organization share one budget, so the shared
+  # limits default to one key's limits and a limit hit on one key rests them all.
+  keys_share_limits: true
+  shared_requests_per_minute: null
+  shared_tokens_per_minute: null
+  shared_requests_per_day: null
+  shared_tokens_per_day: null
+  response_cache: true      # repeated requests cost no quota; --no-cache bypasses it
   max_retries: 5
   timeout_s: 120
-  # Reasoning models: hide the chain of thought so replies stay plain JSON, e.g.
-  #   extra_params: {reasoning_format: hidden}   (Qwen3 / DeepSeek-R1 style models)
-  #   extra_params: {reasoning_effort: low}      (gpt-oss models)
+  # Reasoning models: e.g. extra_params: {reasoning_effort: low} for gpt-oss models.
   extra_params: {}
 
 review:
-  concurrency: 2            # parallel LLM calls; the rate limiter keeps them within quota
+  concurrency: 2            # parallel LLM calls; the key manager keeps them within the limits
 
 rag:
   max_context_chars: 8000   # a smaller prompt fits more calls into a tokens-per-minute quota

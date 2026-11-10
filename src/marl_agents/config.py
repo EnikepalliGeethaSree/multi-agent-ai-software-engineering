@@ -18,6 +18,7 @@ DEFAULT_CONFIG = PROJECT_ROOT / "configs" / "default.yaml"
 # `cli check` verifies it against the key and suggests a replacement if it is unavailable.
 DEFAULT_GEMINI_MODEL = "gemini-3.8-flash"
 DEFAULT_OLLAMA_MODEL = "qwen2.5-coder:7b"
+DEFAULT_GROQ_MODEL = "openai/gpt-oss-120b"
 
 
 class LLMSettings(BaseModel):
@@ -43,6 +44,21 @@ class LLMSettings(BaseModel):
     json_mode: bool = True
     # Extra provider-specific request fields, e.g. {"reasoning_format": "hidden"} on Groq.
     extra_params: dict[str, Any] = {}
+    # Groq key rotation (D38). On when key_rotation is true or any of api_key_envs is set.
+    # api_key_envs empty -> GROQ_API_KEY_1 ... GROQ_API_KEY_10. Absent variables are skipped.
+    key_rotation: bool = False
+    api_key_envs: list[str] = []
+    # True when the keys belong to one organization: a limit hit on one key applies to all. Groq
+    # counts limits per organization, so ten keys do not give ten times the quota.
+    keys_share_limits: bool = True
+    # Organization-wide limits. None -> the per-key limit above (the safe assumption).
+    shared_requests_per_minute: int | None = None
+    shared_tokens_per_minute: int | None = None
+    shared_requests_per_day: int | None = None
+    shared_tokens_per_day: int | None = None
+    # On-disk reply cache (Groq): a repeated request costs no quota. `--no-cache` turns it off.
+    response_cache: bool = True
+    response_cache_dir: str = "data/cache/llm_responses"
 
 
 class IngestionSettings(BaseModel):
@@ -204,6 +220,12 @@ def model_for(provider: str, model: str | None) -> str | None:
         return (
             current if current.startswith(("gemini", "gemma", "models/")) else DEFAULT_GEMINI_MODEL
         )
+    if provider == "groq":
+        explicit = os.environ.get("GROQ_MODEL", "").strip()
+        if explicit:
+            return explicit
+        foreign = current.startswith(("gemini", "gemma", "models/")) or ":" in current
+        return DEFAULT_GROQ_MODEL if not current or foreign else current
     if provider == "ollama":
         explicit = os.environ.get("OLLAMA_MODEL", "").strip()
         if explicit:

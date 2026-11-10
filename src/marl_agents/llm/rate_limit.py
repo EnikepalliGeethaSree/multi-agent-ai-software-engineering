@@ -138,6 +138,16 @@ def pacific_date(now: datetime | None = None) -> str:
     return (next_pacific_midnight(now) - timedelta(hours=12)).date().isoformat()
 
 
+def next_utc_midnight(now: datetime | None = None) -> datetime:
+    """Next midnight UTC: the day boundary of local ledgers for providers that state none."""
+    now = now or datetime.now(UTC)
+    return (now + timedelta(days=1)).replace(hour=0, minute=0, second=0, microsecond=0)
+
+
+def utc_date(now: datetime | None = None) -> str:
+    return (now or datetime.now(UTC)).astimezone(UTC).date().isoformat()
+
+
 class DailyQuota:
     """Local count of today's requests and tokens, kept on disk so restarts do not forget it.
 
@@ -152,13 +162,17 @@ class DailyQuota:
         requests_per_day: int | None = None,
         tokens_per_day: int | None = None,
         clock: Callable[[], datetime] = lambda: datetime.now(UTC),
+        day_of: Callable[[datetime], str] = pacific_date,
+        next_reset: Callable[[datetime], datetime] = next_pacific_midnight,
     ) -> None:
         self.path = path
         self.rpd = requests_per_day
         self.tpd = tokens_per_day
         self._clock = clock
+        self._day_of = day_of
+        self._next_reset = next_reset
         self._lock = threading.Lock()
-        self._day = pacific_date(clock())
+        self._day = day_of(clock())
         self.requests = 0
         self.tokens = 0
         self._load()
@@ -176,7 +190,7 @@ class DailyQuota:
             self.tokens = int(data.get("tokens", 0))
 
     def _roll(self) -> None:
-        today = pacific_date(self._clock())
+        today = self._day_of(self._clock())
         if today != self._day:
             self._day, self.requests, self.tokens = today, 0, 0
 
@@ -199,6 +213,9 @@ class DailyQuota:
                 return f"{self.tokens}/{self.tpd} tokens used today"
             return None
 
+    def resets_at(self) -> datetime:
+        return self._next_reset(self._clock())
+
     def record(self, tokens: int | None) -> None:
         with self._lock:
             self._roll()
@@ -215,5 +232,5 @@ class DailyQuota:
                 "requests_limit": self.rpd,
                 "tokens_used": self.tokens,
                 "tokens_limit": self.tpd,
-                "resets_at": next_pacific_midnight(self._clock()).isoformat(),
+                "resets_at": self._next_reset(self._clock()).isoformat(),
             }

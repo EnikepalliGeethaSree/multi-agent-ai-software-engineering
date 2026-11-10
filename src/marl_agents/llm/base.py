@@ -22,6 +22,8 @@ class CallAttempt(BaseModel):
     ok: bool = False
     status: int | None = None
     error_kind: str | None = None
+    # Which API key served the request, as a label such as "key3" (never the key itself).
+    key_id: str | None = None
 
 
 class LLMError(RuntimeError):
@@ -68,6 +70,9 @@ class GenerationConfig(BaseModel):
     max_tokens: int = 2048
     seed: int | None = 42
     stop: list[str] | None = None
+    # Version of the prompt templates behind the request (e.g. "review=1.1,system=1.0"). Part of
+    # the response-cache key, so a template change never reuses a reply to the old template.
+    prompt_version: str | None = None
 
 
 class LLMResponse(BaseModel):
@@ -85,6 +90,10 @@ class LLMResponse(BaseModel):
     finish_reason: str | None = None
     # Failed requests that preceded this successful one (rate limits, timeouts).
     attempts: list[CallAttempt] = Field(default_factory=list)
+    # True when the reply came from the on-disk response cache: no request was sent, no quota used.
+    cache_hit: bool = False
+    # Which API key served the request, as a label such as "key3" (never the key itself).
+    key_id: str | None = None
 
 
 class LLMCallRecord(BaseModel):
@@ -97,6 +106,9 @@ class LLMCallRecord(BaseModel):
     ok: bool = True
     retry: bool = False
     error_kind: str | None = None
+    model: str | None = None
+    key_id: str | None = None
+    cache_hit: bool = False
 
 
 class Usage(BaseModel):
@@ -112,6 +124,8 @@ class Usage(BaseModel):
     failed_calls: int = 0
     thinking_tokens: int = 0
     calls_without_token_usage: int = 0
+    # Replies served from the response cache. They are not calls: no request, tokens or quota.
+    cache_hits: int = 0
     _lock: threading.Lock = PrivateAttr(default_factory=threading.Lock)
     # (kind, start, end) on the perf_counter clock: "inference" per API call, "parse" per
     # JSON-schema validation. Used for the run's timing breakdown.
@@ -120,6 +134,20 @@ class Usage(BaseModel):
 
     def record(self, response: LLMResponse, retry: bool = False, label: str | None = None) -> None:
         with self._lock:
+            if response.cache_hit:
+                self.cache_hits += 1
+                self._calls.append(
+                    LLMCallRecord(
+                        label=label,
+                        latency_s=response.latency_s,
+                        input_tokens=response.input_tokens,
+                        output_tokens=response.output_tokens,
+                        retry=retry,
+                        model=response.model,
+                        cache_hit=True,
+                    )
+                )
+                return
             self.calls += 1
             self.input_tokens += response.input_tokens or 0
             self.output_tokens += response.output_tokens or 0
@@ -138,6 +166,8 @@ class Usage(BaseModel):
                     input_tokens=response.input_tokens,
                     output_tokens=response.output_tokens,
                     retry=retry,
+                    model=response.model,
+                    key_id=response.key_id,
                 )
             )
 
@@ -149,7 +179,11 @@ class Usage(BaseModel):
                 self._spans.append(("inference", a.started_at, a.started_at + a.latency_s))
                 self._calls.append(
                     LLMCallRecord(
-                        label=label, latency_s=a.latency_s, ok=False, error_kind=a.error_kind
+                        label=label,
+                        latency_s=a.latency_s,
+                        ok=False,
+                        error_kind=a.error_kind,
+                        key_id=a.key_id,
                     )
                 )
 
@@ -180,7 +214,26 @@ class Usage(BaseModel):
                 "failed_calls": self.failed_calls,
                 "thinking_tokens": self.thinking_tokens,
                 "calls_without_token_usage": self.calls_without_token_usage,
+                "cache_hits": self.cache_hits,
             }
+
+    def by_key(self) -> dict[str, dict[str, int]]:
+        """Requests, failures and tokens per API key label ("key1"...), from the call log."""
+        out: dict[str, dict[str, int]] = {}
+        with self._lock:
+            for c in self._calls:
+                if c.cache_hit or c.key_id is None:
+                    continue
+                row = out.setdefault(
+                    c.key_id, {"calls": 0, "failed": 0, "input_tokens": 0, "output_tokens": 0}
+                )
+                if c.ok:
+                    row["calls"] += 1
+                    row["input_tokens"] += c.input_tokens or 0
+                    row["output_tokens"] += c.output_tokens or 0
+                else:
+                    row["failed"] += 1
+        return dict(sorted(out.items()))
 
 
 class LLMProvider(ABC):

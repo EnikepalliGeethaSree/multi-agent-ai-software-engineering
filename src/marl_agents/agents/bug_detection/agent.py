@@ -245,7 +245,11 @@ class BugDetectionAgent(CodeReviewAgent):
         ]
         try:
             reply = self.llm.generate_structured(
-                messages, LLMLocalization, usage=run_usage, label="localize"
+                messages,
+                LLMLocalization,
+                config=self._llm_config(),
+                usage=run_usage,
+                label="localize",
             )
         except QuotaExhaustedError:
             raise

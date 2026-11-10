@@ -359,3 +359,19 @@ statistics, and their counts are always shown.
   which deletes only the link), then `git worktree remove`. Never run a git command in the worktree that
   rewrites files under `experiments/results/`: it would reach the main project's results through the
   junction.
+
+## D38 - Groq becomes the official evaluation provider, with round-robin keys (accepted, 2026-11-10)
+- The team moved the official LLM from Gemini (D27) to **Groq, `openai/gpt-oss-120b`**. Gemini's
+  20 requests per day made the remaining experiments take weeks. Completed Gemini results stay as
+  recorded; partial Gemini runs are reported in an appendix table labelled partial. Ollama stays the
+  local development model (D32). Results are never mixed across providers or models (D36).
+- `llm/groq.py` posts to Groq's OpenAI-compatible endpoint with `httpx` (testable with a fake HTTP
+  layer). `llm/keys.py` is a central key manager: up to ten keys (`GROQ_API_KEY_1..10`), round-robin
+  over eligible keys, thread-safe, per-key and shared limits per minute and per day, cool-down on 429,
+  skip until reset on a daily limit, skip rejected keys, and `QuotaExhaustedError` with the reset time
+  when no key is left (the existing checkpoint path). `llm/response_cache.py` caches replies on disk.
+- **Groq limits are per organization.** Keys of one organization share a single budget, so shared
+  limits default to one key's limits and `keys_share_limits: true` applies a limit seen on one key to
+  all. More keys therefore add resilience and accounting, not quota. Details: docs/llm-groq.md.
+- Groq runs use the current code and prompts (review 1.1), not the a54c6c9 worktree of D37.
+- The older single-key Groq path (`openai_compat.py` with `GROQ_API_KEY`) is kept for compatibility.

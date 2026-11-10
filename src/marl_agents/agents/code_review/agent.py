@@ -64,6 +64,7 @@ from marl_agents.findings.redaction import is_secret_finding, redact_finding
 from marl_agents.ingestion import Repository, load_files, load_repository, load_snippet
 from marl_agents.ingestion.models import FileKind
 from marl_agents.llm.base import (
+    GenerationConfig,
     LLMError,
     LLMProvider,
     Message,
@@ -152,6 +153,14 @@ class CodeReviewAgent(BaseAgent):
 
     def _prompt_versions(self) -> dict[str, str]:
         return prompt_versions()
+
+    def _llm_config(self) -> GenerationConfig | None:
+        """Provider settings plus this agent's prompt versions (part of the reply cache key)."""
+        if self.llm is None:
+            return None
+        versions = ",".join(f"{k}={v}" for k, v in sorted(self._prompt_versions().items()))
+        tag = f"{type(self).__name__}:{versions}"
+        return self.llm.config.model_copy(update={"prompt_version": tag})
 
     def _parse_reply(
         self, envelope: LLMReviewEnvelope
@@ -729,7 +738,11 @@ class CodeReviewAgent(BaseAgent):
             else:
                 try:
                     envelope = self.llm.generate_structured(
-                        request_messages, LLMReviewEnvelope, usage=run_usage, label=unit.key
+                        request_messages,
+                        LLMReviewEnvelope,
+                        config=self._llm_config(),
+                        usage=run_usage,
+                        label=unit.key,
                     )
                 except RequestTooLargeError:
                     if not context_section:
@@ -741,7 +754,11 @@ class CodeReviewAgent(BaseAgent):
                     )
                     outcome.context = []
                     envelope = self.llm.generate_structured(
-                        messages_with(""), LLMReviewEnvelope, usage=run_usage, label=unit.key
+                        messages_with(""),
+                        LLMReviewEnvelope,
+                        config=self._llm_config(),
+                        usage=run_usage,
+                        label=unit.key,
                     )
                 if cache:
                     cache.put(key, envelope.model_dump_json())

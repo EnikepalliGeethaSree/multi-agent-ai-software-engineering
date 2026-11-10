@@ -46,7 +46,9 @@ def _add_common(p: argparse.ArgumentParser) -> None:
     p.add_argument("--tpm", type=int, help="LLM tokens per minute limit (your project's quota)")
     p.add_argument("--classifier", help="fine-tuned change classifier folder (change reviews)")
     p.add_argument("--classifier-mode", choices=["prioritize", "gate"])
-    p.add_argument("--no-cache", action="store_true", help="repeat all work; ignore saved results")
+    p.add_argument(
+        "--no-cache", action="store_true", help="repeat all work; ignore saved results and replies"
+    )
     p.add_argument("--no-rag", action="store_true", help="disable retrieval (experiment config B)")
     p.add_argument("--no-structural", action="store_true", help="disable call-graph context")
     p.add_argument("--store", choices=["chroma", "memory"])
@@ -63,6 +65,8 @@ def build_settings(args: argparse.Namespace) -> Settings:
     if args.provider:
         s.llm.provider = args.provider
         s.llm.model = model_for(args.provider, s.llm.model)
+    if s.llm.provider == "groq":
+        s.llm.model = model_for("groq", s.llm.model)  # GROQ_MODEL wins over the config file
     if args.model:
         s.llm.model = args.model
     if args.base_url:
@@ -90,6 +94,7 @@ def build_settings(args: argparse.Namespace) -> Settings:
         s.classifier.mode = args.classifier_mode
     if getattr(args, "no_cache", False):
         s.review.unit_cache = s.review.analysis_cache = False
+        s.llm.response_cache = False
     return s
 
 
@@ -866,8 +871,12 @@ def cmd_check(args: argparse.Namespace) -> int:
         status: str
 
     s = build_settings(args)
+    s.llm.response_cache = False  # a cached reply would not prove the key works
     try:
         llm = create_provider(s.llm)
+        keys = getattr(llm, "keys", None)
+        if keys is not None:
+            print(f"keys configured: {len(keys.labels)} ({', '.join(keys.labels)})")
         if s.llm.provider == "gemini":
             from marl_agents.llm.gemini import recommend_model
 
@@ -893,6 +902,10 @@ def cmd_check(args: argparse.Namespace) -> int:
         f"OK: provider={llm.name} model={llm.model} reply={reply.status!r} "
         f"tokens={llm.usage.input_tokens}+{llm.usage.output_tokens}"
     )
+    if keys is not None:  # labels and counters only, never the keys themselves
+        for row in keys.status():
+            print(f"  {row['key']}: {row['state']}, today {row['requests_today']} requests, "
+                  f"{row['tokens_today']} tokens")  # fmt: skip
     return 0
 
 
