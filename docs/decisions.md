@@ -375,3 +375,19 @@ statistics, and their counts are always shown.
   all. More keys therefore add resilience and accounting, not quota. Details: docs/llm-groq.md.
 - Groq runs use the current code and prompts (review 1.1), not the a54c6c9 worktree of D37.
 - The older single-key Groq path (`openai_compat.py` with `GROQ_API_KEY`) is kept for compatibility.
+
+## D39 - One Groq key on the Developer tier; the ten-key rotation is retired (accepted, 2026-11-10)
+- Supersedes the key-rotation part of D38. The project uses one Groq organization, one API key
+  (`GROQ_API_KEY`), the Developer tier (pay-as-you-go) and one pinned model, `openai/gpt-oss-120b`.
+  Groq counts limits per organization, so several keys added no quota; one key is simpler and safer.
+- Removed: the key manager (`llm/keys.py`), round-robin selection, per-key accounting and key labels.
+  The old `GROQ_API_KEY_1..10` variables are not read. The ten old keys are treated as compromised and
+  are revoked by the team; none appears in the repository.
+- Kept: temperature 0 and seed, requests- and tokens-per-minute pacing, `x-ratelimit-*` headers, 429
+  and `retry-after`, exponential backoff with jitter (5 attempts), the sha256 response cache and
+  `--no-cache`, per-call token, latency and cache tracking, and the checkpoint stop.
+- Added for pay-as-you-go: cumulative hard caps on tokens and estimated cost (`llm/budget.py`),
+  enforced before each request with a worst-case estimate so they are never exceeded; input and output
+  cost computed separately from console prices; the provider refuses to start without a cap.
+- No limit, quota or price is hard-coded; all come from the Groq console through `.env`. The
+  free-plan figures used in D38 are no longer applied.

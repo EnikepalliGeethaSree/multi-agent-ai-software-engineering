@@ -368,6 +368,7 @@ def test_groq_stays_available_as_legacy_provider(monkeypatch: pytest.MonkeyPatch
     monkeypatch.setenv("LLM_PROVIDER", "groq")
     monkeypatch.setenv("MARL_LLM__MODEL", "m")
     monkeypatch.setenv("GROQ_API_KEY", "k")
+    monkeypatch.setenv("GROQ_MAX_TOTAL_TOKENS", "1000")  # pay-as-you-go needs a cap (D39)
     s = load_settings()
     assert create_provider(s.llm).name == "groq"
 

@@ -65,30 +65,55 @@ def fake_client(replies: list[Any]) -> tuple[Any, list[dict[str, Any]]]:
 # ---- factory -------------------------------------------------------------------------------------
 
 
-def test_factory_builds_groq_provider(monkeypatch: pytest.MonkeyPatch) -> None:
-    pytest.importorskip("openai")
+def test_factory_builds_single_key_groq_provider(monkeypatch: pytest.MonkeyPatch) -> None:
+    from marl_agents.llm.groq import GroqProvider
+
     monkeypatch.setenv("GROQ_API_KEY", "gsk_test")
-    p = create_provider(LLMSettings(provider="groq", model="some-model", extra_params={"x": 1}))
-    assert isinstance(p, OpenAICompatibleProvider) and p.name == "groq"
-    assert str(p._client.base_url).rstrip("/") == GROQ_BASE_URL
-    assert p.limiter.rpm == 30 and p.limiter.tpm == 6000  # safe defaults when unset
-    assert p.extra_params == {"x": 1}
+    p = create_provider(
+        LLMSettings(
+            provider="groq",
+            model="some-model",
+            extra_params={"x": 1},
+            max_total_tokens=1000,
+            response_cache=False,
+        )
+    )
+    assert isinstance(p, GroqProvider) and p.name == "groq"
+    assert p.base_url == GROQ_BASE_URL
+    assert p.limiter.rpm is None and p.limiter.tpm is None  # no limit is assumed
+    assert p.extra_params == {"x": 1} and p.budget is not None and p.daily is None
     custom = create_provider(
-        LLMSettings(provider="groq", model="m", requests_per_minute=5, tokens_per_minute=900)
+        LLMSettings(
+            provider="groq",
+            model="m",
+            requests_per_minute=5,
+            tokens_per_minute=900,
+            requests_per_day=50,
+            max_total_tokens=1000,
+            response_cache=False,
+        )
     )
     assert custom.limiter.rpm == 5 and custom.limiter.tpm == 900  # type: ignore[attr-defined]
+    assert custom.daily.rpd == 50  # type: ignore[attr-defined]
 
 
-def test_factory_groq_errors_are_actionable() -> None:
+def test_factory_groq_errors_are_actionable(monkeypatch: pytest.MonkeyPatch) -> None:
+    monkeypatch.delenv("GROQ_API_KEY", raising=False)
     with pytest.raises(LLMError, match="cli models"):
         create_provider(LLMSettings(provider="groq"))
     with pytest.raises(LLMError, match="GROQ_API_KEY"):
+        create_provider(LLMSettings(provider="groq", model="m", max_total_tokens=10))
+    monkeypatch.setenv("GROQ_API_KEY", "gsk_test")
+    with pytest.raises(LLMError, match="GROQ_MAX_TOTAL_TOKENS"):  # pay-as-you-go needs a cap
         create_provider(LLMSettings(provider="groq", model="m"))
+    with pytest.raises(LLMError, match="PRICE_PER_1M"):  # a spending cap needs prices
+        create_provider(LLMSettings(provider="groq", model="m", max_estimated_cost_usd=1.0))
 
 
 def test_groq_overlay_config_layers_on_default() -> None:
     s = load_settings(Path(__file__).parents[3] / "configs" / "groq.yaml")
-    assert s.llm.provider == "groq" and s.llm.requests_per_minute == 30
+    assert s.llm.provider == "groq" and s.llm.model == "openai/gpt-oss-120b"
+    assert s.llm.requests_per_minute is None  # limits come from the console, never assumed
     assert s.review.concurrency == 2 and s.rag.max_context_chars == 8000
     assert s.rag.top_k == 6  # untouched keys still come from default.yaml
 

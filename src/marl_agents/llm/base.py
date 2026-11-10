@@ -22,8 +22,6 @@ class CallAttempt(BaseModel):
     ok: bool = False
     status: int | None = None
     error_kind: str | None = None
-    # Which API key served the request, as a label such as "key3" (never the key itself).
-    key_id: str | None = None
 
 
 class LLMError(RuntimeError):
@@ -92,8 +90,6 @@ class LLMResponse(BaseModel):
     attempts: list[CallAttempt] = Field(default_factory=list)
     # True when the reply came from the on-disk response cache: no request was sent, no quota used.
     cache_hit: bool = False
-    # Which API key served the request, as a label such as "key3" (never the key itself).
-    key_id: str | None = None
 
 
 class LLMCallRecord(BaseModel):
@@ -107,7 +103,6 @@ class LLMCallRecord(BaseModel):
     retry: bool = False
     error_kind: str | None = None
     model: str | None = None
-    key_id: str | None = None
     cache_hit: bool = False
 
 
@@ -167,7 +162,6 @@ class Usage(BaseModel):
                     output_tokens=response.output_tokens,
                     retry=retry,
                     model=response.model,
-                    key_id=response.key_id,
                 )
             )
 
@@ -183,7 +177,6 @@ class Usage(BaseModel):
                         latency_s=a.latency_s,
                         ok=False,
                         error_kind=a.error_kind,
-                        key_id=a.key_id,
                     )
                 )
 
@@ -216,24 +209,6 @@ class Usage(BaseModel):
                 "calls_without_token_usage": self.calls_without_token_usage,
                 "cache_hits": self.cache_hits,
             }
-
-    def by_key(self) -> dict[str, dict[str, int]]:
-        """Requests, failures and tokens per API key label ("key1"...), from the call log."""
-        out: dict[str, dict[str, int]] = {}
-        with self._lock:
-            for c in self._calls:
-                if c.cache_hit or c.key_id is None:
-                    continue
-                row = out.setdefault(
-                    c.key_id, {"calls": 0, "failed": 0, "input_tokens": 0, "output_tokens": 0}
-                )
-                if c.ok:
-                    row["calls"] += 1
-                    row["input_tokens"] += c.input_tokens or 0
-                    row["output_tokens"] += c.output_tokens or 0
-                else:
-                    row["failed"] += 1
-        return dict(sorted(out.items()))
 
 
 class LLMProvider(ABC):

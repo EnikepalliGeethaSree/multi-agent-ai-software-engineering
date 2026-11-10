@@ -44,19 +44,16 @@ class LLMSettings(BaseModel):
     json_mode: bool = True
     # Extra provider-specific request fields, e.g. {"reasoning_format": "hidden"} on Groq.
     extra_params: dict[str, Any] = {}
-    # Groq key rotation (D38). On when key_rotation is true or any of api_key_envs is set.
-    # api_key_envs empty -> GROQ_API_KEY_1 ... GROQ_API_KEY_10. Absent variables are skipped.
-    key_rotation: bool = False
-    api_key_envs: list[str] = []
-    # True when the keys belong to one organization: a limit hit on one key applies to all. Groq
-    # counts limits per organization, so ten keys do not give ten times the quota.
-    keys_share_limits: bool = True
-    # Organization-wide limits. None -> the per-key limit above (the safe assumption).
-    shared_requests_per_minute: int | None = None
-    shared_tokens_per_minute: int | None = None
-    shared_requests_per_day: int | None = None
-    shared_tokens_per_day: int | None = None
-    # On-disk reply cache (Groq): a repeated request costs no quota. `--no-cache` turns it off.
+    # Pay-as-you-go safeguards (Groq Developer tier, D39). Cumulative across runs until the ledger
+    # data/cache/llm_quota/groq_<model>_budget.json is reset on purpose. None = not capped.
+    max_total_tokens: int | None = None
+    max_estimated_cost_usd: float | None = None
+    # USD per million tokens, from the provider's console. None = unknown (no cost estimate).
+    input_price_per_1m_tokens_usd: float | None = None
+    output_price_per_1m_tokens_usd: float | None = None
+    # A paid provider refuses to start without a token or spending cap unless this is true.
+    allow_uncapped: bool = False
+    base_backoff_s: float = 2.0
     response_cache: bool = True
     response_cache_dir: str = "data/cache/llm_responses"
 
@@ -206,6 +203,35 @@ def _foreign_to_ollama(model: str) -> bool:
     return not model or model.startswith(("gemini", "gemma", "models/")) or "/" in model
 
 
+# GROQ_* variables in .env override configs/groq.yaml (D39). Empty or "TBD" means "not set".
+GROQ_ENV: dict[str, tuple[str, type]] = {
+    "GROQ_MODEL": ("model", str),
+    "GROQ_RPM": ("requests_per_minute", int),
+    "GROQ_TPM": ("tokens_per_minute", int),
+    "GROQ_DAILY_REQUEST_LIMIT": ("requests_per_day", int),
+    "GROQ_DAILY_TOKEN_LIMIT": ("tokens_per_day", int),
+    "GROQ_MAX_TOTAL_TOKENS": ("max_total_tokens", int),
+    "GROQ_MAX_ESTIMATED_COST_USD": ("max_estimated_cost_usd", float),
+    "GROQ_INPUT_PRICE_PER_1M_TOKENS_USD": ("input_price_per_1m_tokens_usd", float),
+    "GROQ_OUTPUT_PRICE_PER_1M_TOKENS_USD": ("output_price_per_1m_tokens_usd", float),
+    "GROQ_MAX_RETRIES": ("max_retries", int),
+    "GROQ_BASE_BACKOFF_SECONDS": ("base_backoff_s", float),
+}
+
+
+def apply_groq_env(llm: LLMSettings) -> None:
+    """Copy the GROQ_* settings from the environment into `llm`, so runs record what they used."""
+    for name, (field, kind) in GROQ_ENV.items():
+        raw = os.environ.get(name, "").strip()
+        if not raw or raw.upper() == "TBD":
+            continue
+        try:
+            value = kind(raw.replace(",", "").replace("_", "")) if kind is not str else raw
+        except ValueError as exc:
+            raise ValueError(f"{name} must be a number or TBD, not {raw!r}") from exc
+        setattr(llm, field, value)
+
+
 def model_for(provider: str, model: str | None) -> str | None:
     """The model a provider should use, so no run records another provider's model id.
 
@@ -222,7 +248,7 @@ def model_for(provider: str, model: str | None) -> str | None:
         )
     if provider == "groq":
         explicit = os.environ.get("GROQ_MODEL", "").strip()
-        if explicit:
+        if explicit and explicit.upper() != "TBD":
             return explicit
         foreign = current.startswith(("gemini", "gemma", "models/")) or ":" in current
         return DEFAULT_GROQ_MODEL if not current or foreign else current
@@ -279,4 +305,7 @@ def load_settings(config_path: Path | None = None) -> Settings:
     env_file = None if os.environ.get("MARL_NO_DOTENV") else str(PROJECT_ROOT / ".env")
     env_only = Settings(_env_file=env_file)
     merged = _apply_llm_env(_deep_merge(data, env_only.model_dump(exclude_defaults=True)))
-    return Settings(_env_file=env_file, **merged)
+    settings = Settings(_env_file=env_file, **merged)
+    if settings.llm.provider == "groq":
+        apply_groq_env(settings.llm)
+    return settings

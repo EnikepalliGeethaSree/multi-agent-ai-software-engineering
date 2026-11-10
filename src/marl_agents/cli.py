@@ -22,7 +22,7 @@ import sys
 from pathlib import Path
 from typing import Any
 
-from marl_agents.config import PROJECT_ROOT, Settings, load_settings, model_for
+from marl_agents.config import PROJECT_ROOT, Settings, apply_groq_env, load_settings, model_for
 from marl_agents.core.schemas import ReviewResult
 from marl_agents.llm.base import LLMError, LLMProvider
 from marl_agents.llm.classifier import ChangeClassifier, create_classifier
@@ -66,7 +66,7 @@ def build_settings(args: argparse.Namespace) -> Settings:
         s.llm.provider = args.provider
         s.llm.model = model_for(args.provider, s.llm.model)
     if s.llm.provider == "groq":
-        s.llm.model = model_for("groq", s.llm.model)  # GROQ_MODEL wins over the config file
+        apply_groq_env(s.llm)  # GROQ_* in .env win over the config file (D39)
     if args.model:
         s.llm.model = args.model
     if args.base_url:
@@ -915,9 +915,6 @@ def cmd_check(args: argparse.Namespace) -> int:
     s.llm.response_cache = False  # a cached reply would not prove the key works
     try:
         llm = create_provider(s.llm)
-        keys = getattr(llm, "keys", None)
-        if keys is not None:
-            print(f"keys configured: {len(keys.labels)} ({', '.join(keys.labels)})")
         if s.llm.provider == "gemini":
             from marl_agents.llm.gemini import recommend_model
 
@@ -943,10 +940,9 @@ def cmd_check(args: argparse.Namespace) -> int:
         f"OK: provider={llm.name} model={llm.model} reply={reply.status!r} "
         f"tokens={llm.usage.input_tokens}+{llm.usage.output_tokens}"
     )
-    if keys is not None:  # labels and counters only, never the keys themselves
-        for row in keys.status():
-            print(f"  {row['key']}: {row['state']}, today {row['requests_today']} requests, "
-                  f"{row['tokens_today']} tokens")  # fmt: skip
+    budget = getattr(llm, "budget", None)
+    if budget is not None:  # cumulative usage and caps; never the key itself
+        print("usage so far: " + ", ".join(f"{k}={v}" for k, v in budget.status().items()))
     return 0
 
 

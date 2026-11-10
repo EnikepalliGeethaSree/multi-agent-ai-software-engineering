@@ -4,23 +4,13 @@ from __future__ import annotations
 
 import os
 import re
-from typing import TYPE_CHECKING
 
 from marl_agents.config import PROJECT_ROOT, LLMSettings
 from marl_agents.llm.base import GenerationConfig, LLMError, LLMProvider
 from marl_agents.llm.mock import MockLLMProvider
 from marl_agents.llm.rate_limit import DailyQuota, RateLimiter
 
-if TYPE_CHECKING:
-    from marl_agents.llm.groq import GroqProvider
-
 GROQ_BASE_URL = "https://api.groq.com/openai/v1"
-GROQ_DEFAULT_RPM = 30
-GROQ_DEFAULT_TPM = 6000
-# Free-plan limits of openai/gpt-oss-120b per Groq's rate-limits page (2026-11): 30 RPM, 1K RPD,
-# 8K TPM, 200K TPD, counted per organization. Your console's limits page is authoritative.
-GROQ_FREE_LIMITS = {"rpm": 30, "tpm": 8000, "rpd": 1000, "tpd": 200_000}
-GROQ_KEY_ENVS = [f"GROQ_API_KEY_{i}" for i in range(1, 11)]
 _DEFAULT_KEY_ENV = {
     "openai": "OPENAI_API_KEY",
     "groq": "GROQ_API_KEY",
@@ -51,25 +41,14 @@ def create_provider(settings: LLMSettings) -> LLMProvider:
         api_key = os.environ.get("GOOGLE_API_KEY")  # the SDK's own variable also works
 
     if settings.provider == "groq":
-        rotating = _create_rotating_groq(settings, config)
-        if rotating is not None:
-            return rotating
+        return _create_groq(settings, config, api_key)
 
-    if settings.provider in {"openai", "groq", "local"}:
+    if settings.provider in {"openai", "local"}:
         from marl_agents.llm.openai_compat import OpenAICompatibleProvider
 
         base_url = settings.base_url
         rpm, tpm = settings.requests_per_minute, settings.tokens_per_minute
-        if settings.provider == "groq":
-            base_url = base_url or GROQ_BASE_URL
-            # Conservative defaults so an unconfigured run throttles instead of hitting 429s.
-            rpm = rpm or GROQ_DEFAULT_RPM
-            tpm = tpm or GROQ_DEFAULT_TPM
-            if not api_key:
-                raise LLMError(
-                    f"{key_env} is not set (create a key at https://console.groq.com/keys)"
-                )
-        elif settings.provider == "local":
+        if settings.provider == "local":
             base_url = base_url or os.environ.get("LOCAL_LLM_BASE_URL", "http://localhost:11434/v1")
         elif not api_key and not base_url:
             raise LLMError(f"{key_env} is not set")
@@ -125,62 +104,73 @@ def create_provider(settings: LLMSettings) -> LLMProvider:
     raise LLMError(f"Unknown LLM provider '{settings.provider}'")
 
 
-def _create_rotating_groq(settings: LLMSettings, config: GenerationConfig) -> GroqProvider | None:
-    """Groq with round-robin keys (D38), or None to keep the single-key path (GROQ_API_KEY).
+def _create_groq(
+    settings: LLMSettings, config: GenerationConfig, api_key: str | None
+) -> LLMProvider:
+    """Groq with one API key (GROQ_API_KEY), Developer tier, pinned model (D39).
 
-    Used when `llm.key_rotation` is true, `llm.api_key_envs` is set, or GROQ_API_KEY_1..10 exist.
+    Every limit and price comes from configuration (configs/groq.yaml, overridden by GROQ_* in
+    .env); none is assumed. A paid provider needs a token or spending cap unless
+    `allow_uncapped` is set.
     """
-    from marl_agents.llm.keys import KeyManager, Limits, load_keys
-
-    names = settings.api_key_envs or GROQ_KEY_ENVS
-    keys = load_keys(names)
-    if not keys and not (settings.key_rotation or settings.api_key_envs):
-        return None
-    if not keys:
-        keys = [("key1", s) for _, s in load_keys(["GROQ_API_KEY"])]
-    if not keys:
-        raise LLMError(
-            f"No Groq API key found: set {names[0]} (up to {names[-1]}) in .env. "
-            "Create keys at https://console.groq.com/keys"
-        )
-    from marl_agents.llm.groq import GROQ_BASE_URL as BASE
+    from marl_agents.llm.budget import Prices, UsageBudget
     from marl_agents.llm.groq import GroqProvider
+    from marl_agents.llm.rate_limit import next_utc_midnight, utc_date
     from marl_agents.llm.response_cache import ResponseCache
 
-    free = GROQ_FREE_LIMITS
-    per_key = Limits(
-        rpm=settings.requests_per_minute or free["rpm"],
-        tpm=settings.tokens_per_minute or free["tpm"],
-        rpd=settings.requests_per_day or free["rpd"],
-        tpd=settings.tokens_per_day or free["tpd"],
-    )
-    shared = Limits(
-        rpm=settings.shared_requests_per_minute or per_key.rpm,
-        tpm=settings.shared_tokens_per_minute or per_key.tpm,
-        rpd=settings.shared_requests_per_day or per_key.rpd,
-        tpd=settings.shared_tokens_per_day or per_key.tpd,
-    )
+    if not api_key:
+        raise LLMError(
+            "GROQ_API_KEY is not set. Put one key in .env (see .env.example); create it at "
+            "https://console.groq.com/keys"
+        )
+    if (
+        settings.max_total_tokens is None
+        and settings.max_estimated_cost_usd is None
+        and not settings.allow_uncapped
+    ):
+        raise LLMError(
+            "Groq is pay-as-you-go: set GROQ_MAX_TOTAL_TOKENS or GROQ_MAX_ESTIMATED_COST_USD in "
+            ".env (or llm.allow_uncapped: true) before making calls"
+        )
     slug = re.sub(r"[^A-Za-z0-9._-]+", "_", str(settings.model))
-    manager = KeyManager(
-        keys,
-        per_key=per_key,
-        shared=shared,
-        ledger_dir=PROJECT_ROOT / "data" / "cache" / "llm_quota",
-        ledger_prefix=f"groq_{slug}",
-        shared_org=settings.keys_share_limits,
-    )
-    cache = (
-        ResponseCache(PROJECT_ROOT / settings.response_cache_dir / "groq")
-        if settings.response_cache
-        else None
-    )
+    ledgers = PROJECT_ROOT / "data" / "cache" / "llm_quota"
+    try:
+        budget = UsageBudget(
+            ledgers / f"groq_{slug}_budget.json",
+            Prices(
+                input_per_mtok=settings.input_price_per_1m_tokens_usd,
+                output_per_mtok=settings.output_price_per_1m_tokens_usd,
+            ),
+            max_total_tokens=settings.max_total_tokens,
+            max_cost_usd=settings.max_estimated_cost_usd,
+        )
+    except ValueError as exc:
+        raise LLMError(str(exc)) from exc
+    daily = None
+    if settings.requests_per_day is not None or settings.tokens_per_day is not None:
+        daily = DailyQuota(
+            ledgers / f"groq_{slug}_daily.json",
+            settings.requests_per_day,
+            settings.tokens_per_day,
+            day_of=utc_date,
+            next_reset=next_utc_midnight,
+        )
     return GroqProvider(
         model=str(settings.model),
-        keys=manager,
+        api_key=api_key,
         config=config,
-        base_url=settings.base_url or BASE,
+        base_url=settings.base_url or GROQ_BASE_URL,
         timeout=settings.timeout_s,
         json_mode=settings.json_mode,
         extra_params=settings.extra_params,
-        cache=cache,
+        limiter=RateLimiter(settings.requests_per_minute, settings.tokens_per_minute),
+        daily=daily,
+        budget=budget,
+        cache=(
+            ResponseCache(PROJECT_ROOT / settings.response_cache_dir / "groq")
+            if settings.response_cache
+            else None
+        ),
+        max_attempts=settings.max_retries,
+        base_backoff_s=settings.base_backoff_s,
     )
