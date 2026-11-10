@@ -132,3 +132,15 @@ def test_bugsinpy_localization_and_detection_have_wilson_intervals() -> None:
     d = bug_scoring.score_detection(rows)
     assert d["wilson"]["precision"]["k"] == 1 and d["wilson"]["precision"]["n"] == 1
     assert d["wilson"]["recall"]["n"] == 2 and d["wilson"]["detection_rate"]["k"] == 1
+
+
+def test_repeated_runs_are_never_pooled_into_more_samples(tmp_path: Path) -> None:
+    for i, (matched, missed) in enumerate(((16, ["P13"]), (17, []), (15, ["P13", "P02"]))):
+        d = {**detection(13, 0, matched), "missed": missed, "defect_findings": 13}
+        exp = {"configuration": {"key": "static_llm"}, "group_id": "g1", "repeat": i + 1}
+        save(tmp_path, f"2026010{i + 1}T000000Z_planted_static_llm", {"detection": d},
+             meta={"experiment": exp, "llm_provider": "groq"}, config=llm_cfg("C"))  # fmt: skip
+    stats = "\n".join(planted_table(load_runs(tmp_path)).statistics)
+    assert "C run 1 of 3: issues found 0.941 (16/17;" in stats
+    assert "C run 3 of 3: issues found 0.882 (15/17;" in stats
+    assert "/51" not in stats  # the same 17 issues three times are not 51 samples

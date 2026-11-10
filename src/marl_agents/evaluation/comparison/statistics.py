@@ -45,25 +45,35 @@ def planted_statistics(rows: list[Row], chosen: dict[str, list[SavedRun]]) -> li
         if row.status != "ok" or row.configuration is None:
             continue
         runs = chosen.get(row.configuration.key) or []
-        dets = [r.metrics["detection"] for r in runs]
-        matched = sum(int(d["matched"]) for d in dets)
-        expected = sum(int(d["expected"]) for d in dets)
-        tp = sum(int(d.get("tp", d.get("defect_true_positives", 0))) for d in dets)
-        defect = sum(int(d.get("defect_findings", 0)) for d in dets)
-        fp = sum(int(d.get("fp", defect - tp)) for d in dets)
-        rec, prec = wilson(matched, expected), wilson(tp, tp + fp)
+        per_run = []
+        for r in runs:
+            d = r.metrics["detection"]
+            tp = int(d.get("tp", d.get("defect_true_positives", 0)))
+            fp = int(d.get("fp", int(d.get("defect_findings", 0)) - tp))
+            per_run.append((wilson(int(d["matched"]), int(d["expected"])), wilson(tp, tp + fp), fp))
+        if not per_run:
+            continue
+        # Repeated runs judge the same 17 issues again: they are not new samples, so intervals are
+        # per run (n = 17), never pooled over runs.
+        rec, prec, fp = per_run[-1]
         row.ci["recall"] = [rec.low, rec.high]
         row.ci["precision"] = [prec.low, prec.high]
-        pooled = f" (pooled over {len(runs)} runs)" if len(runs) > 1 else ""
-        lines.append(
-            f"{_letter(row)}{pooled}: issues found {rec.text()}; defect findings correct "
-            f"{prec.text()}; false-positive defect findings {fp}"
-        )
+        if len(per_run) == 1:
+            lines.append(
+                f"{_letter(row)}: issues found {rec.text()}; defect findings correct "
+                f"{prec.text()}; false-positive defect findings {fp}"
+            )
+        else:
+            for i, (rc, pc, f) in enumerate(per_run, start=1):
+                lines.append(
+                    f"{_letter(row)} run {i} of {len(per_run)}: issues found {rc.text()}; defect "
+                    f"findings correct {pc.text()}; false-positive defect findings {f}"
+                )
         if ids and runs:
             missed = set(runs[-1].metrics["detection"].get("missed") or [])
             found[_letter(row)] = [i not in missed for i in ids]
     for a, b in itertools.combinations(found, 2):
-        lines.append(mcnemar(found[a], found[b]).text(a, b) + " (issues found, latest runs)")
+        lines.append(mcnemar(found[a], found[b]).text(a, b) + " (issues found, latest run each)")
     if found:
         lines.append(
             "Precision is counted per finding (defect-class findings that match an issue / all "
@@ -102,14 +112,26 @@ def codereviewer_statistics(
         return lines
     per: dict[str, dict[str, list[float]]] = {}
     for row in scored:
-        samples = [preds[row.run_ids[-1]][i] for i in common]
-        scores = [comment_scores(str(s.get("reference") or ""), str(s.get("comment") or ""))
-                  for s in samples]  # fmt: skip
-        per[_letter(row)] = {m: [s[m] for s in scores] for m in MSG_METRICS}
-        covered = int(sum(per[_letter(row)]["coverage"]))
-        cov = wilson(covered, len(common))
+        # Each sample's score is averaged over the row's runs, so the bootstrap resamples samples
+        # (the unit of analysis) and repeated runs are not mistaken for more samples.
+        runs = [[comment_scores(str(preds[rid][i].get("reference") or ""),
+                                str(preds[rid][i].get("comment") or "")) for i in common]
+                for rid in row.run_ids]  # fmt: skip
+        per[_letter(row)] = {
+            m: [sum(run[j][m] for run in runs) / len(runs) for j in range(len(common))]
+            for m in MSG_METRICS
+        }
+        counts = [int(sum(s["coverage"] for s in run)) for run in runs]
+        cov = wilson(counts[-1], len(common))
         row.ci["coverage"] = [cov.low, cov.high]
-        lines.append(f"{_letter(row)}: coverage {covered}/{len(common)} = {cov.text()}")
+        if len(counts) == 1:
+            lines.append(f"{_letter(row)}: coverage {counts[0]}/{len(common)} = {cov.text()}")
+        else:
+            each = ", ".join(f"{c}/{len(common)}" for c in counts)
+            lines.append(
+                f"{_letter(row)}: coverage per run {each} (mean {sum(counts) / len(counts):.1f}/"
+                f"{len(common)}, min {min(counts)}, max {max(counts)}); latest run {cov.text()}"
+            )
     pairs = [("A", x) for x in ("B", "C", "D")] + [("C", "D"), ("B", "D")]
     for a, b in pairs:
         if a in per and b in per:
@@ -121,6 +143,7 @@ def codereviewer_statistics(
     lines.append(
         "Coverage: the share of samples for which the configuration produced a comment (its "
         "top-ranked in-scope finding was not empty). Empty comments score 0 on BLEU-4, ROUGE-L "
-        "and chrF. Paired tests use the latest run of each configuration."
+        "and chrF. With several runs, each sample's scores are averaged over the runs before "
+        "the paired bootstrap."
     )
     return lines
