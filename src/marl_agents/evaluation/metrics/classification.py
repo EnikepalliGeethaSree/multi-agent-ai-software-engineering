@@ -94,3 +94,72 @@ def bootstrap_ci(
     lo = stats[int((alpha / 2) * n_boot)]
     hi = stats[min(int((1 - alpha / 2) * n_boot), n_boot - 1)]
     return (lo, hi)
+
+
+def average_precision(y_true: Sequence[int], scores: Sequence[float]) -> float | None:
+    """PR-AUC as average precision: sum over score thresholds of (R_k - R_k-1) * P_k.
+
+    Tied scores form one threshold (as in scikit-learn). Its chance level is the positive base
+    rate. None when there is no positive example.
+    """
+    pairs = sorted(zip(scores, y_true, strict=True), key=lambda x: -x[0])
+    n_pos = sum(1 for _, t in pairs if t == 1)
+    if not n_pos:
+        return None
+    ap, tp, fp, prev_recall, i = 0.0, 0, 0, 0.0, 0
+    while i < len(pairs):
+        j = i
+        while j < len(pairs) and pairs[j][0] == pairs[i][0]:
+            tp += pairs[j][1] == 1
+            fp += pairs[j][1] != 1
+            j += 1
+        recall = tp / n_pos
+        ap += (recall - prev_recall) * (tp / (tp + fp))
+        prev_recall, i = recall, j
+    return ap
+
+
+def mcc(m: BinaryMetrics) -> float | None:
+    """Matthews correlation coefficient; None when a row or column of the matrix is empty."""
+    den = math.sqrt((m.tp + m.fp) * (m.tp + m.fn) * (m.tn + m.fp) * (m.tn + m.fn))
+    return (m.tp * m.tn - m.fp * m.fn) / den if den else None
+
+
+def balanced_accuracy(m: BinaryMetrics) -> float | None:
+    """Mean of the true-positive and true-negative rates; None if a class is absent."""
+    if not (m.tp + m.fn) or not (m.tn + m.fp):
+        return None
+    return (m.tp / (m.tp + m.fn) + m.tn / (m.tn + m.fp)) / 2
+
+
+def brier_score(y_true: Sequence[int], probs: Sequence[float]) -> float | None:
+    """Mean squared difference between the predicted probability and the 0/1 label."""
+    if not y_true:
+        return None
+    return sum((p - t) ** 2 for t, p in zip(y_true, probs, strict=True)) / len(y_true)
+
+
+def precision_at_fraction(
+    y_true: Sequence[int], scores: Sequence[float], fraction: float = 0.10
+) -> tuple[float, int] | None:
+    """Share of positives among the top `fraction` of items by score, and how many items that is.
+
+    The cut is ceil(fraction * n) items; ties at the cut are broken by the original order.
+    """
+    n = len(y_true)
+    if not n:
+        return None
+    k = max(1, math.ceil(fraction * n))
+    order = sorted(range(n), key=lambda i: -scores[i])[:k]
+    return sum(y_true[i] for i in order) / k, k
+
+
+def always_positive(y_true: Sequence[int]) -> dict[str, float]:
+    """The flag-everything baseline: precision = accuracy = base rate, recall = 1."""
+    base = sum(y_true) / len(y_true) if y_true else 0.0
+    return {
+        "precision": base,
+        "recall": 1.0 if base else 0.0,
+        "f1": 2 * base / (1 + base) if base else 0.0,
+        "accuracy": base,
+    }

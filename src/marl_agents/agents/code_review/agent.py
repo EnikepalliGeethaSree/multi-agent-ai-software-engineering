@@ -100,6 +100,7 @@ class UnitOutcome:
     from_cache: bool = False
     not_attempted: bool = False  # the quota ran out before this unit's turn
     gated: bool = False  # the classifier kept this unit away from the LLM
+    schema_invalid: int = 0  # finding items in the reply that failed the finding schema
 
 
 class CodeReviewAgent(BaseAgent):
@@ -425,6 +426,7 @@ class CodeReviewAgent(BaseAgent):
                 llm_rejections.update(claim_rejections)
                 stats.setdefault("llm_repaired", 0)
                 stats["llm_repaired"] += report.repaired
+            stats["llm_items_schema_invalid"] = sum(oc.schema_invalid for oc in outcomes)
             stats["llm_findings_raw"] = sum(len(oc.findings) for oc in outcomes)
             stats["llm_findings_valid"] = len(llm_findings)
             if cfg.drop_vague:
@@ -432,6 +434,7 @@ class CodeReviewAgent(BaseAgent):
                     llm_findings, dropped, downgraded = filter_actionable(llm_findings)
                 stats["vague_dropped"] = dropped
                 stats["vague_downgraded"] = downgraded
+            stats["llm_findings_actionable"] = len(llm_findings)
             stats["llm_rejected_by_reason"] = dict(llm_rejections)
             raw = stats["llm_findings_raw"]
             stats["llm_rejection_rate"] = (
@@ -469,6 +472,10 @@ class CodeReviewAgent(BaseAgent):
                 self._finish_findings(rank_and_number(kept, self.id_prefix), repo), repo
             )
         stats["dedup_merged"] = dedup.merged
+        if "llm_findings_raw" in stats:
+            stats["llm_findings_after_dedupe"] = sum(
+                1 for f in dedup.findings if any(str(s) == "llm" for s in f.sources)
+            )
         stats["filtered_low_confidence"] = len(ruled) - len(kept)
         timings["postprocess"] = time.perf_counter() - t
 
@@ -770,6 +777,7 @@ class CodeReviewAgent(BaseAgent):
             return outcome
 
         items, assessments, parse_errors = self._parse_reply(envelope)
+        outcome.schema_invalid = sum(1 for e in parse_errors if e.startswith("malformed finding"))
         outcome.errors.extend(parse_errors)
         outcome.assessments = assessments
         module_symbols = {s.qualname: s for s in unit.symbols}

@@ -1,0 +1,87 @@
+{
+  "source_run": "20261012T163153Z_codereviewer_cls_test_static_only_n4196",
+  "flagged": "at least one finding of severity >= low",
+  "all_rules": {
+    "n": 4195,
+    "positives": 2033,
+    "positive_base_rate": 0.48462455303933255,
+    "confusion": {
+      "tp": 540,
+      "fp": 868,
+      "tn": 1294,
+      "fn": 1493
+    },
+    "accuracy": 0.4371871275327771,
+    "precision": 0.3835227272727273,
+    "recall": 0.26561731431382196,
+    "f1": 0.31386224934612034,
+    "balanced_accuracy": 0.4320686016527482,
+    "mcc": -0.14378953277617007,
+    "majority_baseline_accuracy": 0.5153754469606675,
+    "always_positive": {
+      "precision": 0.48462455303933255,
+      "recall": 1.0,
+      "f1": 0.6528580603725113,
+      "accuracy": 0.48462455303933255
+    },
+    "wilson_precision": {
+      "k": 540,
+      "n": 1408,
+      "value": 0.3835227272727273,
+      "low": 0.3584741669102317,
+      "high": 0.40920513025817906
+    },
+    "wilson_recall": {
+      "k": 540,
+      "n": 2033,
+      "value": 0.26561731431382196,
+      "low": 0.2468738101589523,
+      "high": 0.28524490439638917
+    }
+  },
+  "without_single_hunk_rules": {
+    "n": 4195,
+    "positives": 2033,
+    "positive_base_rate": 0.48462455303933255,
+    "confusion": {
+      "tp": 340,
+      "fp": 234,
+      "tn": 1928,
+      "fn": 1693
+    },
+    "accuracy": 0.5406436233611442,
+    "precision": 0.5923344947735192,
+    "recall": 0.16724053123462862,
+    "f1": 0.26083621020329883,
+    "balanced_accuracy": 0.5295037068754087,
+    "mcc": 0.08580901283518431,
+    "majority_baseline_accuracy": 0.5153754469606675,
+    "always_positive": {
+      "precision": 0.48462455303933255,
+      "recall": 1.0,
+      "f1": 0.6528580603725113,
+      "accuracy": 0.48462455303933255
+    },
+    "wilson_precision": {
+      "k": 340,
+      "n": 574,
+      "value": 0.5923344947735192,
+      "low": 0.5516496583603935,
+      "high": 0.6317916617143783
+    },
+    "wilson_recall": {
+      "k": 340,
+      "n": 2033,
+      "value": 0.16724053123462862,
+      "low": 0.1516490621380915,
+      "high": 0.18408716114981707
+    }
+  },
+  "excluded_rules": [
+    "F401",
+    "F403",
+    "F405",
+    "F811",
+    "F821"
+  ]
+}

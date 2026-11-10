@@ -340,6 +340,8 @@ def cmd_eval(args: argparse.Namespace) -> int:
 
     if args.suite == "summary":
         return _eval_summary()
+    if args.suite in ("funnel", "classifier-metrics", "static-baseline"):
+        return _eval_report(args.suite)
     if args.suite == "classifier":
         return _eval_classifier(args, s)
     if args.suite == "classifier-ablation":
@@ -457,6 +459,45 @@ def _eval_classifier_ablation(args: argparse.Namespace, s: Settings) -> int:
     ablation.write_outputs(out, rows)
     print(summary)
     print(f"saved: {out}")
+    return 0
+
+
+def _eval_report(kind: str) -> int:
+    """Reports from saved runs only (no model call): funnel, classifier, static baseline."""
+    import json as _json
+
+    from marl_agents.evaluation import reanalysis
+    from marl_agents.evaluation.funnel import funnel_report
+    from marl_agents.evaluation.runs import load_runs
+
+    runs = load_runs(PROJECT_ROOT / "experiments" / "results")
+    data: object
+    if kind == "funnel":
+        md, data = funnel_report(runs)
+    elif kind == "classifier-metrics":
+        cls = [r for r in runs if r.name.split("_", 1)[-1].startswith("classifier_cls_test")]
+        if not cls:
+            print("error: no saved classifier test run", file=sys.stderr)
+            return 1
+        data = reanalysis.classifier_report(cls[-1])
+        md = reanalysis.classifier_md(data)
+    else:
+        full = [r for r in runs if r.kind == "codereviewer" and r.task == "cls"
+                and r.split == "test" and r.configuration is not None
+                and r.configuration.key == "static_only"
+                and int(r.metrics.get("n_evaluated") or 0) >= 4000]  # fmt: skip
+        if not full:
+            print("error: no saved full static run on the CodeReviewer cls test split",
+                  file=sys.stderr)  # fmt: skip
+            return 1
+        data = reanalysis.static_baseline_report(full[-1])
+        md = reanalysis.static_baseline_md(data)
+    out = PROJECT_ROOT / "experiments" / "evaluation_summary"
+    out.mkdir(parents=True, exist_ok=True)
+    (out / f"{kind}.md").write_text(md, encoding="utf-8")
+    (out / f"{kind}.json").write_text(_json.dumps(data, indent=2, default=str), encoding="utf-8")
+    print(md)
+    print(f"saved: {out / (kind + '.md')}")
     return 0
 
 
@@ -1004,6 +1045,9 @@ def main(argv: list[str] | None = None) -> int:
             "classifier",
             "classifier-ablation",
             "before-after",
+            "funnel",
+            "classifier-metrics",
+            "static-baseline",
         ],
         help="hunkrisk: risk ranking vs CodeReviewer cls labels; timing: efficiency benchmark "
         "(time per review and per component); summary: baseline comparison + five-component "

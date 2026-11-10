@@ -1,0 +1,93 @@
+{
+  "source_run": "20261106T144800Z_classifier_cls_test_n1771",
+  "threshold": 0.44,
+  "threshold_source": "chosen on dev before the test run",
+  "repo_disjoint": {
+    "n": 1771,
+    "positives": 979,
+    "positive_base_rate": 0.5527950310559007,
+    "confusion": {
+      "tp": 658,
+      "fp": 273,
+      "tn": 519,
+      "fn": 321
+    },
+    "accuracy": 0.6645962732919255,
+    "precision": 0.706766917293233,
+    "recall": 0.6721144024514811,
+    "f1": 0.6890052356020943,
+    "balanced_accuracy": 0.6637087163772557,
+    "mcc": 0.3260177547079027,
+    "majority_baseline_accuracy": 0.5527950310559007,
+    "always_positive": {
+      "precision": 0.5527950310559007,
+      "recall": 1.0,
+      "f1": 0.7120000000000001,
+      "accuracy": 0.5527950310559007
+    },
+    "wilson_precision": {
+      "k": 658,
+      "n": 931,
+      "value": 0.706766917293233,
+      "low": 0.6767223218396601,
+      "high": 0.7351122158429955
+    },
+    "wilson_recall": {
+      "k": 658,
+      "n": 979,
+      "value": 0.6721144024514811,
+      "low": 0.6420852630140723,
+      "high": 0.7007981155568361
+    },
+    "roc_auc": 0.7230347396333096,
+    "pr_auc": 0.7798035739335927,
+    "pr_auc_chance": 0.5527950310559007,
+    "brier": 0.21475046462299865,
+    "precision_at_10pct": 0.9382022471910112,
+    "top_10pct_items": 178
+  },
+  "official_test": {
+    "n": 3634,
+    "positives": 2022,
+    "positive_base_rate": 0.5564116675839296,
+    "confusion": {
+      "tp": 1395,
+      "fp": 576,
+      "tn": 1036,
+      "fn": 627
+    },
+    "accuracy": 0.6689598238855256,
+    "precision": 0.7077625570776256,
+    "recall": 0.6899109792284867,
+    "f1": 0.6987227648384674,
+    "balanced_accuracy": 0.6662954399864518,
+    "mcc": 0.3316606853235023,
+    "majority_baseline_accuracy": 0.5564116675839296,
+    "always_positive": {
+      "precision": 0.5564116675839296,
+      "recall": 1.0,
+      "f1": 0.714992927864215,
+      "accuracy": 0.5564116675839296
+    },
+    "wilson_precision": {
+      "k": 1395,
+      "n": 1971,
+      "value": 0.7077625570776256,
+      "low": 0.6872960664838181,
+      "high": 0.7274207688053691
+    },
+    "wilson_recall": {
+      "k": 1395,
+      "n": 2022,
+      "value": 0.6899109792284867,
+      "low": 0.6694064573315924,
+      "high": 0.7096952718072104
+    },
+    "roc_auc": 0.7237315705895202,
+    "pr_auc": 0.7803816605175471,
+    "pr_auc_chance": 0.5564116675839296,
+    "brier": 0.21402914275536983,
+    "precision_at_10pct": 0.9203296703296703,
+    "top_10pct_items": 364
+  }
+}

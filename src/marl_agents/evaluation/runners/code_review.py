@@ -16,6 +16,7 @@ from __future__ import annotations
 import json
 import logging
 import random
+import re
 import time
 from collections import Counter
 from collections.abc import Callable
@@ -28,6 +29,7 @@ from marl_agents.config import Settings
 from marl_agents.core.schemas import AgentRequest, Finding, ReviewResult, Severity
 from marl_agents.core.timing import TimingBreakdown, describe
 from marl_agents.evaluation.datasets.codereviewer import CodeReviewerSample
+from marl_agents.evaluation.funnel import FUNNEL_KEYS, funnel_counts
 from marl_agents.evaluation.metrics import (
     ExpectedIssue,
     binary_metrics,
@@ -44,6 +46,7 @@ from marl_agents.evaluation.metrics import (
     sentence_bleu,
 )
 from marl_agents.evaluation.recorder import RunRecorder
+from marl_agents.evaluation.stats import wilson
 from marl_agents.findings.confidence import priority
 from marl_agents.ingestion import load_repository
 from marl_agents.ingestion.diff import PatchError, apply_patch, changed_new_lines
@@ -217,6 +220,11 @@ def _review_sample(agent: CodeReviewAgent, sample: CodeReviewerSample) -> dict[s
         "changed": ranges,
         "findings": result.findings,
         "llm_rejected": result.stats.get("llm_rejected_by_reason", {}),
+        "funnel": {
+            k: result.stats[k]
+            for k in (*FUNNEL_KEYS, "llm_rejected_by_reason")
+            if k in result.stats
+        },
         "errors": result.errors,
         "timing": timing_summary(result),
         "llm_usage": result.stats.get("llm_usage"),
@@ -375,6 +383,8 @@ def run_codereviewer(
     }
 
     metrics["llm_work"] = llm_work(ok)
+    if any(r.get("funnel") for r in ok):
+        metrics["llm_funnel"] = funnel_counts(r.get("funnel") or {} for r in ok)
     findings_lists = [r["findings"] for r in ok]
     if task == "cls":
         metrics.update(_cls_metrics(y_true, findings_lists))
@@ -564,6 +574,38 @@ def callgraph_queries(index: RepoIndex, chunks: list[Chunk]) -> list[tuple[Chunk
     return queries
 
 
+_CAMEL = re.compile(r"[A-Z]+(?=[A-Z][a-z])|[A-Z]?[a-z]+|[A-Z]+|[0-9]+")
+
+
+def code_tokens(text: str) -> list[str]:
+    """BM25 tokens for code: identifiers split on '_' and camelCase, lower-cased, plus the whole
+    identifier (so `load_user` matches both `load_user` and `load` / `user`)."""
+    out: list[str] = []
+    for word in re.findall(r"[A-Za-z_][A-Za-z0-9_]*", text):
+        parts = [p.lower() for piece in word.split("_") for p in _CAMEL.findall(piece)]
+        out.extend(parts)
+        if len(parts) > 1:
+            out.append(word.lower())
+    return out
+
+
+def bm25_ranker(chunks: list[Chunk]) -> Callable[[Chunk], list[str]] | None:
+    """Okapi BM25 (rank_bm25, k1=1.5, b=0.75) over code tokens; None if rank_bm25 is missing."""
+    try:
+        from rank_bm25 import BM25Okapi  # type: ignore[import-untyped]
+    except ImportError:
+        return None
+    ids = [c.id for c in chunks]
+    bm25 = BM25Okapi([code_tokens(c.text) for c in chunks])
+
+    def rank(q: Chunk) -> list[str]:
+        scores = bm25.get_scores(code_tokens(q.text))
+        order = sorted(range(len(ids)), key=lambda i: (-scores[i], ids[i]))
+        return [ids[i] for i in order if ids[i] != q.id]
+
+    return rank
+
+
 def run_retrieval(
     repo_path: Path,
     embedders: dict[str, Embedder],
@@ -579,6 +621,12 @@ def run_retrieval(
         "n_chunks": len(chunks),
         "n_queries": len(queries),
         "relevance": "chunks containing the query function's repo-defined callees (AST call graph)",
+        "relevance_labelling": (
+            "automatic, no human labels: for every function with at least one callee defined in "
+            "the repository, the query is the function's own chunk and the relevant set is the "
+            "chunks that contain those callees (the query chunk itself is excluded); classes are "
+            "skipped"
+        ),
         "ks": list(ks),
         "seed": seed,
         "embedders": list(embedders),
@@ -606,6 +654,13 @@ def run_retrieval(
         return ids
 
     results["random_baseline"] = evaluate(random_rank)
+    bm25 = bm25_ranker(chunks)
+    if bm25 is not None:
+        t = time.perf_counter()
+        results["bm25"] = evaluate(bm25)
+        results["bm25"]["seconds"] = round(time.perf_counter() - t, 2)
+    else:
+        results["bm25_skipped"] = "rank_bm25 is not installed (pip install -e '.[eval]')"
     for name, emb in embedders.items():
         t = time.perf_counter()
         vectors = dict(
@@ -647,6 +702,13 @@ def retrieval_summary_md(metrics: dict[str, Any], title: str) -> str:
     ]
     for m in methods:
         lines.append(f"| {m} | " + " | ".join(f"{metrics[m][c]:.3f}" for c in cols) + " |")
+    n = int(metrics.get("n_queries") or 0)
+    if n:
+        lines += ["", f"Hit@10 with Wilson 95% intervals (share of the {n} queries):"]
+        for m in methods:
+            lines.append(f"- {m}: {wilson(round(metrics[m]['hit@10'] * n), n).text()}")
+    if metrics.get("relevance_labelling"):
+        lines += ["", f"Relevance labelling: {metrics['relevance_labelling']}."]
     return "\n".join(lines) + "\n"
 
 
