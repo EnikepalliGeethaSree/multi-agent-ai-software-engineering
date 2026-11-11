@@ -205,6 +205,7 @@ class BugRepoCache:
             command, stdout=subprocess.PIPE, stderr=subprocess.DEVNULL
         )
         written = 0
+        self.skipped_long_paths: list[str] = []
         try:
             with tarfile.open(fileobj=cast(IO[bytes], process.stdout), mode="r|") as archive:
                 for member in archive:
@@ -214,6 +215,11 @@ class BugRepoCache:
                     if data is None:
                         continue
                     target = dest.joinpath(*PurePosixPath(member.name).parts)
+                    if not fits_windows_path(target):
+                        # Deep fixture paths (e.g. ansible's placebo recordings) exceed MAX_PATH.
+                        self.skipped_long_paths.append(member.name)
+                        logger.warning("skipped %s: path too long for Windows", member.name)
+                        continue
                     target.parent.mkdir(parents=True, exist_ok=True)
                     target.write_bytes(data.read())
                     written += 1
@@ -235,6 +241,14 @@ class BugRepoCache:
         if any(_WINDOWS_BAD.search(p) or p.endswith((".", " ")) for p in path.parts):
             return False
         return not (set(path.parts[:-1]) & ignore)
+
+
+MAX_PATH_CHARS = 240  # Windows' classic limit is 260 characters; keep a margin
+
+
+def fits_windows_path(target: Path) -> bool:
+    """False when a snapshot file's absolute path would exceed the Windows path limit."""
+    return len(str(target.resolve())) <= MAX_PATH_CHARS
 
 
 # ---- gold locations ------------------------------------------------------------------------------

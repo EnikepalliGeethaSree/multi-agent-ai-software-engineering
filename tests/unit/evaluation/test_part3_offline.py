@@ -214,3 +214,11 @@ def test_saved_score_ranker_comparison_reads_only_saved_runs(tmp_path: Path) -> 
     assert r["rankers"]["classifier_saved_score"]["auc"] == 1.0
     assert r["default_ranker"] == "risk_v2 (unchanged)"
     assert "secondary analysis" in compare_md(r)
+
+
+def test_snapshot_paths_too_long_for_windows_are_detected(tmp_path: Path) -> None:
+    from marl_agents.evaluation.datasets.bugsinpy_repo import MAX_PATH_CHARS, fits_windows_path
+
+    assert fits_windows_path(tmp_path / "pkg" / "module.py")
+    deep = tmp_path.joinpath(*(["placebo_recordings_directory"] * 12), "recording.json")
+    assert len(str(deep.resolve())) > MAX_PATH_CHARS and not fits_windows_path(deep)

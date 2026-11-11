@@ -376,6 +376,9 @@ class _Snapshot:
             self.cache.snapshot(
                 bug.sample.project, bug.buggy_commit, self.dir, self.settings.ingestion
             )
+            if bug.file in getattr(self.cache, "skipped_long_paths", []):
+                # Never review a snapshot that lacks the file under test.
+                raise IneligibleBug("path_too_long", bug.file)
         if version == "fixed":
             # Only the patched file differs, so both versions have the same project around them.
             text = self.cache.show(bug.sample.project, bug.fixed_commit, bug.file)
