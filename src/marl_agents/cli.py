@@ -356,6 +356,8 @@ def cmd_eval(args: argparse.Namespace) -> int:
 
     if args.suite == "summary":
         return _eval_summary()
+    if args.suite == "clean-repos":
+        return _eval_clean_repos(s)
     if args.suite in ("funnel", "classifier-metrics", "static-baseline", "ranker-saved-scores"):
         return _eval_report(args.suite)
     if args.suite == "classifier":
@@ -475,6 +477,36 @@ def _eval_classifier_ablation(args: argparse.Namespace, s: Settings) -> int:
     ablation.write_outputs(out, rows)
     print(summary)
     print(f"saved: {out}")
+    return 0
+
+
+def _eval_clean_repos(s: Settings) -> int:
+    """Part 3.10: configuration D on the three clean repositories, then the labelling sheet."""
+    import json as _json
+
+    from marl_agents.evaluation.runners import clean_repos as cr
+    from marl_agents.llm.base import QuotaExhaustedError
+
+    settings = cr.settings_for(s)
+    llm = create_provider(settings.llm)
+    rows: list[dict[str, object]] = []
+    for repo in cr.REPOS:
+        print(f"reviewing {repo.name} ({repo.package}) ...", flush=True)
+        try:
+            out = cr.review_repo(repo, settings, llm)
+        except QuotaExhaustedError as exc:
+            print(f"stopped: {exc}")
+            return 1
+        metrics = _json.loads((out / "metrics.json").read_text(encoding="utf-8"))
+        print(f"  {metrics['findings']} findings, {metrics['per_kloc']} per 1,000 lines, "
+              f"status {metrics['review_status']} -> {out.name}", flush=True)  # fmt: skip
+        if not metrics["complete"]:
+            print("stopped: the review is partial; repeat the command after fixing the cause")
+            return 1
+        with (out / "predictions.jsonl").open(encoding="utf-8") as fh:
+            rows.extend({**_json.loads(line), "run": out.name} for line in fh)
+    n = cr.export_sheet(rows)
+    print(f"labelling sheet: {n} of {len(rows)} findings -> {cr.SHEET}")
     return 0
 
 
@@ -1096,6 +1128,7 @@ def main(argv: list[str] | None = None) -> int:
             "classifier-metrics",
             "static-baseline",
             "ranker-saved-scores",
+            "clean-repos",
         ],
         help="hunkrisk: risk ranking vs CodeReviewer cls labels; timing: efficiency benchmark "
         "(time per review and per component); summary: baseline comparison + five-component "
