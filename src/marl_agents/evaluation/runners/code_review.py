@@ -155,6 +155,13 @@ def _cls_metrics(y_true: list[int], findings_lists: list[list[Finding]]) -> dict
 
 
 def _msg_metrics(refs: list[str], findings_lists: list[list[Finding]]) -> dict[str, Any]:
+    """Comment-generation metrics over the evaluated samples.
+
+    Coverage (the same definition in every configuration and table): the number of samples for
+    which the configuration produced a comment, i.e. its top-ranked in-scope finding exists, so
+    the composed comment is not empty, divided by the number of evaluated samples. It is
+    reported as a count (x/n) and a fraction. Empty comments score 0 on BLEU-4, ROUGE-L, chrF.
+    """
     n = max(len(refs), 1)
     variants = ("title", "title_fix", "description")
     comments = {v: [compose_comment(fs, v) for fs in findings_lists] for v in variants}

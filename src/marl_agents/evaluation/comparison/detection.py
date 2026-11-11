@@ -30,6 +30,7 @@ from marl_agents.evaluation.comparison.common import (
     prf,
     provider_badge,
 )
+from marl_agents.evaluation.comparison.external import external_row
 from marl_agents.evaluation.comparison.models import Column, ComparisonTable, FairnessCheck, Row
 from marl_agents.evaluation.comparison.statistics import (
     codereviewer_statistics,
@@ -323,6 +324,13 @@ def cls_metrics(preds: list[dict[str, Any]]) -> dict[str, float | int | None]:
 
 
 def msg_metrics(preds: list[dict[str, Any]]) -> dict[str, float | int | None]:
+    """BLEU-4, ROUGE-L, chrF (0-100) and coverage, recomputed from saved predictions.
+
+    Coverage (the same definition in every configuration and table): the number of samples for
+    which the configuration produced a comment, i.e. its top-ranked in-scope finding exists, so
+    the composed comment is not empty, divided by the number of evaluated samples. It is
+    reported as a count (x/n) and a fraction. Empty comments score 0 on BLEU-4, ROUGE-L, chrF.
+    """
     refs = [str(p.get("reference") or "") for p in preds]
     hyps = [str(p.get("comment") or "") for p in preds]
     n = len(preds)
@@ -529,6 +537,25 @@ def codereviewer_tables(runs: list[SavedRun], task: str) -> list[ComparisonTable
     full = _full_static_table(cand, task, len(ref_ids), columns, section)
     if full is not None:
         tables.append(full)
+    ref = external_row(task, [c.key for c in columns])
+    if ref is not None:  # its own table: never paired with, compared to or observed with ours
+        tables.append(
+            ComparisonTable(
+                id=f"{tid}_external",
+                section=section,
+                title=f"{title}: external reference (published, all languages)",
+                about="Published result of the original CodeReviewer paper on the full "
+                "multi-language benchmark. Our tables above use the Python subset.",
+                columns=columns,
+                rows=[ref],
+                supplementary=True,
+                show_counts=False,
+                notes=[
+                    "TBD until filled in from the paper: "
+                    "experiments/external_reference/codereviewer_paper.json."
+                ],
+            )
+        )
     return tables
 
 

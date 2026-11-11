@@ -144,3 +144,17 @@ def test_repeated_runs_are_never_pooled_into_more_samples(tmp_path: Path) -> Non
     assert "C run 1 of 3: issues found 0.941 (16/17;" in stats
     assert "C run 3 of 3: issues found 0.882 (15/17;" in stats
     assert "/51" not in stats  # the same 17 issues three times are not 51 samples
+
+
+def test_codereviewer_paper_reference_is_a_separate_tbd_table(tmp_path: Path) -> None:
+    ids = ["s1"]
+    save(tmp_path, "20260101T000000Z_codereviewer_msg_test_static_only_n1",
+         {"task": "msg", "n_evaluated": 1, "n_failed": 0}, meta={"sample_ids": ids, "split": "test"},
+         config=CFG["A"], predictions=[msg_pred("s1", "", "ref")])  # fmt: skip
+    tables = codereviewer_tables(load_runs(tmp_path), "msg")
+    ext = tables[-1]
+    assert ext.id == "codereviewer_msg_external" and ext.supplementary
+    row = ext.rows[0]
+    assert row.values["bleu4"] is None and "TBD" in row.na["bleu4"]
+    assert "Python subset" in " ".join(row.notes)
+    assert all("External reference" not in r.label for r in tables[0].rows)  # never mixed in

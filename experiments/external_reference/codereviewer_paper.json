@@ -1,0 +1,7 @@
+{
+  "source": "Original CodeReviewer paper (Li et al., 'Automating Code Review Activities by Large-Scale Pre-training', ESEC/FSE 2022)",
+  "scope": "Published on the full multi-language CodeReviewer benchmark. Our evaluation uses the Python subset, so the numbers are a reference, not a paired comparison.",
+  "fill_in": "Replace each TBD with the value printed in the paper (same metric definition); leave TBD if the paper does not report it.",
+  "msg": {"bleu4": "TBD"},
+  "cls": {"precision": "TBD", "recall": "TBD", "f1": "TBD", "accuracy": "TBD"}
+}
