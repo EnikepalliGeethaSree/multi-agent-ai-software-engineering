@@ -138,7 +138,7 @@ export type JobStatus = "queued" | "running" | "done" | "failed";
 export type AgentName = "code_review" | "bug_detection";
 
 /** LLM providers a single review can pick; null = the server's provider. */
-export type LLMProviderName = "gemini" | "ollama";
+export type LLMProviderName = "groq" | "gemini" | "ollama";
 
 export interface ReviewOptions {
   agent?: AgentName;

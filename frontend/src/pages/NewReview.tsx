@@ -26,7 +26,8 @@ const MODES: { value: Mode; title: string; text: string; needsLLM: boolean }[] =
 ];
 
 export const PROVIDERS: Record<LLMProviderName, { title: string; text: string }> = {
-  gemini: { title: "Gemini (free tier)", text: "Hosted by Google; the code is sent to Google. Official evaluation provider." },
+  groq: { title: "Groq (Developer tier)", text: "openai/gpt-oss-120b, hosted by Groq; the code is sent to Groq. Official evaluation provider; paid per token, within the project's caps." },
+  gemini: { title: "Gemini (free tier)", text: "Hosted by Google; the code is sent to Google. Earlier evaluation provider (partial results)." },
   ollama: { title: "Ollama (local)", text: "Runs on this machine; no code leaves it. About a minute per request." },
 };
 
@@ -386,7 +387,7 @@ export default function NewReview() {
             className="mt-1 w-full rounded-lg border border-line bg-surface px-2 py-1.5 text-sm text-ink disabled:opacity-50"
           >
             <option value="">Server default ({llm?.provider ?? "none"})</option>
-            {(llm?.selectable_providers ?? (["gemini", "ollama"] as LLMProviderName[])).map((p) => (
+            {(llm?.selectable_providers ?? (["groq", "gemini", "ollama"] as LLMProviderName[])).map((p) => (
               <option key={p} value={p}>
                 {PROVIDERS[p]?.title ?? p}
               </option>

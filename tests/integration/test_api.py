@@ -364,7 +364,7 @@ def test_llm_status_for_ollama_reports_a_local_provider(
     body = client.get("/api/llm/status?provider=ollama").json()
     assert body["provider"] == "ollama" and body["server_provider"] == "mock"
     assert body["ready"] is True and body["local"] is True and body["data_notice"] is None
-    assert body["selectable_providers"] == ["gemini", "ollama"]
+    assert body["selectable_providers"] == ["gemini", "groq", "ollama"]
 
 
 def test_llm_status_for_ollama_explains_a_missing_model(
@@ -390,3 +390,21 @@ def test_review_options_choose_the_provider(settings: Settings, paths: dict[str,
     s = manager._job_settings(ReviewOptions(provider="ollama", model="gemini-3.6-flash"))
     assert (s.llm.provider, s.llm.model) == ("ollama", "qwen2.5-coder:7b")  # foreign id replaced
     assert manager._job_settings(ReviewOptions()).llm.provider == settings.llm.provider
+
+
+def test_groq_is_selectable_per_review_without_exposing_the_key(monkeypatch) -> None:  # type: ignore[no-untyped-def]
+    from fastapi.testclient import TestClient
+
+    from marl_agents.api import create_app
+    from marl_agents.config import load_settings
+
+    monkeypatch.setenv("GROQ_API_KEY", "gsk_FAKEKEYFORTESTS0123456789")
+    monkeypatch.setenv("GROQ_RPM", "123")
+    client = TestClient(create_app(settings=load_settings()))
+    r = client.get("/api/llm/status", params={"provider": "groq"})
+    assert r.status_code == 200
+    body = r.json()
+    assert body["provider"] == "groq" and body["model"] == "openai/gpt-oss-120b"
+    assert body["requests_per_minute"] == 123  # GROQ_* settings applied to the per-review copy
+    assert "groq" in body["selectable_providers"] and "Groq" in (body["data_notice"] or "")
+    assert "gsk_" not in r.text

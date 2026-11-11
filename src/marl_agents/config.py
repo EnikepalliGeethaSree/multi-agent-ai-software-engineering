@@ -262,6 +262,7 @@ def model_for(provider: str, model: str | None) -> str | None:
 
 # Providers one request (a dashboard review) may switch to, and the file holding their settings.
 SELECTABLE_PROVIDERS: dict[str, Path] = {
+    "groq": PROJECT_ROOT / "configs" / "groq.yaml",
     "gemini": PROJECT_ROOT / "configs" / "gemini.yaml",
     "ollama": PROJECT_ROOT / "configs" / "ollama.yaml",
 }
@@ -288,6 +289,8 @@ def with_provider(settings: Settings, provider: str) -> Settings:
     llm["model"] = model_for(provider, llm.get("model"))
     out = settings.model_copy(deep=True)
     out.llm = LLMSettings(**llm)
+    if provider == "groq":
+        apply_groq_env(out.llm)  # key-free settings from .env: model, limits, prices, caps
     concurrency = (data.get("review") or {}).get("concurrency")
     if concurrency is not None:
         out.review.concurrency = int(concurrency)

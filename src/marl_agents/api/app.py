@@ -70,6 +70,10 @@ from marl_agents.llm.base import LLMError, Message
 from marl_agents.llm.classifier import read_metadata
 
 MAX_SNIPPET_CHARS = 1_000_000
+GROQ_DATA_NOTICE = (
+    "Your code is sent to Groq (paid Developer tier, billed per token within the project's caps). "
+    "Do not review confidential code this way."
+)
 GEMINI_DATA_NOTICE = (
     "Code is sent to Google. On the free tier Google may use it to improve its products, so do "
     "not review confidential code."
@@ -325,7 +329,9 @@ def create_app(
             "requests_per_day": llm.requests_per_day,
             "tokens_per_day": llm.tokens_per_day,
             "free_tier": llm.provider == "gemini",
-            "data_notice": GEMINI_DATA_NOTICE if llm.provider == "gemini" else None,
+            "data_notice": {"gemini": GEMINI_DATA_NOTICE, "groq": GROQ_DATA_NOTICE}.get(
+                llm.provider
+            ),
             "classifier": classifier_info(chosen),
             "quota": None,
             "ready": False,

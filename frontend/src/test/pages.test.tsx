@@ -123,7 +123,7 @@ describe("new review", () => {
       // listed first: the mock matches the first route whose path prefixes the URL
       "GET /api/llm/status?provider=ollama": ollama,
       "GET /api/llm/models?provider=ollama": { models: ["qwen2.5-coder:7b"], default: "qwen2.5-coder:7b" },
-      "GET /api/llm/status": { ...LLM_READY, provider: "gemini", model: "gemini-3.6-flash", selectable_providers: ["gemini", "ollama"] },
+      "GET /api/llm/status": { ...LLM_READY, provider: "gemini", model: "gemini-3.6-flash", selectable_providers: ["gemini", "groq", "ollama"] },
       "GET /api/llm/models": { models: [], default: null },
       "POST /api/reviews": job({ id: "fedcba654321", status: "queued", summary: null }),
       "GET /api/reviews/fedcba654321": { job: job({ id: "fedcba654321", status: "running", summary: null }), result: null },

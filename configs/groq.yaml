@@ -23,7 +23,7 @@ llm:
   # GROQ_MAX_ESTIMATED_COST_USD) and prices from the console (GROQ_INPUT_PRICE_PER_1M_TOKENS_USD,
   # GROQ_OUTPUT_PRICE_PER_1M_TOKENS_USD). Without a cap the provider refuses to start.
   max_total_tokens: 8100000   # project cap: worst case of all pending runs (cli estimate)
-  max_estimated_cost_usd: null
+  max_estimated_cost_usd: 4.50  # app-level stop, below the $5 spend limit set in the Groq console
   input_price_per_1m_tokens_usd: null
   output_price_per_1m_tokens_usd: null
   response_cache: true        # repeated requests cost nothing; --no-cache bypasses it
