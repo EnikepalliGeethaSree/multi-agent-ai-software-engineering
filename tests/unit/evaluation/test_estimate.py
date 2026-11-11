@@ -25,6 +25,6 @@ def test_costs_use_the_configured_prices_separately_for_input_and_output() -> No
 def test_without_prices_or_limits_the_cost_and_time_are_tbd() -> None:
     e = estimate(LLMSettings(provider="groq", model="m"), pending_plan(bugs=40, runs=3))
     assert e["total"]["total_cost_usd"] is None and e["total"]["min_minutes_at_limits"] is None
-    assert e["total"]["calls"] == 39 + 360 + 200 + 120 + 240
+    assert e["total"]["calls"] == 39 + 360 + 363 + 200 + 120 + 240
     md = estimate_md(e)
     assert "TBD (set prices)" in md and "cache misses" in md

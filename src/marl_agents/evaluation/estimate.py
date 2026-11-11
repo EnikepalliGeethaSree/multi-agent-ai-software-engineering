@@ -74,6 +74,10 @@ def pending_plan(bugs: int = 40, runs: int = 3, samples: int = 40) -> list[Item]
              calls={"planted_B": 4 * runs, "planted_C": 4 * runs, "planted_D": 5 * runs}),
         Item(experiment=f"3.1 CodeReviewer comments B/C/D x {runs} runs x {samples}",
              calls={f"crmsg_{c}": samples * runs for c in "BCD"}),
+        # Clean repositories, configuration D: review units counted offline (requests 48, flask 73,
+        # pydantic 218 in their package folders) plus at most 8 fix suggestions per repository.
+        Item(experiment="3.10 Clean repos (requests, flask, pydantic), D: 339 units + fixes",
+             calls={"runtime": 339 + 3 * 8}),
         Item(experiment="3.12 Runtime benchmark (cap 200 calls)", calls={"runtime": 200}),
         Item(experiment=f"4 BugsInPy localization B/C/D, {bugs} bugs (dev + test)",
              calls={f"loc_{c}": bugs for c in "BCD"}),
