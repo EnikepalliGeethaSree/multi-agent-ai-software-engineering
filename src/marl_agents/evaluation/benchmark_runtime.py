@@ -342,8 +342,11 @@ def metrics(
             "rag_top_k": settings.rag.top_k if rag else None,
             "suggested_fixes": False,
             "hardware": hardware(),
-            "api_conditions": "free tier; throttling appears in llm_quota_wait_sec"
-            if uses_llm and not mock
+            "api_conditions": (
+                f"{llm.name} (provider reply cache off; per-run unit cache only); throttling "
+                "appears in llm_quota_wait_sec"
+            )
+            if uses_llm and not mock and llm is not None
             else "no API used",
             "order": "interleaved: round -> file -> cold then warm",
         },
@@ -440,6 +443,9 @@ def main(argv: list[str] | None = None) -> int:
 
     settings = load_settings(args.config)
     rag = args.mode != "static_only" and not args.no_rag
+    # A cold run must reach the LLM: the provider reply cache would answer rounds 2+ from disk.
+    # Warm runs reuse the per-run unit cache that `run_settings` points at a fresh folder instead.
+    settings.llm.response_cache = False
     llm = create_provider(settings.llm) if args.mode != "static_only" else None
     inputs = select_inputs(args.inputs or stdlib_dir(), args.per_category)
     for category in CATEGORIES:
