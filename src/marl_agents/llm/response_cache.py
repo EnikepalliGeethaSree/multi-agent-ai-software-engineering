@@ -18,6 +18,7 @@ from typing import Any
 
 from pydantic import BaseModel, ValidationError
 
+from marl_agents.core.atomic import write_atomic
 from marl_agents.llm.base import GenerationConfig, Message
 
 logger = logging.getLogger(__name__)
@@ -81,6 +82,4 @@ class ResponseCache:
     def put(self, key: str, reply: CachedReply) -> None:
         path = self._path(key)
         path.parent.mkdir(parents=True, exist_ok=True)
-        tmp = path.with_suffix(".tmp")
-        tmp.write_text(reply.model_dump_json(), encoding="utf-8")
-        tmp.replace(path)
+        write_atomic(path, reply.model_dump_json().encode("utf-8"))

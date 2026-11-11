@@ -147,7 +147,23 @@ def cmd_review(args: argparse.Namespace) -> int:
         progress=lambda m: print(f"  {m}", file=sys.stderr),
         classifier=build_classifier(s),
     )
-    result = agent.run(request)
+    if getattr(args, "orchestrated", False):
+        from marl_agents.agents.bug_detection import BugDetectionAgent
+        from marl_agents.orchestration.graph import run_orchestrated
+
+        bugs = BugDetectionAgent(
+            llm, settings=s, progress=lambda m: print(f"  {m}", file=sys.stderr)
+        )
+        result = run_orchestrated(agent, bugs, request)
+        agg = result.stats["aggregation"]
+        print(
+            f"orchestrated: code review {agg['findings_in']['code_review']} + bug detection "
+            f"{agg['findings_in']['bug_detection']} findings -> {agg['total']} after aggregation "
+            f"(only code review {agg['unique']['code_review']}, only bug detection "
+            f"{agg['unique']['bug_detection']}, shared {agg['shared']})"
+        )
+    else:
+        result = agent.run(request)
     _print_llm_usage(llm, result)
     out = (
         Path(args.out)
@@ -1021,6 +1037,11 @@ def main(argv: list[str] | None = None) -> int:
     p_review.add_argument("target")
     p_review.add_argument("--out")
     p_review.add_argument("--formats", default="json,md,pdf")
+    p_review.add_argument(
+        "--orchestrated",
+        action="store_true",
+        help="run Code Review and Bug Detection in parallel (LangGraph) and aggregate the results",
+    )
     _add_common(p_review)
     p_review.add_argument(
         "--fail-on",

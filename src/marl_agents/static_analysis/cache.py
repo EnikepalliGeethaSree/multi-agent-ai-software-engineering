@@ -15,6 +15,7 @@ from pathlib import Path
 
 from pydantic import TypeAdapter
 
+from marl_agents.core.atomic import write_atomic
 from marl_agents.core.schemas import Finding
 from marl_agents.ingestion.models import Repository
 from marl_agents.static_analysis import rules
@@ -73,6 +74,4 @@ class AnalysisCache:
         if analyzer.name in NEVER_CACHED or output.errors or output.skipped:
             return
         path = self.dir / f"{self._key(repo, analyzer, files, scope)}.json"
-        tmp = path.with_suffix(".tmp")
-        tmp.write_bytes(_FINDINGS.dump_json(output.findings))
-        tmp.replace(path)
+        write_atomic(path, _FINDINGS.dump_json(output.findings))
