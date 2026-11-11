@@ -132,7 +132,14 @@ def review_repo(repo: CleanRepo, settings: Settings, llm: LLMProvider) -> Path:
         dataset=f"{repo.url}@{repo.commit[:12]}", split="package folder " + repo.package,
     )  # fmt: skip
     experiment["prompt_versions"] = result.metadata.prompt_versions
-    return recorder.finish(metrics, summary_md(metrics), experiment=experiment)
+    return recorder.finish(
+        metrics,
+        summary_md(metrics),
+        experiment=experiment,
+        llm_provider=llm.name,
+        llm_model=llm.model,
+        sample_ids=[repo.name],
+    )
 
 
 def summary_md(m: dict[str, Any]) -> str:
