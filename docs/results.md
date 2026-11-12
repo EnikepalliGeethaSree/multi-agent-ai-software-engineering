@@ -30,7 +30,9 @@ newer than it is.
 | 9. Fine-tuned classifier | Current | Does not depend on the LLM provider |
 | 10. Pending Gemini experiments | **Pending** | Work still to run |
 | 11. First live Gemini runs | **Preliminary** | `gemini-3.6-flash`. Incomplete, and under the old token limit |
-| 12. Planted issues on Gemini | Current | `gemini-3.6-flash`, all four configurations in one group |
+| 12. Planted issues on Gemini | Earlier provider | `gemini-3.6-flash`, all four configurations in one group |
+| 13-14. Local Ollama runs | Local | Reported apart; never in an official table |
+| **15. Official Groq evaluation** | **Official (D38, D39)** | `openai/gpt-oss-120b`; all numbers re-verified from saved predictions |
 
 ## 1. Planted-issue benchmark
 
@@ -571,3 +573,135 @@ F1 95% CI for A, C and D is 0.000-0.750.
   ran on a different model and an older working tree, and only A and B.
 - **Next:** the official Bug Detection numbers need Gemini on the dev split (larger n), then one final
   test-split run (D31). Those are pending the prompt-version decision and the free-tier quota.
+
+## 15. Official Groq evaluation (D38, D39)
+
+**Official results.** Provider Groq, model `openai/gpt-oss-120b`, temperature 0, seed 42,
+`max_tokens` 4096, prompts system 1.0 / review 1.1 (bug: bug_system 1.0, bug_review 1.1,
+bug_localize 1.0), Developer tier, run 2026-11-11/12. Every number below is copied from
+`experiments/evaluation_summary/groq_final_results.json`, produced by
+`scripts/groq_final_results.py`, which recomputes the metrics from each run's saved predictions
+and found **no mismatch** with the stored values. Run ids, commits and commands:
+`experiments/evaluation_summary/groq_manifest.json`. Groq and earlier Gemini or Ollama results
+are never in one table.
+
+**Usage and cost.** 1230 Groq requests in total, 4,561,550 input and
+1,865,556 output tokens: estimated $0.68 input +
+$1.12 output = **$1.80** at
+$0.15 / $0.60 per 1M tokens (console prices; Groq's usage page is the bill). The total includes
+2 key checks, the 8 calls of a stopped first planted attempt (archived), 7 agent smoke-test calls,
+1 API probe and a superseded runtime run (archived, see 15.4).
+
+**Commit stamps.** Most runs record `-dirty` because an untracked report template
+(`Template - Report - AIDS.docx`) sits in the project root; in the planted group, code edited
+while the run was in progress was also uncommitted (the running process had already loaded its
+code, so it did not use the edits).
+
+### 15.1 Planted issues (17 issues, 3 runs per configuration)
+
+Group `abl-20261111T111100Z`. Recall is per issue (issues matched / 17). Precision is per
+finding (defect-class findings that match an issue / all defect-class findings).
+
+| Configuration | Issues found per run | Issue recall mean (min-max) | Defect precision mean | False-positive defect findings per run |
+|---|---|---|---|---|
+| A. Static only | [16, 16, 16] | 0.941 (0.941-0.941) | 1.000 | [0, 0, 0] |
+| B. LLM only | [11, 11, 12] | 0.667 (0.647-0.706) | 1.000 | [0, 0, 0] |
+| C. Static + LLM | [17, 17, 16] | 0.980 (0.941-1.000) | 0.954 | [1, 0, 1] |
+| D. Static + LLM + RAG | [17, 17, 17] | 1.000 (1.000-1.000) | 1.000 | [0, 0, 0] |
+
+- Exact McNemar on issues found (latest run of each): D vs B p = 0.062, C vs D p = 1.000; no
+  difference is significant at n = 17 (comparison run `20261111T111509Z_ablation_planted`).
+- The LLM alone finds the semantic issue (P13) in every run but misses rule-detectable ones;
+  static analysis finds all 16 rule-detectable issues; D finds all 17 in all three runs.
+- Hallucination funnel (eval funnel): 0 of the LLM findings that passed the schema failed the
+  quote check in any planted run.
+
+### 15.2 CodeReviewer review-comment generation (40 test samples, Python, 3 runs)
+
+Group `abl-20261111T111605Z`, seed 42, comment = top-ranked finding's title +
+recommendation. Coverage = number of samples for which a comment was produced (count per run, out
+of 40); empty comments score 0 on BLEU-4, ROUGE-L and chrF (0-100 scales).
+
+| Configuration | BLEU-4 mean (min-max) | ROUGE-L | chrF | Coverage per run (x/40) |
+|---|---|---|---|---|
+| A. Static only | 1.78 (1.78-1.78) | 4.90 | 7.86 | [17, 17, 17] |
+| B. LLM only | 1.55 (1.47-1.65) | 5.22 | 11.09 | [26, 25, 26] |
+| C. Static + LLM | 1.78 (1.71-1.89) | 5.33 | 12.40 | [25, 28, 28] |
+| D. Static + LLM + RAG | 1.92 (1.55-2.25) | 5.42 | 13.16 | [30, 29, 27] |
+
+- Paired bootstrap (1,000 resamples, seed 42, samples averaged over runs; comparison run
+  `20261111T115035Z_ablation_codereviewer_msg`): D vs A chrF +5.30 (95% CI +2.82 to +7.94) and
+  coverage +0.29 (+0.17 to +0.42); C vs A chrF +4.54 and coverage +0.25 (both p < 0.001).
+  BLEU-4 and ROUGE-L differences, and every D vs C difference, are not significant.
+- Hallucination rate (failed quote check / passed schema): 1.5-2.4% per LLM run.
+- Every fairness check passed (same 40 samples, model, temperature, prompts, threshold; one group).
+
+### 15.3 False alarms on clean, mature code (configuration D, not yet labelled)
+
+Repositories chosen by the team, pinned commits, package folders only, every review unit sent to
+the LLM (`review.max_units` raised to 220; 0 units failed or skipped). Not labelled: a false-alarm
+rate exists only after the team labels `results/manual_label/clean_repo_findings.csv` (a seeded
+random 50 of the 867 findings, empty `label` and `notes` columns).
+
+| Repository | Commit | Lines | Findings | Per 1,000 lines | Critical | High | Medium | Low | Info | Run |
+|---|---|---:|---:|---:|---:|---:|---:|---:|---:|---|
+| requests | `3c7baaa0` | 6,394 | 164 | 25.649 | 0 | 11 | 32 | 120 | 1 | `20261111T115458Z_cleanrepo_requests_static_llm_rag` |
+| flask | `49943b5a` | 9,566 | 122 | 12.754 | 0 | 21 | 36 | 58 | 7 | `20261111T115751Z_cleanrepo_flask_static_llm_rag` |
+| pydantic | `560f0f96` | 29,755 | 581 | 19.526 | 1 | 42 | 142 | 374 | 22 | `20261111T120830Z_cleanrepo_pydantic_static_llm_rag` |
+
+### 15.4 Review time by file size (LLM included)
+
+Run `20261111T121516Z_runtime_full_r5`: 5 rounds per file, concurrency 1, RAG on, provider reply cache off
+(cold runs reach the LLM; warm runs reuse the per-run unit cache). The earlier run
+`20261111T121027Z_runtime_full_r5` is superseded (archived): the reply cache answered rounds 2-5.
+
+| Size | Run | Complete | Mean (s) | Median (s) | LLM (s) | Static (s) | Tokens in | Tokens out |
+|---|---|---|---:|---:|---:|---:|---:|---:|
+| small | cold | 5/5 | 9.76 | 9.36 | 6.72 | 2.35 | 2410 | 2350 |
+| small | warm | 5/5 | 0.16 | 0.16 | 0.00 | 0.02 | - | - |
+| medium | cold | 5/5 | 20.35 | 20.05 | 17.41 | 2.41 | 11369 | 6247 |
+| medium | warm | 5/5 | 0.33 | 0.33 | 0.00 | 0.04 | - | - |
+| large | cold | 3/5 | 73.77 | 73.28 | 65.98 | 6.77 | 55180 | 18388 |
+| large | warm | 4/5 | 5.44 | 0.89 | 4.64 | 0.03 | 6715 | 4015 |
+
+- Large file: in 3 of 10 runs one 200-line unit's reply was cut off at the 4,096-token output limit
+  (gpt-oss spends part of it on reasoning); those runs are partial and excluded from the means.
+
+### 15.5 Bug Detection on BugsInPy (20 dev bugs, then 20 test bugs once)
+
+Dev and test share no project. Pool: one source file, at most 10 changed lines, change inside a
+function. Prompts and thresholds were frozen before the test split; the test split ran once with
+`--final` (its first attempt crashed while unpacking files, before any bug was evaluated or any
+LLM call was made; fixed in edd63d4; the run then resumed from its ledger after three
+interruptions by system restarts, without repeating finished bugs). Failed samples count as
+misses, never dropped. Detection: each bug's buggy and fixed function in separate requests;
+"told apart" = flagged in the buggy version and not in the fixed one; false positives per bug =
+(flagged in both + flagged only in the fixed version) / bugs.
+
+**Dev split.**
+
+| Configuration | Top-1 (Wilson 95% CI) | Top-3 | Top-5 | MRR | Precision | Recall | F1 | Told apart | FP per bug |
+|---|---|---|---|---|---|---|---|---|---|
+| A. Static only | 0.20 (0.08-0.42) | 0.25 | 0.30 | 0.258 | 0.571 | 0.200 | 0.296 | 1/20 | 0.15 |
+| B. LLM only | 0.55 (0.34-0.74) | 0.60 | 0.60 | 0.581 | 0.483 | 0.700 | 0.571 | 2/20 | 0.75 |
+| C. Static + LLM | 0.45 (0.26-0.66) | 0.45 | 0.50 | 0.476 | 0.571 | 0.800 | 0.667 | 6/20 | 0.60 |
+| D. Static + LLM + RAG | 0.50 (0.30-0.70) | 0.60 | 0.60 | 0.556 | 0.593 | 0.800 | 0.681 | 6/20 | 0.55 |
+
+Runs: localization `20261111T140357Z_bugsinpy_localization_dev_static_only_n20`, `20261111T140358Z_bugsinpy_localization_dev_llm_only_n20`, `20261111T140358Z_bugsinpy_localization_dev_static_llm_n20`, `20261111T140358Z_bugsinpy_localization_dev_static_llm_rag_n20`; detection `20261111T141831Z_bugsinpy_detection_dev_static_only_n20`, `20261111T141831Z_bugsinpy_detection_dev_llm_only_n20`, `20261111T141831Z_bugsinpy_detection_dev_static_llm_n20`, `20261111T141831Z_bugsinpy_detection_dev_static_llm_rag_n20`.
+
+**Test split.**
+
+| Configuration | Top-1 (Wilson 95% CI) | Top-3 | Top-5 | MRR | Precision | Recall | F1 | Told apart | FP per bug |
+|---|---|---|---|---|---|---|---|---|---|
+| A. Static only | 0.15 (0.05-0.36) | 0.25 | 0.35 | 0.228 | 0.667 | 0.100 | 0.174 | 1/20 | 0.05 |
+| B. LLM only | 0.35 (0.18-0.57) | 0.50 | 0.50 | 0.425 | 0.467 | 0.700 | 0.560 | 1/20 | 0.80 |
+| C. Static + LLM | 0.35 (0.18-0.57) | 0.40 | 0.40 | 0.374 | 0.552 | 0.800 | 0.653 | 4/20 | 0.65 |
+| D. Static + LLM + RAG | 0.25 (0.11-0.47) | 0.40 | 0.40 | 0.316 | 0.516 | 0.800 | 0.627 | 3/20 | 0.75 |
+
+Runs: localization `20261111T192728Z_bugsinpy_localization_test_static_only_n20`, `20261111T192729Z_bugsinpy_localization_test_llm_only_n20`, `20261111T192729Z_bugsinpy_localization_test_static_llm_n20`, `20261111T192730Z_bugsinpy_localization_test_static_llm_rag_n20`; detection `20261111T232015Z_bugsinpy_detection_test_static_only_n20`, `20261111T232016Z_bugsinpy_detection_test_llm_only_n20`, `20261111T232016Z_bugsinpy_detection_test_static_llm_n20`, `20261111T232016Z_bugsinpy_detection_test_static_llm_rag_n20`.
+
+- Test split, exact McNemar: no pair of configurations differs significantly (all p >= 0.125).
+- Two test localization samples failed (B on keras-38, D on fastapi-5): the model ranked no listed
+  candidate; validation rejected the ranking and the bug counts as a miss.
+- Not run: the Ochiai spectrum-based baseline and test-execution checks need the Docker sandbox,
+  which needs WSL (not installed yet). They stay TBD.

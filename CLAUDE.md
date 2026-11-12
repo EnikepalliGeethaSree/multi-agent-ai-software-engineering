@@ -38,23 +38,29 @@ validation -> dedup -> severity rubric -> confidence -> redaction -> JSON / Mark
 It also reviews **code changes** (git refs / working tree / staged / two ZIPs): impact analysis on
 unchanged callers, hunk risk ranking, verified fix suggestions, actionability filter, mypy, SARIF,
 CI/pre-commit gate (see [docs/change-review.md](docs/change-review.md), decisions D16-D20).
-Results (static baseline, LLM runs, hunk risk, usefulness judge) are in `docs/results.md`.
+Results are in `docs/results.md`; the official Groq evaluation is section 15, every number re-verified
+from saved predictions by `scripts/groq_final_results.py` (outputs in `experiments/evaluation_summary/`).
 
 **Bug Detection Agent: implemented and tested** (see [docs/bug-detection-agent.md](docs/bug-detection-agent.md),
 D31). It subclasses the Code Review Agent: control-flow checks (`parsing/cfg.py`,
 `static_analysis/flow_checks.py`), bug prompts, claim checks, a scan budget, and fault localization from
-a failing test. Its BugsInPy evaluation has two tracks, and the test split has not been run.
+a failing test. Its BugsInPy evaluation (localization + paired detection) ran on Groq: 20 dev bugs,
+then the 20-bug test split once (`docs/results.md` 15.5). The Ochiai baseline needs Docker (TBD).
 
 Do not start the other three agents unless asked; reuse the shared building blocks listed in
 `.claude/rules/architecture.md`.
 
-LLM: **Google Gemini free tier** (`GEMINI_API_KEY` in `.env`, default model `gemini-3.8-flash`, see
-`docs/llm-gemini.md` and D27). No paid APIs. Groq remains a legacy option (`LLM_PROVIDER=groq`).
-Never read or print `.env`. `cli models` lists models for the key, `cli check` verifies key + model
-with one tiny call. Free-tier content may be used by Google, so never send confidential code.
+LLM: **Groq, `openai/gpt-oss-120b`, one key, Developer tier (pay-as-you-go)** is the official
+evaluation provider (`--config configs/groq.yaml`; `GROQ_API_KEY` and the `GROQ_*` limits, prices and
+caps in `.env`; `docs/llm-groq.md`, D38/D39). Hard caps: 11.0M tokens and $4.50 estimated cost, below
+the $5 spend limit set in the Groq console; the provider refuses to start without a cap.
+`cli estimate` prints calls, tokens and cost before any paid run: get approval first.
+Gemini (D27, D37) is the earlier provider; its results are kept as recorded and are partial.
+Never read or print `.env`. `cli check` verifies key + model with one tiny call. Code sent to Groq or
+Gemini leaves this machine, so never send confidential code.
 Local development: **Ollama** `qwen2.5-coder:7b` (`--provider ollama --config configs/ollama.yaml`,
-`docs/llm-ollama.md`, D32): no key, no quota. Gemini stays the official evaluation provider; Ollama
-runs are reported in their own section and never mixed into Gemini tables (D36).
+`docs/llm-ollama.md`, D32): no key, no quota. Groq is the official evaluation provider; Ollama
+and Gemini runs are reported in their own sections and never mixed into Groq tables (D36).
 
 Dashboard: `python -m marl_agents.cli serve` (FastAPI `src/marl_agents/api/` + React/TS/Tailwind
 `frontend/`, see docs/dashboard.md). Frontend: `cd frontend; npm test; npm run build`.
