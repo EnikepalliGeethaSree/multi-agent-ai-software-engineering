@@ -229,7 +229,7 @@ def main() -> int:
             },
             "note": "includes 2 key checks, 8 calls of the stopped first planted attempt, 7 calls of "
             "the agent smoke tests, 1 API probe and the superseded runtime run",
-        },  # fmt: skip
+        },
         "planted": planted(runs, problems),
         "codereviewer_msg": codereviewer(runs, problems),
         "clean_repos": clean_repos(runs),
@@ -248,7 +248,7 @@ def main() -> int:
     (OUT / "groq_manifest.json").write_text(json.dumps(manifest, indent=2), encoding="utf-8")
     (OUT / "groq_final_results.md").write_text(summary_md(data), encoding="utf-8")
     print(summary_md(data))
-    print("reproducibility:", "OK, all recomputed metrics match" if not problems else problems)
+    print("reproducibility:", problems if problems else "OK, all recomputed metrics match")
     return 1 if problems else 0
 
 
