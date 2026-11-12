@@ -633,7 +633,8 @@ of 40); empty comments score 0 on BLEU-4, ROUGE-L and chrF (0-100 scales).
   `20261111T115035Z_ablation_codereviewer_msg`): D vs A chrF +5.30 (95% CI +2.82 to +7.94) and
   coverage +0.29 (+0.17 to +0.42); C vs A chrF +4.54 and coverage +0.25 (both p < 0.001).
   BLEU-4 and ROUGE-L differences, and every D vs C difference, are not significant.
-- Hallucination rate (failed quote check / passed schema): 1.5-2.4% per LLM run.
+- Hallucination rate (failed quote check / passed schema): 0 or 1 finding per LLM run, 0-2.6%
+  (clean-repository runs: 0-3 findings, 0-3.8%; planted runs: 0).
 - Every fairness check passed (same 40 samples, model, temperature, prompts, threshold; one group).
 
 ### 15.3 False alarms on clean, mature code (configuration D, not yet labelled)

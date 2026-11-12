@@ -1,3 +1,4 @@
+# ruff: noqa: E501 - report script: long Markdown table and message lines are kept on one line
 """Part 3.9 feasibility check: is there a verifiable, never-used held-out set in the train split?
 
     python scripts/check_unused_train_holdout.py

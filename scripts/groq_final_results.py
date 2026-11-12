@@ -1,3 +1,4 @@
+# ruff: noqa: E501 - report script: long Markdown table and message lines are kept on one line
 """Collect, re-verify and summarise the official Groq evaluation (D38/D39) from saved runs only.
 
     python scripts/groq_final_results.py
