@@ -446,3 +446,16 @@ def test_pending_comment_comparison_uses_the_cache_flag(tmp_path: Path) -> None:
     assert status is not None
     item = next(i for i in status.items if i.name == "Comment generation on Gemini")
     assert "--reuse-llm-cache" in (item.command or "")
+
+
+def test_official_groq_runs_are_labelled_official_and_older_ones_historical(tmp_path) -> None:  # type: ignore[no-untyped-def]
+    from marl_agents.evaluation.comparison.common import provider_badge
+    from marl_agents.evaluation.runs import load_runs
+
+    cfg = {**llm_cfg("D"), "llm": {"provider": "groq", "model": "openai/gpt-oss-120b"}}
+    save(tmp_path / "new", "20261111T000000Z_planted_static_llm_rag", {"detection": {}},
+         meta={"llm_provider": "groq", "llm_model": "openai/gpt-oss-120b"}, config=cfg)  # fmt: skip
+    save(tmp_path / "old", "20261012T000000Z_planted_static_llm_rag", {"detection": {}},
+         meta={"llm_provider": "groq", "llm_model": "openai/gpt-oss-120b"}, config=cfg)  # fmt: skip
+    assert provider_badge(load_runs(tmp_path / "new")) == "Official: Groq (openai/gpt-oss-120b)"
+    assert provider_badge(load_runs(tmp_path / "old")).startswith("Historical: Groq")

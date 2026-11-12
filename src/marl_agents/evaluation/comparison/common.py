@@ -11,7 +11,7 @@ from marl_agents.evaluation.metrics.efficiency import mean_sd
 from marl_agents.evaluation.runs import SavedRun
 
 CMD = "python -m marl_agents.cli eval"
-LLM_CONFIG = "--config configs/gemini.yaml"
+LLM_CONFIG = "--config configs/groq.yaml"
 ALL_CONFIGS = ",".join(ORDER)
 # A comparison needs a paired sample large enough to mean something. Smaller ones stay visible,
 # labelled preliminary, and are never promoted to a headline.
@@ -33,7 +33,8 @@ def prf(tp: int, fp: int, fn: int) -> tuple[float | None, float | None, float | 
 
 def provider_badge(runs: Iterable[SavedRun]) -> str | None:
     """Names the provider and model behind a table, so eras are never mistaken for each other."""
-    pairs = sorted({(str(r.provider), str(r.model)) for r in runs if r.provider and r.model})
+    runs_list = list(runs)
+    pairs = sorted({(str(r.provider), str(r.model)) for r in runs_list if r.provider and r.model})
     if not pairs:
         return None
     models = ", ".join(sorted({model for _, model in pairs}))
@@ -42,8 +43,16 @@ def provider_badge(runs: Iterable[SavedRun]) -> str | None:
         return f"Gemini: {models}"
     if providers <= LOCAL_PROVIDERS:
         return f"Local: {', '.join(sorted(p.title() for p in providers))} ({models})"
+    stamps = [r.stamp for r in runs_list if r.provider and r.model]
+    if pairs == [OFFICIAL] and stamps and min(stamps) >= OFFICIAL_SINCE:
+        return f"Official: Groq ({OFFICIAL[1]})"
     return f"Historical: {', '.join(sorted(p.title() for p in providers))} ({models})"
 
+
+# The official evaluation provider and model since D38/D39; earlier Groq runs (Sept-Oct 2026) are
+# historical, even with the same model id, because code and prompts differed.
+OFFICIAL = ("groq", "openai/gpt-oss-120b")
+OFFICIAL_SINCE = "20261110"
 
 # Models run on this machine (development). Their runs are reported in their own section and
 # never enter the official (Gemini) comparison tables.

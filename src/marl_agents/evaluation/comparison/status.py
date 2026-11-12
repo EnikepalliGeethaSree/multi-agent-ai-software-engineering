@@ -167,7 +167,7 @@ def _method_items(tables: dict[str, ComparisonTable], runs: list[SavedRun]) -> l
         command = None
         if gemini and not done:
             command = (
-                "python -m marl_agents.evaluation.benchmark_runtime --config configs/gemini.yaml "
+                "python -m marl_agents.evaluation.benchmark_runtime --config configs/groq.yaml "
                 "--repeats 5 --per-category 1 --max-llm-calls 65"
             )
         items.append(
