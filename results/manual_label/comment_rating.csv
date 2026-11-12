@@ -1,0 +1,456 @@
+sample_id,diff,generated_comment,reference_comment,r1_relevance,r1_correctness,r1_actionability,r2_relevance,r2_correctness,r2_actionability,notes
+msg-test-9950-4481,"@@ -2,6 +2,7 @@
+ from __future__ import unicode_literals
+ import unittest
+ import os
++import pytest
+ 
+ import colander
+ import mock",Unused import of pytest. Remove the unused import line (`import pytest`) from the file. Also: Delete the line `import pytest` as it is not used.,"Just a small tip: I think you don't need to include pytest here. You can run tests using: - `pytest tests/path/to/my/test` under the virtualenv to run a single test. - `pytest tests/` under the virtualenv to run all the tests. - `make tests` to run all the tests for all python versions, like travis do. Hope this helps! :)",,,,,,,
+msg-test-23207-666,"@@ -143,6 +143,9 @@ def executeEvent(eventName,obj,**kwargs):
+ 	@param kwargs: Additional event parameters as keyword arguments.
+ 	""""""
+ 	try:
++		# Allow NVDAObjects to redirect focus events to another object of their choosing.
++		if eventName==""gainFocus"" and obj.focusRedirect:
++			obj=obj.focusRedirect
+ 		sleepMode=obj.sleepMode
+ 		if eventName==""gainFocus"" and not doPreGainFocus(obj,sleepMode=sleepMode):
+ 			return","Unsafe attribute access on obj in focus redirect logic. Access the attribute safely using `getattr` and only reassign when a valid redirect object is present:
+```python
+if eventName == ""gainFocus"":
+    redirect = getattr(obj, ""focusRedirect"", None)
+    if redirect:
+        obj = redirect
+```","focusRedirect is used in the powerpnt appModule. We might have to make sure that this does not break. Having said that, I really like this being handled on the events level!",,,,,,,
+msg-test-34135-596,"@@ -34,6 +34,15 @@ import appModules
+ import watchdog
+ import extensionPoints
+ from fileUtils import getFileVersionInfo
++import shlobj
++from functools import wraps
++
++# Path to the native system32 directory.
++nativeSys32: str = shlobj.SHGetFolderPath(None, shlobj.CSIDL.SYSTEM)
++# Path to the syswow64 directory if it exists on the current system.
++Syswow64Sys32: str = shlobj.SHGetFolderPath(None, shlobj.CSIDL.SYSTEMX86)
++# Do we have separate system32 directories for 32 and 64-bit processes?
++hasSeparateSyswow64: bool = nativeSys32 != Syswow64Sys32
+ 
+ #Dictionary of processID:appModule paires used to hold the currently running modules
+ runningTable={}","Unused import `wraps`. Remove the unused import line or use `wraps` where appropriate. For example, delete line 38. Also: Remove the unused `wraps` import (line 38).",Could we have this initialization as part of the initialize method?,,,,,,,
+msg-test-15956-6229,"@@ -25,17 +25,6 @@ except:
+     xr = None
+ 
+ 
+-def toarray(v, index_value=False):
+-    """"""
+-    Interface helper function to turn dask Arrays into numpy arrays as
+-    necessary. If index_value is True, a value is returned instead of
+-    an array holding a single value.
+-    """"""
+-    if dask and isinstance(v, dask.array.Array):
+-        arr =  v.compute()
+-        return arr[()] if index_value else arr
+-    else:
+-        return v
+ 
+ def compute_edges(edges):
+     """"""","Bare except hides import errors for xarray. Catch only `ImportError`:
+```python
+except ImportError:
+    xr = None
+``` Also: Replace bare except with `except ImportError:`",Guess it isn't used. The dask thing was just a prototype so removing it is probably the right thing to do.,,,,,,,
+msg-test-7567-2087,"@@ -17,8 +17,8 @@ MINIMALIST_COLLECTION = {'data': dict()}
+ MINIMALIST_GROUP = {'data': dict(members=['fxa:user'])}
+ MINIMALIST_RECORD = {'data': dict(name=""Hulled Barley"",
+                                   type=""Whole Grain"")}
+-USER_PRINCIPAL = 'basicauth:8a931a10fc88ab2f6d1cc02a07d3a81b5d4768f' \
+-                 '6f13e85c5d8d4180419acb1b4'
++USER_PRINCIPAL = 'basicauth:aaedca130273574dd2bd6c3acad57f3545b662a974fa4320' \
++                 '236f25fe474676d6'
+ 
+ 
+ class BaseWebTest(object):","Prefer parentheses over backslash for multi-line string literals. Rewrite the definition using parentheses for implicit concatenation, e.g.:\n\n```python\nUSER_PRINCIPAL = (\n    'basicauth:aaedca130273574dd2bd6c3acad57f3545b662a974fa4320'
+    '236f25fe474676d6'\n)\n```",Why is the principal changing here?,,,,,,,
+msg-test-8228-2025,"@@ -455,6 +455,10 @@ class ELBConnection(AWSQueryConnection):
+                     'LoadBalancerName'          : lb_name,
+                     'LoadBalancerPort'          : lb_port,
+                  }
++        if policies:
++            self.build_list_params(params, policies, 'PolicyNames.member.%d')
++        else:
++            params[""PolicyNames""] = """"
+         self.build_list_params(params, policies, 'PolicyNames.member.%d')
+         return self.get_status('SetLoadBalancerPoliciesOfListener', params)
+ ","Incorrect handling of empty/None policies in set_lb_policies_of_listener. Remove the unconditional call on line 462 and only build the list when `policies` is truthy. For the empty case, either omit the parameter or set it to an empty string as already done.",Shouldn't this line be removed?,,,,,,,
+msg-test-19419-6376,"@@ -162,6 +162,7 @@ def _get_configtypes():
+                                      configtypes._Numeric] and
+                            issubclass(e, configtypes.BaseType))
+     yield from inspect.getmembers(configtypes, predicate)
++    # pylint: enable=protected-access
+ 
+ 
+ def _get_setting_types_quickref():","Avoid assigning lambda to variable. Replace the lambda with a named function, e.g.:
+```python
+def _is_valid_configtype(e):
+    return (
+        inspect.isclass(e)
+        and e not in [configtypes.BaseType, configtypes.MappingType, configtypes._Numeric]
+        and issubclass(e, configtypes.BaseType)
+    )
+```
+Then use `predicate = _is_valid_configtype` or directly pass the function to `inspect.getmembers`. Also: Replace the lambda with a regular function definition as described in the finding.",You can probably move this up after the `._Numeric` line.,,,,,,,
+msg-test-12558-985,"@@ -1,11 +1,12 @@
+-import pytest
+ import time
+ from unittest import mock
+ 
++import pytest
++
+ from pyramid import testing
+ 
+-from kinto.core.storage import exceptions
+ from kinto.core.cache import heartbeat
++from kinto.core.storage import exceptions
+ 
+ 
+ class CacheTest:","Unused imports. Remove the unused imports or use them if they are required elsewhere in the file. For example:
+```python
+- import time
+- import pytest
+- from kinto.core.storage import exceptions
++ # import statements that are actually used
++ from kinto.core.cache import heartbeat
++ from pyramid import testing
++```",Why a blank line here?,,,,,,,
+msg-test-10642-9202,"@@ -65,7 +65,11 @@ class QR_Window(QWidget):
+         amount_text = ''
+         if amount:
+             if currency:
+-                self.amount = Decimal(amount) / self.exchanger.exchange(1, currency) if currency else amount
++                exch = self.exchanger.exchange(1, currency)
++                if exch == None:
++                    self.amount = Decimal('0.0')
++                else:
++                    self.amount = Decimal(amount) / exch if currency else amount
+             else:
+                 self.amount = Decimal(amount)
+             self.amount = self.amount.quantize(Decimal('1.0000'))","Potential division by zero when exchange rate is zero. Check for both `None` and zero (or any falsy) exchange rates before performing the division. For example:
+```python
+exch = self.exchanger.exchange(1, currency)
+if not exch:  # covers None and 0
+    self.amount = Decimal('0.0')
+else:
+    self.amount = Decimal(amount) / exch
+```",Should this be `None` instead?,,,,,,,
+msg-test-19865-4125,"@@ -348,8 +348,8 @@ class BigQueryClient:
+             status = self.client.jobs().get(projectId=project_id, jobId=job_id).execute(num_retries=10)
+             if status['status']['state'] == 'DONE':
+                 if status['status'].get('errorResult'):
+-                    raise Exception('BigQuery job failed: {}'.format(status['status']['errorResult']))
+-                return
++                    raise BigQueryExecutionError(job_id, status['status']['errorResult'])
++                return job_id
+ 
+             logger.info('Waiting for job %s:%s to complete...', project_id, job_id)
+             time.sleep(5)","Undefined exception class BigQueryExecutionError. Define or import a proper exception class for job execution errors. For example, add `class BigQueryExecutionError(RuntimeError):
+    def __init__(self, job_id, error):
+        super().__init__(f""BigQuery job {job_id} failed: {error}"")
+        self.job_id = job_id
+        self.error = error` at the top of the module, or import it from the project's exceptions module. Also: Import or define `BigQueryExecutionError` before it is used.",Please add return and return type description to docstring of this method.,,,,,,,
+msg-test-20425-639,"@@ -232,6 +232,11 @@ class Command(misc.MinimalLineEditMixin, misc.CommandLineEdit):
+         Enter/Shift+Enter/etc. will cause QLineEdit to think it's finished
+         without command_accept to be called.
+         """"""
++        text = self.text()
++        if text in modeparsers.STARTCHARS and e.key() == Qt.Key_Backspace:
++            modeman.leave(self._win_id, usertypes.KeyMode.command,
++                          'prefix deleted')
++
+         if e.key() == Qt.Key_Return:
+             e.ignore()
+             return",Incorrect prefix‑deletion detection in keyPressEvent. Check that the text consists of a single character before comparing: if text and len(text) == 1 and text[0] in modeparsers.STARTCHARS and e.key() == Qt.Key_Backspace: then leave the mode.,You should also call `e.accept()` and `return` so the key press isn't processed further (as we're leaving insert mode anyways).,,,,,,,
+msg-test-31586-4211,"@@ -55,8 +55,9 @@ def browseableMessage(message,title=None,isHtml=False):
+ 	if not title:
+ 		# Translators: The title for the dialog used to present general NVDA messages in browse mode.
+ 		title = _(""NVDA Message"")
+-	isHtmlArgument = ""true"" if isHtml else ""false""
+-	dialogString = u""{isHtml};{title};{message}"".format( isHtml = isHtmlArgument , title=title , message=message ) 
++	if not isHtml:
++		message = f""<pre>{message.replace('<', '&lt;')}</pre>""
++	dialogString = f""{title};{message}""
+ 	dialogArguements = automation.VARIANT( dialogString )
+ 	gui.mainFrame.prePopup() 
+ 	windll.mshtml.ShowHTMLDialogEx( ","Undefined name `_`. If the project relies on a global gettext installation, keep as is; otherwise add `from gettext import gettext as _` at the top of the file.",Please use something like html.escape() to ensure that the text is totally safe to include within html. &lt; is not enough.,,,,,,,
+msg-test-13511-3386,"@@ -19,13 +19,14 @@ package org.openqa.selenium.remote;
+ 
+ import com.google.common.collect.ImmutableMap;
+ 
++import org.openqa.selenium.DeviceRotation;
+ import org.openqa.selenium.Rotatable;
+ import org.openqa.selenium.ScreenOrientation;
+ 
+ import java.lang.reflect.Method;
+ 
+ public class AddRotatable implements AugmenterProvider {
+-
++    
+   public Class<?> getDescribedInterface() {
+     return Rotatable.class;
+   }",Unused import DeviceRotation. Remove the unused import line. Also: Follow PEP 8.,"you don't need to create a enum for this, java allows you to switch on a string ;) (since java 7?)",,,,,,,
+msg-test-24070-599,"@@ -238,9 +238,14 @@ class DetectoRS_ResNet(ResNet):
+                  pretrained=None,
+                  init_cfg=None,
+                  **kwargs):
+-        assert init_cfg is None, 'To prevent abnormal initialization ' \
+-                                 'behavior, init_cfg is not allowed to be set'
+-        self.pretrained = pretrained
++        self.init_cfg = init_cfg
++        if init_cfg is not None:  # init_cfg priority > pretrained
++            self.pretrained = init_cfg['checkpoint']
++        else:
++            if pretrained is not None:
++                self.pretrained = pretrained
++            else:
++                self.pretrained = None
+         self.sac = sac
+         self.stage_with_sac = stage_with_sac
+         self.rfp_inplanes = rfp_inplanes","KeyError when init_cfg lacks 'checkpoint'. Validate `init_cfg` before accessing the `'checkpoint'` key. For example:
+```python
+if isinstance(init_cfg, dict) and 'checkpoint' in init_cfg:
+    self.pretrained = init_cfg['checkpoint']
+else:
+    raise ValueError('init_cfg must be a dict containing a ""checkpoint"" key')
+```
+Alternatively, use `init_cfg.get('checkpoint')` with a sensible fallback.","For insurance, it's best not to take it directly",,,,,,,
+msg-test-11964-8578,"@@ -230,6 +230,18 @@ class Key(object):
+         else:
+             self.encrypted = None
+ 
++    def handle_storage_class_header(self, resp):
++        provider = self.bucket.connection.provider
++        if provider.storage_class_header:
++            self._storage_class = resp.getheader(
++                provider.storage_class_header, None)
++            if (self._storage_class is None and
++                provider.get_provider_name() == 'aws'):
++                # S3 docs for HEAD object requests say S3 will return this
++                # header for all objects except Standard storage class objects.
++                self._storage_class = 'STANDARD'
++
++
+     def handle_version_headers(self, resp, force=False):
+         provider = self.bucket.connection.provider
+         # If the Key object already has a version_id attribute value, it","Missing docstring for public method `handle_version_headers`. Add a concise docstring explaining the purpose, parameters, and behavior of the method. Also: Add a docstring to `handle_version_headers`.","I don't understand why you want to populate the storage class in this case, if the S3 docs say they won't populate the header in this case?",,,,,,,
+msg-test-19247-4033,"@@ -29,6 +29,13 @@ from PyRegion import PyRegion
+ from nupic.algorithms.cla_classifier_factory import CLAClassifierFactory
+ 
+ 
++class _NumCatgoriesNotSpecified(Exception):
++  pass
++
++
++class _UnknownOutput(Exception):
++  pass
++
+ 
+ class CLAClassifierRegion(PyRegion):
+   """"""",Misspelled exception class name. Rename the class to the correct spelling `_NumCategoriesNotSpecified` and update all references throughout the codebase to use the new name. Optionally add a short docstring explaining when this exception is raised.,this is spelled wrong and also not used so remove it,,,,,,,
+msg-test-13985-5670,"@@ -180,7 +180,7 @@ def parse_bwids(bwolist):
+     return list(ast.literal_eval(bwolist))
+ 
+ 
+-def get_holdingpen_objects(ptags=[]):
++def get_holdingpen_objects(ptags=[""Need action""]):
+     """"""Get BibWorkflowObject's for display in Holding Pen.
+ 
+     Uses DataTable naming for filtering/sorting. Work in progress.",Do not use mutable data structures for argument defaults. Replace the mutable default list with `None` and initialise inside the function (see finding 1).,@jalavik should be have somewhere enum/list/registry of possible tags?,,,,,,,
+msg-test-19772-9572,"@@ -652,9 +652,10 @@ class TabbedBrowser(tabwidget.TabWidget):
+ 
+         log.modes.debug(""Current tab changed, focusing {!r}"".format(tab))
+         tab.setFocus()
+-        for mode in [usertypes.KeyMode.hint, usertypes.KeyMode.insert,
+-                     usertypes.KeyMode.caret, usertypes.KeyMode.passthrough]:
+-            modeman.leave(self._win_id, mode, 'tab changed', maybe=True)
++        if not config.val.tabs.persist_mode_on_change:
++            for mode in [usertypes.KeyMode.hint, usertypes.KeyMode.insert,
++                         usertypes.KeyMode.caret, usertypes.KeyMode.passthrough]:
++                modeman.leave(self._win_id, mode, 'tab changed', maybe=True)
+         if self._now_focused is not None:
+             objreg.register('last-focused-tab', self._now_focused, update=True,
+                             scope='window', window=self._win_id)","Uncaught exceptions from modeman.leave may crash UI. Wrap the call to `modeman.leave` in a try/except block that logs the exception and continues, e.g.:\n```python\nif not config.val.tabs.persist_mode_on_change:\n    for mode in [usertypes.KeyMode.hint, usertypes.KeyMode.insert,\n                 usertypes.KeyMode.caret, usertypes.KeyMode.passthrough]:\n        try:\n            modeman.leave(self._win_id, mode, 'tab changed', maybe=True)\n        except Exception as e:\n            log.modes.exception('Failed to leave mode %s on tab change', mode)\n```",This line is too long now - please break it after the comma.,,,,,,,
+msg-test-23207-6706,"@@ -145,6 +145,17 @@ class MainWindow(QWidget):
+         _private: Whether the window is in private browsing mode.
+     """"""
+ 
++    # Application wide stylesheets
++    STYLESHEET = """"""
++        QLabel#hint {
++            background-color: {{ conf.colors.hints.bg }};
++            color: {{ conf.colors.hints.fg }};
++            font: {{ conf.fonts.hints }};
++            border: {{ conf.hints.border }};
++            padding-left: -3px;
++        }
++    """"""
++
+     def __init__(self, *, private, geometry=None, parent=None):
+         """"""Create a new main window.
+ ","Long function MainWindow.__init__ (95 lines). Refactor MainWindow.__init__ into smaller helper methods (e.g., _setup_ui, _register_objects, _initialize_components) to improve readability and maintainability.",Would using `HintLabel` here instead (without `setObjectName`) work?,,,,,,,
+msg-test-10263-2436,"@@ -56,6 +56,12 @@ PERMISSIONS_INHERITANCE_TREE = {
+             'group': ['write', 'read']
+         },
+     },
++    'history': {
++        'read': {
++            'bucket': ['write', 'read'],
++            'history': ['write', 'read']
++        },
++    },
+     'collection': {
+         'write': {
+             'bucket': ['write'],","Missing attribute permission entry for 'history' resource. Add a `'read:attributes'` entry for the 'history' resource (even if it maps to the same permissions as `'read'` or an empty dict) so that `_inherited_permissions` can safely retrieve it. For example:
+```python
+    'history': {
+        'read': {
+            'bucket': ['write', 'read'],
+            'history': ['write', 'read']
+        },
+        'read:attributes': {
+            'bucket': ['write', 'read'],
+            'history': ['write', 'read']
+        }
+    },
+```",We should add write inheritance too.,,,,,,,
+msg-test-19970-3645,"@@ -527,6 +527,12 @@ class BigQueryLoadTask(MixinBigQueryBulkComplete, luigi.Task):
+         """"""	Indicates if BigQuery should allow quoted data sections that contain newline characters in a CSV file. The default value is false.""""""
+         return False
+ 
++    @property
++    def project_id(self):
++        """"""Project ID on which to run the BigQuery Job
++        """"""
++        return self.output().table.project_id
++
+     def run(self):
+         output = self.output()
+         assert isinstance(output, BigQueryTarget), 'Output must be a BigQueryTarget, not %s' % (output)","Missing docstring on public function BigQueryLoadTask.run. Add a docstring to the `run` method explaining its purpose, the expected output target, and the exceptions it may raise (e.g., `BigQueryExecutionError`).",Could you please add short description for the default value as well?,,,,,,,
+msg-test-10302-3044,"@@ -203,6 +203,8 @@ class TestPython3Checker(testutils.CheckerTestCase):
+             '[x for x in {}]',
+             'func({})',
+             'a, b = {}',
++            'max({}())',
++            'min({}())',
+         ]
+         non_iterating_code = [
+             'x = __({}())',","Missing extraction marker in non‑iterating dict method tests. Insert a `#@` marker after each call expression, e.g. `'x = __({}())#@'` and `'__({}())[0]#@'`, so that `extract_node` yields the correct Call node for the checker.","these tests are currently somewhat nonsensical. This code expands to `a, b = {}.keys` when it really should be expanding to `a, b = {}.keys()` -- though fixing this causes the test to fail so I suspect something worse is going on here that I don't quite understand?",,,,,,,
+msg-test-18309-3075,"@@ -0,0 +1,19 @@
++module.exports = {
++  roots: [
++    ""<rootDir>/javascript/grid-ui/src""
++  ],
++  testMatch: [
++    ""<rootDir>/javascript/grid-ui/src/tests/**/*.test.tsx""
++  ],
++  transform: {
++    ""^.+\\.(ts|tsx)$"": ""ts-jest""
++  },
++  moduleFileExtensions: [""ts"", ""tsx"", ""js"", ""jsx"", ""json"", ""node""],
++  snapshotSerializers: [""enzyme-to-json/serializer""],
++  setupFilesAfterEnv: [""<rootDir>/setupTests.ts""],
++  testEnvironment: ""jsdom"",
++  moduleNameMapper: {
++    "".+\\.(svg|png|jpg|css)$"": ""identity-obj-proxy"",
++    ""selenium/javascript/grid-ui/(.*)"": ""<rootDir>/$1""
++  }
++}",Undefined name `module`. Define or import the name before use; this raises NameError at runtime.,"We don't need this file, we can use the one that is in the grid-ui directory",,,,,,,
+msg-test-22830-1114,"@@ -68,12 +68,13 @@ class ControlField(Field):
+ 			or (role in (controlTypes.ROLE_TABLE, controlTypes.ROLE_TABLECELL, controlTypes.ROLE_TABLEROWHEADER, controlTypes.ROLE_TABLECOLUMNHEADER) and not formatConfig[""reportTables""])
+ 			or (role in (controlTypes.ROLE_LIST, controlTypes.ROLE_LISTITEM) and controlTypes.STATE_READONLY in states and not formatConfig[""reportLists""])
+ 			or (role in (controlTypes.ROLE_FRAME, controlTypes.ROLE_INTERNALFRAME) and not formatConfig[""reportFrames""])
++			or (role in (controlTypes.ROLE_DELETED_CONTENT,controlTypes.ROLE_INSERTED_CONTENT) and not formatConfig[""reportRevisions""])
+ 		):
+ 			# This is just layout as far as the user is concerned.
+ 			return self.PRESCAT_LAYOUT
+ 
+ 		if (
+-			role in (controlTypes.ROLE_LINK, controlTypes.ROLE_HEADING, controlTypes.ROLE_BUTTON, controlTypes.ROLE_RADIOBUTTON, controlTypes.ROLE_CHECKBOX, controlTypes.ROLE_GRAPHIC, controlTypes.ROLE_CHART, controlTypes.ROLE_MENUITEM, controlTypes.ROLE_TAB, controlTypes.ROLE_COMBOBOX, controlTypes.ROLE_SLIDER, controlTypes.ROLE_SPINBUTTON, controlTypes.ROLE_COMBOBOX, controlTypes.ROLE_PROGRESSBAR, controlTypes.ROLE_TOGGLEBUTTON, controlTypes.ROLE_MENUBUTTON, controlTypes.ROLE_TREEVIEW, controlTypes.ROLE_CHECKMENUITEM, controlTypes.ROLE_RADIOMENUITEM)
++			role in (controlTypes.ROLE_DELETED_CONTENT,controlTypes.ROLE_INSERTED_CONTENT,controlTypes.ROLE_LINK, controlTypes.ROLE_HEADING, controlTypes.ROLE_BUTTON, controlTypes.ROLE_RADIOBUTTON, controlTypes.ROLE_CHECKBOX, controlTypes.ROLE_GRAPHIC, controlTypes.ROLE_CHART, controlTypes.ROLE_MENUITEM, controlTypes.ROLE_TAB, controlTypes.ROLE_COMBOBOX, controlTypes.ROLE_SLIDER, controlTypes.ROLE_SPINBUTTON, controlTypes.ROLE_COMBOBOX, controlTypes.ROLE_PROGRESSBAR, controlTypes.ROLE_TOGGLEBUTTON, controlTypes.ROLE_MENUBUTTON, controlTypes.ROLE_TREEVIEW, controlTypes.ROLE_CHECKMENUITEM, controlTypes.ROLE_RADIOMENUITEM)
+ 			or (role == controlTypes.ROLE_EDITABLETEXT and controlTypes.STATE_MULTILINE not in states and (controlTypes.STATE_READONLY not in states or controlTypes.STATE_FOCUSABLE in states))
+ 			or (role == controlTypes.ROLE_LIST and controlTypes.STATE_READONLY not in states)
+ 		):","Unprotected dictionary access may raise KeyError. Access the key safely using `formatConfig.get(""reportRevisions"", False)` (or an appropriate default) and document the expected default behaviour.",Could you split this into multiple lines?,,,,,,,
+msg-test-12636-1249,"@@ -37,13 +37,18 @@ from .execution_context import (
+     SystemPipelineExecutionContext,
+ )
+ 
+-
+ from .errors import DagsterInvariantViolationError
+ 
+ from .events import construct_event_logger
+ 
+ from .execution_plan.create import create_execution_plan_core
+ 
++from .execution_plan.intermediates_manager import (
++    FileSystemIntermediateManager,
++    InMemoryIntermediatesManager,
++    IntermediatesManager,
++)
++
+ from .execution_plan.objects import (
+     ExecutionPlan,
+     ExecutionStepEvent,","Unused imports. Remove the unused imports from the module, e.g., delete lines 46‑50 or comment them out if they are needed later. Also: Remove the unused import of FileSystemIntermediateManager.",`Intermediates` or `Intermediate`,,,,,,,
+msg-test-10597-6141,"@@ -25,6 +25,8 @@ _rtp_payload_types = {
+     31: 'H261',          32: 'MPV',
+     33: 'MP2T',          34: 'H263' }
+ 
++extension_condition = lambda pkt: pkt.extension
++
+ class RTP(Packet):
+     name=""RTP""
+     fields_desc = [ BitField('version', 2, 2),","Lambda assigned to variable instead of function definition. Replace the lambda with a proper function definition:
+
+```python
+def extension_condition(pkt):
+    return getattr(pkt, ""extension"", False)
+``` Also: Use a regular function definition instead of assigning a lambda (see finding).",Please note that adding this will import `extension_condition` in the entire scapy (as you are located in a layer). You might want to move this inside the RTP class ? Would be better i think,,,,,,,
+msg-test-8643-8001,"@@ -120,7 +120,8 @@ def default_bucket(request):
+     try:
+         response = request.invoke_subrequest(subrequest)
+     except httpexceptions.HTTPException as error:
+-        if error.content_type == 'application/json':
++        is_redirect = error.status_code < 400
++        if error.content_type == 'application/json' or is_redirect:
+             response = reapply_cors(subrequest, error)
+         else:
+             # Ask the upper level to format the error.","Incorrect redirect detection logic. Replace the redirect check with an explicit 3xx range test, e.g.: `is_redirect = 300 <= error.status_code < 400`.",I would have tested 304 only there.,,,,,,,
+msg-test-16862-2695,"@@ -36,3 +36,4 @@ ACTIVATE_SALT = 'activate'
+ PASSWORD_RESET_SALT = 'reset'
+ MAX_LINK_AGE = 60 * 60 * 24 # 24 hours
+ CODE_EXP_MINUTES = 10
++TOKEN_EXP_DEFAULT = {'days': 90}","Mutable constant dictionary. Replace the mutable dict with an immutable mapping, e.g.: 
+```python
+from types import MappingProxyType
+TOKEN_EXP_DEFAULT = MappingProxyType({'days': 90})
+``` 
+or expose the value as a simple integer constant and construct the dict where needed.",should also be alphabetized or at least grouped and alphabetized within group,,,,,,,
+msg-test-10054-3555,"@@ -4,6 +4,8 @@ import functools
+ import colander
+ import venusian
+ import six
++from jsonpatch import JsonPatchException
++from jsonpointer import JsonPointerException
+ from pyramid import exceptions as pyramid_exceptions
+ from pyramid.decorator import reify
+ from pyramid.security import Everyone",Unused import JsonPatchException. Remove the import line or use the exception where appropriate. Also: Remove the unused import `JsonPatchException`.,"I'd rather catch those to `utils.py` and raise a simple ValueError from them. From the resource point of view, these are details of implementation",,,,,,,
+msg-test-8914-4355,"@@ -1,8 +1,8 @@
+ import os
+ import codecs
+-
++from time import strftime
+ from cliquet import utils as cliquet_utils
+-
++from kinto import __version__
+ from kinto import logger
+ 
+ HERE = os.path.abspath(os.path.dirname(__file__))","Unused import `strftime`. Remove the unused import line or use the function if needed. For example, delete line 3 or replace it with a direct `import time` if future code requires it. Also: Delete the line `from time import strftime` as it is not used.","The spaces are actually legitimate here: in python, you: - first import standard library modules (hint: time is one) - then import 3rd party library modules - then import the modules from you project (here kinto). Between each block you need an empty line.",,,,,,,
