@@ -17,7 +17,8 @@ propose a level with a justification; `findings.severity` applies the rubric and
    `src/marl_agents/static_analysis/rules.py` (e.g. `F401 -> low`, `S608 -> high`, `E722 -> medium`,
    Radon CC 11-15 -> low, > 15 -> medium; AWS/private keys -> critical). The LLM never changes these.
    Control-flow checks use `FLOW_RULES` in the same file (`BUG-NONE-DEREF` -> high,
-   `BUG-OFF-BY-ONE` -> high, the others -> medium).
+   `BUG-OFF-BY-ONE` -> high, the others -> medium). `BUG-INFINITE-LOOP` (D35, in `rules.py`) -> high.
+   (Audit correction, 2026-11-12: this rule was listed as medium; the code has always used high.)
 2. **LLM-only findings** keep the LLM's *proposed* severity (stored in `proposed_severity`) subject to:
    - security floor: at least `medium`;
    - low-confidence cap: confidence < 0.5 cannot be above `medium`.

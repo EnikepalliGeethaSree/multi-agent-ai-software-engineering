@@ -463,7 +463,8 @@ Group `abl-20261108T055008Z`, 2026-11-08, `gemini-3.6-flash`, temperature 0, `ll
 free tier. All four configurations ran together on the same fixture and answer key, and every fairness
 check passed. Runs: `20261108T055008Z_planted_static_only`, `20261108T055018Z_planted_llm_only`,
 `20261108T055101Z_planted_static_llm`, `20261108T055201Z_planted_static_llm_rag`; comparison
-`20261108T055341Z_ablation_planted`. 12 LLM requests, 0 failed units.
+`20261108T055341Z_ablation_planted`. 13 LLM requests (12 successful, 1 failed and retried in D),
+0 failed units. (Audit correction, 2026-11-12: this said "12 LLM requests"; the runs record 4 + 4 + 5.)
 
 | Configuration | Issue recall | Found | Rule-detectable recall | Semantic recall | Defect precision | Correct / defect findings | Mean line error |
 |---|---:|---:|---:|---:|---:|---:|---:|

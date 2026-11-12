@@ -352,6 +352,9 @@ statistics, and their counts are always shown.
   and runs are saved with the others. A local launcher (`data/gemini_p10/run.py`, not tracked) puts the
   worktree's `src` first on the path and loads the main `.env` into the environment. Runs record
   commit `a54c6c9...` and prompts system 1.0, review 1.0 (bug: system, review and localize 1.0).
+- Correction (audit, 2026-11-12): the planted Gemini results of results section 12 were not produced
+  at a54c6c9. Their runs record commit `ff1b67c...-dirty`: an ancestor of a54c6c9 whose uncommitted
+  changes were committed next (522805c, a54c6c9). The continuation runs use a54c6c9 as stated.
 - Consequence: the Gemini numbers measure the a54c6c9 agents, without the D33-D35 additions. Ollama
   runs, the dashboard and the tests use the current code. The two sets of results are reported
   apart (D36) and never merged.

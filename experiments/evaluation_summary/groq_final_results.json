@@ -1,0 +1,1384 @@
+{
+  "provider": "groq",
+  "model": "openai/gpt-oss-120b",
+  "prices_usd_per_1m_tokens": {
+    "input": 0.15,
+    "output": 0.6
+  },
+  "usage_all_groq_calls": {
+    "requests": 1230,
+    "input_tokens": 4561550,
+    "output_tokens": 1865556,
+    "estimated_cost_usd": {
+      "input": 0.6842,
+      "output": 1.1193,
+      "total": 1.8036
+    },
+    "note": "includes 2 key checks, 8 calls of the stopped first planted attempt, 7 calls of the agent smoke tests, 1 API probe and the superseded runtime run"
+  },
+  "planted": {
+    "group": "abl-20261111T111100Z",
+    "issues": 17,
+    "configurations": {
+      "A": {
+        "runs": [
+          "20261111T111100Z_planted_static_only",
+          "20261111T111212Z_planted_static_only",
+          "20261111T111332Z_planted_static_only"
+        ],
+        "issues_found_per_run": [
+          16,
+          16,
+          16
+        ],
+        "true_positive_defect_findings_per_run": [
+          13,
+          13,
+          13
+        ],
+        "false_positive_defect_findings_per_run": [
+          0,
+          0,
+          0
+        ],
+        "issue_recall": {
+          "mean": 0.9412,
+          "min": 0.9411764705882353,
+          "max": 0.9411764705882353
+        },
+        "defect_precision_per_finding": {
+          "mean": 1.0,
+          "min": 1.0,
+          "max": 1.0
+        },
+        "complete": true
+      },
+      "B": {
+        "runs": [
+          "20261111T111106Z_planted_llm_only",
+          "20261111T111217Z_planted_llm_only",
+          "20261111T111338Z_planted_llm_only"
+        ],
+        "issues_found_per_run": [
+          11,
+          11,
+          12
+        ],
+        "true_positive_defect_findings_per_run": [
+          11,
+          11,
+          12
+        ],
+        "false_positive_defect_findings_per_run": [
+          0,
+          0,
+          0
+        ],
+        "issue_recall": {
+          "mean": 0.6667,
+          "min": 0.6470588235294118,
+          "max": 0.7058823529411765
+        },
+        "defect_precision_per_finding": {
+          "mean": 1.0,
+          "min": 1.0,
+          "max": 1.0
+        },
+        "complete": true
+      },
+      "C": {
+        "runs": [
+          "20261111T111123Z_planted_static_llm",
+          "20261111T111237Z_planted_static_llm",
+          "20261111T111358Z_planted_static_llm"
+        ],
+        "issues_found_per_run": [
+          17,
+          17,
+          16
+        ],
+        "true_positive_defect_findings_per_run": [
+          14,
+          14,
+          13
+        ],
+        "false_positive_defect_findings_per_run": [
+          1,
+          0,
+          1
+        ],
+        "issue_recall": {
+          "mean": 0.9804,
+          "min": 0.9411764705882353,
+          "max": 1.0
+        },
+        "defect_precision_per_finding": {
+          "mean": 0.954,
+          "min": 0.9285714285714286,
+          "max": 1.0
+        },
+        "complete": true
+      },
+      "D": {
+        "runs": [
+          "20261111T111144Z_planted_static_llm_rag",
+          "20261111T111306Z_planted_static_llm_rag",
+          "20261111T111430Z_planted_static_llm_rag"
+        ],
+        "issues_found_per_run": [
+          17,
+          17,
+          17
+        ],
+        "true_positive_defect_findings_per_run": [
+          14,
+          14,
+          14
+        ],
+        "false_positive_defect_findings_per_run": [
+          0,
+          0,
+          0
+        ],
+        "issue_recall": {
+          "mean": 1.0,
+          "min": 1.0,
+          "max": 1.0
+        },
+        "defect_precision_per_finding": {
+          "mean": 1.0,
+          "min": 1.0,
+          "max": 1.0
+        },
+        "complete": true
+      }
+    }
+  },
+  "codereviewer_msg": {
+    "group": "abl-20261111T111605Z",
+    "samples": 40,
+    "split": "test, Python",
+    "configurations": {
+      "A": {
+        "runs": [
+          "20261111T111605Z_codereviewer_msg_test_static_only_n40",
+          "20261111T112652Z_codereviewer_msg_test_static_only_n40",
+          "20261111T113829Z_codereviewer_msg_test_static_only_n40"
+        ],
+        "bleu4": {
+          "mean": 1.7813,
+          "min": 1.7813,
+          "max": 1.7813
+        },
+        "rouge_l": {
+          "mean": 4.9042,
+          "min": 4.9042,
+          "max": 4.9042
+        },
+        "chrf": {
+          "mean": 7.8576,
+          "min": 7.8576,
+          "max": 7.8576
+        },
+        "coverage": {
+          "mean": 0.425,
+          "min": 0.425,
+          "max": 0.425
+        },
+        "coverage_count_per_run": [
+          17,
+          17,
+          17
+        ]
+      },
+      "B": {
+        "runs": [
+          "20261111T111615Z_codereviewer_msg_test_llm_only_n40",
+          "20261111T112702Z_codereviewer_msg_test_llm_only_n40",
+          "20261111T113839Z_codereviewer_msg_test_llm_only_n40"
+        ],
+        "bleu4": {
+          "mean": 1.5518,
+          "min": 1.4682,
+          "max": 1.6507
+        },
+        "rouge_l": {
+          "mean": 5.2169,
+          "min": 4.793,
+          "max": 5.6621
+        },
+        "chrf": {
+          "mean": 11.0901,
+          "min": 10.6938,
+          "max": 11.7484
+        },
+        "coverage": {
+          "mean": 0.6417,
+          "min": 0.625,
+          "max": 0.65
+        },
+        "coverage_count_per_run": [
+          26,
+          25,
+          26
+        ]
+      },
+      "C": {
+        "runs": [
+          "20261111T111914Z_codereviewer_msg_test_static_llm_n40",
+          "20261111T113024Z_codereviewer_msg_test_static_llm_n40",
+          "20261111T114143Z_codereviewer_msg_test_static_llm_n40"
+        ],
+        "bleu4": {
+          "mean": 1.7825,
+          "min": 1.7076,
+          "max": 1.8852
+        },
+        "rouge_l": {
+          "mean": 5.3337,
+          "min": 4.8064,
+          "max": 5.9712
+        },
+        "chrf": {
+          "mean": 12.3953,
+          "min": 11.1794,
+          "max": 13.2758
+        },
+        "coverage": {
+          "mean": 0.675,
+          "min": 0.625,
+          "max": 0.7
+        },
+        "coverage_count_per_run": [
+          25,
+          28,
+          28
+        ]
+      },
+      "D": {
+        "runs": [
+          "20261111T112247Z_codereviewer_msg_test_static_llm_rag_n40",
+          "20261111T113432Z_codereviewer_msg_test_static_llm_rag_n40",
+          "20261111T114545Z_codereviewer_msg_test_static_llm_rag_n40"
+        ],
+        "bleu4": {
+          "mean": 1.9151,
+          "min": 1.5534,
+          "max": 2.2519
+        },
+        "rouge_l": {
+          "mean": 5.4179,
+          "min": 4.8951,
+          "max": 5.9177
+        },
+        "chrf": {
+          "mean": 13.1576,
+          "min": 12.2679,
+          "max": 14.0455
+        },
+        "coverage": {
+          "mean": 0.7167,
+          "min": 0.675,
+          "max": 0.75
+        },
+        "coverage_count_per_run": [
+          30,
+          29,
+          27
+        ]
+      }
+    }
+  },
+  "clean_repos": {
+    "requests": {
+      "run": "20261111T115458Z_cleanrepo_requests_static_llm_rag",
+      "commit": "3c7baaa05ab4aa49cc819ce3a819d260de19c157",
+      "package": "src/requests",
+      "lines": 6394,
+      "files": 19,
+      "findings": 164,
+      "per_kloc": 25.649,
+      "by_severity": {
+        "critical": 0,
+        "high": 11,
+        "medium": 32,
+        "low": 120,
+        "info": 1
+      },
+      "per_kloc_by_severity": {
+        "critical": 0.0,
+        "high": 1.72,
+        "medium": 5.005,
+        "low": 18.768,
+        "info": 0.156
+      },
+      "units": 48,
+      "units_failed": 0,
+      "llm_calls": 56,
+      "fixes": {
+        "attempted": 8,
+        "attached": 7,
+        "verified": 0,
+        "rejected": {
+          "introduces_issues": 1
+        }
+      },
+      "status": "complete"
+    },
+    "flask": {
+      "run": "20261111T115751Z_cleanrepo_flask_static_llm_rag",
+      "commit": "49943b5a94413a530761350f04e896f76e8d620e",
+      "package": "src/flask",
+      "lines": 9566,
+      "files": 24,
+      "findings": 122,
+      "per_kloc": 12.754,
+      "by_severity": {
+        "critical": 0,
+        "high": 21,
+        "medium": 36,
+        "low": 58,
+        "info": 7
+      },
+      "per_kloc_by_severity": {
+        "critical": 0.0,
+        "high": 2.195,
+        "medium": 3.763,
+        "low": 6.063,
+        "info": 0.732
+      },
+      "units": 73,
+      "units_failed": 0,
+      "llm_calls": 81,
+      "fixes": {
+        "attempted": 8,
+        "attached": 3,
+        "verified": 2,
+        "rejected": {
+          "issue_still_present": 2,
+          "introduces_issues": 1,
+          "does_not_parse": 2
+        }
+      },
+      "status": "complete"
+    },
+    "pydantic": {
+      "run": "20261111T120830Z_cleanrepo_pydantic_static_llm_rag",
+      "commit": "560f0f96a37d6913afdfddb2de22030ef08e68c3",
+      "package": "pydantic",
+      "lines": 29755,
+      "files": 55,
+      "findings": 581,
+      "per_kloc": 19.526,
+      "by_severity": {
+        "critical": 1,
+        "high": 42,
+        "medium": 142,
+        "low": 374,
+        "info": 22
+      },
+      "per_kloc_by_severity": {
+        "critical": 0.034,
+        "high": 1.412,
+        "medium": 4.772,
+        "low": 12.569,
+        "info": 0.739
+      },
+      "units": 218,
+      "units_failed": 0,
+      "llm_calls": 226,
+      "fixes": {
+        "attempted": 8,
+        "attached": 6,
+        "verified": 1,
+        "rejected": {
+          "does_not_parse": 2
+        }
+      },
+      "status": "complete"
+    }
+  },
+  "runtime": {
+    "run": "20261111T121516Z_runtime_full_r5",
+    "rows": [
+      {
+        "category": "small",
+        "run_type": "cold",
+        "runs": 5,
+        "complete": 5,
+        "partial": 0,
+        "mean_sec": 9.7603,
+        "median_sec": 9.3648,
+        "mean_llm_inference_sec": 6.7155,
+        "mean_static_analysis_sec": 2.3532,
+        "mean_input_tokens": 2410.0,
+        "mean_output_tokens": 2350.0,
+        "mean_cache_hit_rate": 0.0
+      },
+      {
+        "category": "small",
+        "run_type": "warm",
+        "runs": 5,
+        "complete": 5,
+        "partial": 0,
+        "mean_sec": 0.1635,
+        "median_sec": 0.1643,
+        "mean_llm_inference_sec": 0.0,
+        "mean_static_analysis_sec": 0.0214,
+        "mean_input_tokens": null,
+        "mean_output_tokens": null,
+        "mean_cache_hit_rate": 1.0
+      },
+      {
+        "category": "medium",
+        "run_type": "cold",
+        "runs": 5,
+        "complete": 5,
+        "partial": 0,
+        "mean_sec": 20.353,
+        "median_sec": 20.0492,
+        "mean_llm_inference_sec": 17.4051,
+        "mean_static_analysis_sec": 2.4082,
+        "mean_input_tokens": 11369.0,
+        "mean_output_tokens": 6247.2,
+        "mean_cache_hit_rate": 0.0
+      },
+      {
+        "category": "medium",
+        "run_type": "warm",
+        "runs": 5,
+        "complete": 5,
+        "partial": 0,
+        "mean_sec": 0.3333,
+        "median_sec": 0.328,
+        "mean_llm_inference_sec": 0.0,
+        "mean_static_analysis_sec": 0.0414,
+        "mean_input_tokens": null,
+        "mean_output_tokens": null,
+        "mean_cache_hit_rate": 1.0
+      },
+      {
+        "category": "large",
+        "run_type": "cold",
+        "runs": 5,
+        "complete": 3,
+        "partial": 2,
+        "mean_sec": 73.7699,
+        "median_sec": 73.2813,
+        "mean_llm_inference_sec": 65.9846,
+        "mean_static_analysis_sec": 6.7677,
+        "mean_input_tokens": 55179.6667,
+        "mean_output_tokens": 18388.3333,
+        "mean_cache_hit_rate": 0.0
+      },
+      {
+        "category": "large",
+        "run_type": "warm",
+        "runs": 5,
+        "complete": 4,
+        "partial": 1,
+        "mean_sec": 5.4444,
+        "median_sec": 0.8881,
+        "mean_llm_inference_sec": 4.6411,
+        "mean_static_analysis_sec": 0.0284,
+        "mean_input_tokens": 6715.0,
+        "mean_output_tokens": 4015.0,
+        "mean_cache_hit_rate": 0.975
+      }
+    ]
+  },
+  "bugsinpy": {
+    "localization_dev": {
+      "A": {
+        "run": "20261111T140357Z_bugsinpy_localization_dev_static_only_n20",
+        "n": 20,
+        "failed": 0,
+        "top_1": 0.2,
+        "top_3": 0.25,
+        "top_5": 0.3,
+        "mrr": 0.2577,
+        "wilson": {
+          "top_1": {
+            "k": 4,
+            "n": 20,
+            "value": 0.2,
+            "low": 0.08065766257979806,
+            "high": 0.41601743225189364
+          },
+          "top_3": {
+            "k": 5,
+            "n": 20,
+            "value": 0.25,
+            "low": 0.11186170140766569,
+            "high": 0.468700877618744
+          },
+          "top_5": {
+            "k": 6,
+            "n": 20,
+            "value": 0.3,
+            "low": 0.1454772448676043,
+            "high": 0.5189728183535235
+          }
+        },
+        "llm_calls": 0
+      },
+      "B": {
+        "run": "20261111T140358Z_bugsinpy_localization_dev_llm_only_n20",
+        "n": 20,
+        "failed": 0,
+        "top_1": 0.55,
+        "top_3": 0.6,
+        "top_5": 0.6,
+        "mrr": 0.5806,
+        "wilson": {
+          "top_1": {
+            "k": 11,
+            "n": 20,
+            "value": 0.55,
+            "low": 0.34208534245034233,
+            "high": 0.7418021417443759
+          },
+          "top_3": {
+            "k": 12,
+            "n": 20,
+            "value": 0.6,
+            "low": 0.3865815007622531,
+            "high": 0.781193467627183
+          },
+          "top_5": {
+            "k": 12,
+            "n": 20,
+            "value": 0.6,
+            "low": 0.3865815007622531,
+            "high": 0.781193467627183
+          }
+        },
+        "llm_calls": 20
+      },
+      "C": {
+        "run": "20261111T140358Z_bugsinpy_localization_dev_static_llm_n20",
+        "n": 20,
+        "failed": 0,
+        "top_1": 0.45,
+        "top_3": 0.45,
+        "top_5": 0.5,
+        "mrr": 0.4756,
+        "wilson": {
+          "top_1": {
+            "k": 9,
+            "n": 20,
+            "value": 0.45,
+            "low": 0.2581978582556243,
+            "high": 0.6579146575496577
+          },
+          "top_3": {
+            "k": 9,
+            "n": 20,
+            "value": 0.45,
+            "low": 0.2581978582556243,
+            "high": 0.6579146575496577
+          },
+          "top_5": {
+            "k": 10,
+            "n": 20,
+            "value": 0.5,
+            "low": 0.2992980081982123,
+            "high": 0.7007019918017877
+          }
+        },
+        "llm_calls": 20
+      },
+      "D": {
+        "run": "20261111T140358Z_bugsinpy_localization_dev_static_llm_rag_n20",
+        "n": 20,
+        "failed": 0,
+        "top_1": 0.5,
+        "top_3": 0.6,
+        "top_5": 0.6,
+        "mrr": 0.5563,
+        "wilson": {
+          "top_1": {
+            "k": 10,
+            "n": 20,
+            "value": 0.5,
+            "low": 0.2992980081982123,
+            "high": 0.7007019918017877
+          },
+          "top_3": {
+            "k": 12,
+            "n": 20,
+            "value": 0.6,
+            "low": 0.3865815007622531,
+            "high": 0.781193467627183
+          },
+          "top_5": {
+            "k": 12,
+            "n": 20,
+            "value": 0.6,
+            "low": 0.3865815007622531,
+            "high": 0.781193467627183
+          }
+        },
+        "llm_calls": 20
+      },
+      "mcnemar": {
+        "top_1": [
+          {
+            "a": "static_only",
+            "b": "llm_only",
+            "n": 20,
+            "only_a_correct": 0,
+            "only_b_correct": 7,
+            "p_value": 0.0156
+          },
+          {
+            "a": "static_only",
+            "b": "static_llm",
+            "n": 20,
+            "only_a_correct": 0,
+            "only_b_correct": 5,
+            "p_value": 0.0625
+          },
+          {
+            "a": "static_only",
+            "b": "static_llm_rag",
+            "n": 20,
+            "only_a_correct": 0,
+            "only_b_correct": 6,
+            "p_value": 0.0312
+          },
+          {
+            "a": "llm_only",
+            "b": "static_llm",
+            "n": 20,
+            "only_a_correct": 2,
+            "only_b_correct": 0,
+            "p_value": 0.5
+          },
+          {
+            "a": "llm_only",
+            "b": "static_llm_rag",
+            "n": 20,
+            "only_a_correct": 2,
+            "only_b_correct": 1,
+            "p_value": 1.0
+          },
+          {
+            "a": "static_llm",
+            "b": "static_llm_rag",
+            "n": 20,
+            "only_a_correct": 1,
+            "only_b_correct": 2,
+            "p_value": 1.0
+          }
+        ],
+        "top_5": [
+          {
+            "a": "static_only",
+            "b": "llm_only",
+            "n": 20,
+            "only_a_correct": 0,
+            "only_b_correct": 6,
+            "p_value": 0.0312
+          },
+          {
+            "a": "static_only",
+            "b": "static_llm",
+            "n": 20,
+            "only_a_correct": 0,
+            "only_b_correct": 4,
+            "p_value": 0.125
+          },
+          {
+            "a": "static_only",
+            "b": "static_llm_rag",
+            "n": 20,
+            "only_a_correct": 0,
+            "only_b_correct": 6,
+            "p_value": 0.0312
+          },
+          {
+            "a": "llm_only",
+            "b": "static_llm",
+            "n": 20,
+            "only_a_correct": 2,
+            "only_b_correct": 0,
+            "p_value": 0.5
+          },
+          {
+            "a": "llm_only",
+            "b": "static_llm_rag",
+            "n": 20,
+            "only_a_correct": 1,
+            "only_b_correct": 1,
+            "p_value": 1.0
+          },
+          {
+            "a": "static_llm",
+            "b": "static_llm_rag",
+            "n": 20,
+            "only_a_correct": 0,
+            "only_b_correct": 2,
+            "p_value": 0.5
+          }
+        ]
+      },
+      "comparison_run": "20261111T140359Z_bugsinpy_localization_dev_comparison_n20"
+    },
+    "detection_dev": {
+      "A": {
+        "run": "20261111T141831Z_bugsinpy_detection_dev_static_only_n20",
+        "bugs": 20,
+        "failed": 0,
+        "precision": 0.5714,
+        "recall": 0.2,
+        "f1": 0.2963,
+        "told_apart": 1,
+        "flagged_both": 3,
+        "flagged_only_fixed": 0,
+        "neither": 16,
+        "false_positives_per_bug": 0.15,
+        "wilson": {
+          "precision": {
+            "k": 4,
+            "n": 7,
+            "value": 0.5714285714285714,
+            "low": 0.2504583645276572,
+            "high": 0.8417801447485302
+          },
+          "recall": {
+            "k": 4,
+            "n": 20,
+            "value": 0.2,
+            "low": 0.08065766257979806,
+            "high": 0.41601743225189364
+          },
+          "detection_rate": {
+            "k": 1,
+            "n": 20,
+            "value": 0.05,
+            "low": 0.008881448800795402,
+            "high": 0.23613119344674205
+          }
+        },
+        "llm_calls": 0,
+        "llm_rejected": 0
+      },
+      "B": {
+        "run": "20261111T141831Z_bugsinpy_detection_dev_llm_only_n20",
+        "bugs": 20,
+        "failed": 0,
+        "precision": 0.4828,
+        "recall": 0.7,
+        "f1": 0.5714,
+        "told_apart": 2,
+        "flagged_both": 12,
+        "flagged_only_fixed": 3,
+        "neither": 3,
+        "false_positives_per_bug": 0.75,
+        "wilson": {
+          "precision": {
+            "k": 14,
+            "n": 29,
+            "value": 0.4827586206896552,
+            "low": 0.3138609015268349,
+            "high": 0.6556897811800528
+          },
+          "recall": {
+            "k": 14,
+            "n": 20,
+            "value": 0.7,
+            "low": 0.4810271816464765,
+            "high": 0.8545227551323956
+          },
+          "detection_rate": {
+            "k": 2,
+            "n": 20,
+            "value": 0.1,
+            "low": 0.027866481213768224,
+            "high": 0.3010336452284873
+          }
+        },
+        "llm_calls": 40,
+        "llm_rejected": 0
+      },
+      "C": {
+        "run": "20261111T141831Z_bugsinpy_detection_dev_static_llm_n20",
+        "bugs": 20,
+        "failed": 0,
+        "precision": 0.5714,
+        "recall": 0.8,
+        "f1": 0.6667,
+        "told_apart": 6,
+        "flagged_both": 10,
+        "flagged_only_fixed": 2,
+        "neither": 2,
+        "false_positives_per_bug": 0.6,
+        "wilson": {
+          "precision": {
+            "k": 16,
+            "n": 28,
+            "value": 0.5714285714285714,
+            "low": 0.3907078562746876,
+            "high": 0.734914528758763
+          },
+          "recall": {
+            "k": 16,
+            "n": 20,
+            "value": 0.8,
+            "low": 0.5839825677481064,
+            "high": 0.919342337420202
+          },
+          "detection_rate": {
+            "k": 6,
+            "n": 20,
+            "value": 0.3,
+            "low": 0.1454772448676043,
+            "high": 0.5189728183535235
+          }
+        },
+        "llm_calls": 40,
+        "llm_rejected": 0
+      },
+      "D": {
+        "run": "20261111T141831Z_bugsinpy_detection_dev_static_llm_rag_n20",
+        "bugs": 20,
+        "failed": 0,
+        "precision": 0.5926,
+        "recall": 0.8,
+        "f1": 0.6809,
+        "told_apart": 6,
+        "flagged_both": 10,
+        "flagged_only_fixed": 1,
+        "neither": 3,
+        "false_positives_per_bug": 0.55,
+        "wilson": {
+          "precision": {
+            "k": 16,
+            "n": 27,
+            "value": 0.5925925925925926,
+            "low": 0.4072670096806468,
+            "high": 0.7548524292560443
+          },
+          "recall": {
+            "k": 16,
+            "n": 20,
+            "value": 0.8,
+            "low": 0.5839825677481064,
+            "high": 0.919342337420202
+          },
+          "detection_rate": {
+            "k": 6,
+            "n": 20,
+            "value": 0.3,
+            "low": 0.1454772448676043,
+            "high": 0.5189728183535235
+          }
+        },
+        "llm_calls": 40,
+        "llm_rejected": 1
+      },
+      "mcnemar": {
+        "correct": [
+          {
+            "a": "static_only",
+            "b": "llm_only",
+            "n": 40,
+            "only_a_correct": 13,
+            "only_b_correct": 11,
+            "p_value": 0.8388
+          },
+          {
+            "a": "static_only",
+            "b": "static_llm",
+            "n": 40,
+            "only_a_correct": 11,
+            "only_b_correct": 14,
+            "p_value": 0.69
+          },
+          {
+            "a": "static_only",
+            "b": "static_llm_rag",
+            "n": 40,
+            "only_a_correct": 9,
+            "only_b_correct": 13,
+            "p_value": 0.5235
+          },
+          {
+            "a": "llm_only",
+            "b": "static_llm",
+            "n": 40,
+            "only_a_correct": 3,
+            "only_b_correct": 8,
+            "p_value": 0.2266
+          },
+          {
+            "a": "llm_only",
+            "b": "static_llm_rag",
+            "n": 40,
+            "only_a_correct": 2,
+            "only_b_correct": 8,
+            "p_value": 0.1094
+          },
+          {
+            "a": "static_llm",
+            "b": "static_llm_rag",
+            "n": 40,
+            "only_a_correct": 4,
+            "only_b_correct": 5,
+            "p_value": 1.0
+          }
+        ]
+      },
+      "comparison_run": "20261111T141832Z_bugsinpy_detection_dev_comparison_n20"
+    },
+    "localization_test": {
+      "A": {
+        "run": "20261111T192728Z_bugsinpy_localization_test_static_only_n20",
+        "n": 20,
+        "failed": 0,
+        "top_1": 0.15,
+        "top_3": 0.25,
+        "top_5": 0.35,
+        "mrr": 0.2275,
+        "wilson": {
+          "top_1": {
+            "k": 3,
+            "n": 20,
+            "value": 0.15,
+            "low": 0.052368745896216595,
+            "high": 0.36041886474075696
+          },
+          "top_3": {
+            "k": 5,
+            "n": 20,
+            "value": 0.25,
+            "low": 0.11186170140766569,
+            "high": 0.468700877618744
+          },
+          "top_5": {
+            "k": 7,
+            "n": 20,
+            "value": 0.35,
+            "low": 0.18119182410108206,
+            "high": 0.5671457233147638
+          }
+        },
+        "llm_calls": 0
+      },
+      "B": {
+        "run": "20261111T192729Z_bugsinpy_localization_test_llm_only_n20",
+        "n": 20,
+        "failed": 1,
+        "top_1": 0.35,
+        "top_3": 0.5,
+        "top_5": 0.5,
+        "mrr": 0.425,
+        "wilson": {
+          "top_1": {
+            "k": 7,
+            "n": 20,
+            "value": 0.35,
+            "low": 0.18119182410108206,
+            "high": 0.5671457233147638
+          },
+          "top_3": {
+            "k": 10,
+            "n": 20,
+            "value": 0.5,
+            "low": 0.2992980081982123,
+            "high": 0.7007019918017877
+          },
+          "top_5": {
+            "k": 10,
+            "n": 20,
+            "value": 0.5,
+            "low": 0.2992980081982123,
+            "high": 0.7007019918017877
+          }
+        },
+        "llm_calls": 19
+      },
+      "C": {
+        "run": "20261111T192729Z_bugsinpy_localization_test_static_llm_n20",
+        "n": 20,
+        "failed": 0,
+        "top_1": 0.35,
+        "top_3": 0.4,
+        "top_5": 0.4,
+        "mrr": 0.3738,
+        "wilson": {
+          "top_1": {
+            "k": 7,
+            "n": 20,
+            "value": 0.35,
+            "low": 0.18119182410108206,
+            "high": 0.5671457233147638
+          },
+          "top_3": {
+            "k": 8,
+            "n": 20,
+            "value": 0.4,
+            "low": 0.21880653237281705,
+            "high": 0.6134184992377469
+          },
+          "top_5": {
+            "k": 8,
+            "n": 20,
+            "value": 0.4,
+            "low": 0.21880653237281705,
+            "high": 0.6134184992377469
+          }
+        },
+        "llm_calls": 19
+      },
+      "D": {
+        "run": "20261111T192730Z_bugsinpy_localization_test_static_llm_rag_n20",
+        "n": 20,
+        "failed": 1,
+        "top_1": 0.25,
+        "top_3": 0.4,
+        "top_5": 0.4,
+        "mrr": 0.316,
+        "wilson": {
+          "top_1": {
+            "k": 5,
+            "n": 20,
+            "value": 0.25,
+            "low": 0.11186170140766569,
+            "high": 0.468700877618744
+          },
+          "top_3": {
+            "k": 8,
+            "n": 20,
+            "value": 0.4,
+            "low": 0.21880653237281705,
+            "high": 0.6134184992377469
+          },
+          "top_5": {
+            "k": 8,
+            "n": 20,
+            "value": 0.4,
+            "low": 0.21880653237281705,
+            "high": 0.6134184992377469
+          }
+        },
+        "llm_calls": 20
+      },
+      "mcnemar": {
+        "top_1": [
+          {
+            "a": "static_only",
+            "b": "llm_only",
+            "n": 20,
+            "only_a_correct": 1,
+            "only_b_correct": 5,
+            "p_value": 0.2188
+          },
+          {
+            "a": "static_only",
+            "b": "static_llm",
+            "n": 20,
+            "only_a_correct": 1,
+            "only_b_correct": 5,
+            "p_value": 0.2188
+          },
+          {
+            "a": "static_only",
+            "b": "static_llm_rag",
+            "n": 20,
+            "only_a_correct": 2,
+            "only_b_correct": 4,
+            "p_value": 0.6875
+          },
+          {
+            "a": "llm_only",
+            "b": "static_llm",
+            "n": 20,
+            "only_a_correct": 1,
+            "only_b_correct": 1,
+            "p_value": 1.0
+          },
+          {
+            "a": "llm_only",
+            "b": "static_llm_rag",
+            "n": 20,
+            "only_a_correct": 3,
+            "only_b_correct": 1,
+            "p_value": 0.625
+          },
+          {
+            "a": "static_llm",
+            "b": "static_llm_rag",
+            "n": 20,
+            "only_a_correct": 2,
+            "only_b_correct": 0,
+            "p_value": 0.5
+          }
+        ],
+        "top_5": [
+          {
+            "a": "static_only",
+            "b": "llm_only",
+            "n": 20,
+            "only_a_correct": 0,
+            "only_b_correct": 3,
+            "p_value": 0.25
+          },
+          {
+            "a": "static_only",
+            "b": "static_llm",
+            "n": 20,
+            "only_a_correct": 0,
+            "only_b_correct": 1,
+            "p_value": 1.0
+          },
+          {
+            "a": "static_only",
+            "b": "static_llm_rag",
+            "n": 20,
+            "only_a_correct": 0,
+            "only_b_correct": 1,
+            "p_value": 1.0
+          },
+          {
+            "a": "llm_only",
+            "b": "static_llm",
+            "n": 20,
+            "only_a_correct": 2,
+            "only_b_correct": 0,
+            "p_value": 0.5
+          },
+          {
+            "a": "llm_only",
+            "b": "static_llm_rag",
+            "n": 20,
+            "only_a_correct": 2,
+            "only_b_correct": 0,
+            "p_value": 0.5
+          },
+          {
+            "a": "static_llm",
+            "b": "static_llm_rag",
+            "n": 20,
+            "only_a_correct": 0,
+            "only_b_correct": 0,
+            "p_value": 1.0
+          }
+        ]
+      },
+      "comparison_run": "20261111T192730Z_bugsinpy_localization_test_comparison_n20"
+    },
+    "detection_test": {
+      "A": {
+        "run": "20261111T232015Z_bugsinpy_detection_test_static_only_n20",
+        "bugs": 20,
+        "failed": 0,
+        "precision": 0.6667,
+        "recall": 0.1,
+        "f1": 0.1739,
+        "told_apart": 1,
+        "flagged_both": 1,
+        "flagged_only_fixed": 0,
+        "neither": 18,
+        "false_positives_per_bug": 0.05,
+        "wilson": {
+          "precision": {
+            "k": 2,
+            "n": 3,
+            "value": 0.6666666666666666,
+            "low": 0.2076596008020477,
+            "high": 0.9385080552796037
+          },
+          "recall": {
+            "k": 2,
+            "n": 20,
+            "value": 0.1,
+            "low": 0.027866481213768224,
+            "high": 0.3010336452284873
+          },
+          "detection_rate": {
+            "k": 1,
+            "n": 20,
+            "value": 0.05,
+            "low": 0.008881448800795402,
+            "high": 0.23613119344674205
+          }
+        },
+        "llm_calls": 0,
+        "llm_rejected": 0
+      },
+      "B": {
+        "run": "20261111T232016Z_bugsinpy_detection_test_llm_only_n20",
+        "bugs": 20,
+        "failed": 0,
+        "precision": 0.4667,
+        "recall": 0.7,
+        "f1": 0.56,
+        "told_apart": 1,
+        "flagged_both": 13,
+        "flagged_only_fixed": 3,
+        "neither": 3,
+        "false_positives_per_bug": 0.8,
+        "wilson": {
+          "precision": {
+            "k": 14,
+            "n": 30,
+            "value": 0.4666666666666667,
+            "low": 0.30232388907699753,
+            "high": 0.638577003801267
+          },
+          "recall": {
+            "k": 14,
+            "n": 20,
+            "value": 0.7,
+            "low": 0.4810271816464765,
+            "high": 0.8545227551323956
+          },
+          "detection_rate": {
+            "k": 1,
+            "n": 20,
+            "value": 0.05,
+            "low": 0.008881448800795402,
+            "high": 0.23613119344674205
+          }
+        },
+        "llm_calls": 44,
+        "llm_rejected": 0
+      },
+      "C": {
+        "run": "20261111T232016Z_bugsinpy_detection_test_static_llm_n20",
+        "bugs": 20,
+        "failed": 0,
+        "precision": 0.5517,
+        "recall": 0.8,
+        "f1": 0.6531,
+        "told_apart": 4,
+        "flagged_both": 12,
+        "flagged_only_fixed": 1,
+        "neither": 3,
+        "false_positives_per_bug": 0.65,
+        "wilson": {
+          "precision": {
+            "k": 16,
+            "n": 29,
+            "value": 0.5517241379310345,
+            "low": 0.37547963210970914,
+            "high": 0.7158683197696281
+          },
+          "recall": {
+            "k": 16,
+            "n": 20,
+            "value": 0.8,
+            "low": 0.5839825677481064,
+            "high": 0.919342337420202
+          },
+          "detection_rate": {
+            "k": 4,
+            "n": 20,
+            "value": 0.2,
+            "low": 0.08065766257979806,
+            "high": 0.41601743225189364
+          }
+        },
+        "llm_calls": 44,
+        "llm_rejected": 0
+      },
+      "D": {
+        "run": "20261111T232016Z_bugsinpy_detection_test_static_llm_rag_n20",
+        "bugs": 20,
+        "failed": 0,
+        "precision": 0.5161,
+        "recall": 0.8,
+        "f1": 0.6275,
+        "told_apart": 3,
+        "flagged_both": 13,
+        "flagged_only_fixed": 2,
+        "neither": 2,
+        "false_positives_per_bug": 0.75,
+        "wilson": {
+          "precision": {
+            "k": 16,
+            "n": 31,
+            "value": 0.5161290322580645,
+            "low": 0.348403954480288,
+            "high": 0.6802974843758269
+          },
+          "recall": {
+            "k": 16,
+            "n": 20,
+            "value": 0.8,
+            "low": 0.5839825677481064,
+            "high": 0.919342337420202
+          },
+          "detection_rate": {
+            "k": 3,
+            "n": 20,
+            "value": 0.15,
+            "low": 0.052368745896216595,
+            "high": 0.36041886474075696
+          }
+        },
+        "llm_calls": 44,
+        "llm_rejected": 0
+      },
+      "mcnemar": {
+        "correct": [
+          {
+            "a": "static_only",
+            "b": "llm_only",
+            "n": 40,
+            "only_a_correct": 15,
+            "only_b_correct": 12,
+            "p_value": 0.7011
+          },
+          {
+            "a": "static_only",
+            "b": "static_llm",
+            "n": 40,
+            "only_a_correct": 13,
+            "only_b_correct": 15,
+            "p_value": 0.8506
+          },
+          {
+            "a": "static_only",
+            "b": "static_llm_rag",
+            "n": 40,
+            "only_a_correct": 15,
+            "only_b_correct": 15,
+            "p_value": 1.0
+          },
+          {
+            "a": "llm_only",
+            "b": "static_llm",
+            "n": 40,
+            "only_a_correct": 1,
+            "only_b_correct": 6,
+            "p_value": 0.125
+          },
+          {
+            "a": "llm_only",
+            "b": "static_llm_rag",
+            "n": 40,
+            "only_a_correct": 6,
+            "only_b_correct": 9,
+            "p_value": 0.6072
+          },
+          {
+            "a": "static_llm",
+            "b": "static_llm_rag",
+            "n": 40,
+            "only_a_correct": 7,
+            "only_b_correct": 5,
+            "p_value": 0.7744
+          }
+        ]
+      },
+      "comparison_run": "20261111T232017Z_bugsinpy_detection_test_comparison_n20"
+    }
+  },
+  "reproducibility": {
+    "checked": true,
+    "mismatches": []
+  }
+}

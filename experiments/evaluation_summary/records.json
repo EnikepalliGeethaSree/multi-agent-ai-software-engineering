@@ -53,34 +53,95 @@
     "benchmark": "Planted issues",
     "configuration": "LLM only (openai/gpt-oss-120b)",
     "status": "ok",
-    "run_id": "20261012T161026Z_planted_llm_only",
+    "run_id": "20261111T111338Z_planted_llm_only",
     "n": 17,
     "quality_metrics": {
       "precision": 1.0,
-      "recall": 0.588,
-      "f1": 0.741
+      "recall": 0.706,
+      "f1": 0.828
     },
     "counts": {
-      "tp": 10,
+      "tp": 12,
       "fp": 0,
-      "fn": 7,
+      "fn": 5,
       "expected_issues": 17
     },
     "timing": {
-      "total_sec": 67.6124,
+      "total_sec": 19.5685,
       "static_analysis_sec": 0.0,
       "static_tools_sec": {},
       "rag_index_sec": 0.0,
       "rag_retrieval_sec": 0.0,
       "rag_queries": 0,
-      "llm_inference_sec": 15.9796,
+      "llm_inference_sec": 19.5297,
       "llm_calls": 4,
-      "llm_rate_limit_wait_sec": 51.609,
-      "validation_sec": 0.003,
+      "llm_rate_limit_wait_sec": 0.0,
+      "validation_sec": 0.0035,
       "report_generation_sec": null,
-      "ingestion_parsing_sec": 0.0119,
-      "other_sec": 51.6298,
-      "concurrency": 1
+      "ingestion_parsing_sec": 0.0168,
+      "other_sec": 0.0352,
+      "concurrency": 1,
+      "file_ingestion_sec": 0.0078,
+      "parsing_sec": 0.0087,
+      "ast_call_graph_sec": 0.0003,
+      "prompt_construction_sec": 0.0005,
+      "evidence_validation_sec": 0.002,
+      "dedup_severity_sec": 0.0005,
+      "fix_generation_sec": null,
+      "classifier_sec": null,
+      "failed_stages": []
+    },
+    "conditions": {},
+    "notes": [
+      "precision over defect findings (bug, security, error handling, edge case)",
+      "earlier run 20261012T161026Z_planted_llm_only: precision 1.0, recall 0.588, f1 0.741",
+      "earlier run 20261111T111106Z_planted_llm_only: precision 1.0, recall 0.647, f1 0.786",
+      "earlier run 20261111T111217Z_planted_llm_only: precision 1.0, recall 0.647, f1 0.786"
+    ],
+    "how_to_run": null
+  },
+  {
+    "component": "detection",
+    "benchmark": "Planted issues",
+    "configuration": "LLM only (qwen2.5-coder:7b)",
+    "status": "ok",
+    "run_id": "20261108T074052Z_planted_llm_only",
+    "n": 17,
+    "quality_metrics": {
+      "precision": 1.0,
+      "recall": 0.294,
+      "f1": 0.455
+    },
+    "counts": {
+      "tp": 5,
+      "fp": 0,
+      "fn": 12,
+      "expected_issues": 17
+    },
+    "timing": {
+      "total_sec": 422.1301,
+      "static_analysis_sec": 0.0,
+      "static_tools_sec": {},
+      "rag_index_sec": 0.0,
+      "rag_retrieval_sec": 0.0,
+      "rag_queries": 0,
+      "llm_inference_sec": 422.1031,
+      "llm_calls": 4,
+      "llm_rate_limit_wait_sec": null,
+      "validation_sec": 0.0019,
+      "report_generation_sec": null,
+      "ingestion_parsing_sec": 0.0137,
+      "other_sec": 0.0251,
+      "concurrency": 1,
+      "file_ingestion_sec": 0.0068,
+      "parsing_sec": 0.0067,
+      "ast_call_graph_sec": 0.0002,
+      "prompt_construction_sec": 0.0071,
+      "evidence_validation_sec": 0.001,
+      "dedup_severity_sec": 0.0003,
+      "fix_generation_sec": null,
+      "classifier_sec": null,
+      "failed_stages": []
     },
     "conditions": {},
     "notes": [
@@ -149,41 +210,111 @@
     "benchmark": "Planted issues",
     "configuration": "static + LLM (openai/gpt-oss-120b), no RAG",
     "status": "ok",
-    "run_id": "20261012T161133Z_planted_static_llm",
+    "run_id": "20261111T111358Z_planted_static_llm",
     "n": 17,
     "quality_metrics": {
-      "precision": 1.0,
-      "recall": 1.0,
-      "f1": 1.0
+      "precision": 0.929,
+      "recall": 0.941,
+      "f1": 0.935
     },
     "counts": {
-      "tp": 14,
-      "fp": 0,
-      "fn": 0,
+      "tp": 13,
+      "fp": 1,
+      "fn": 1,
       "expected_issues": 17
     },
     "timing": {
-      "total_sec": 180.8798,
-      "static_analysis_sec": 5.8751,
+      "total_sec": 32.2939,
+      "static_analysis_sec": 4.9577,
       "static_tools_sec": {
-        "ruff": 0.0508,
-        "radon": 0.0128,
-        "ast": 0.0057,
-        "secrets": 0.0012,
+        "ruff": 0.0493,
+        "radon": 0.0126,
+        "ast": 0.0059,
+        "design": 0.0057,
+        "secrets": 0.0011,
         "test_gap": 0.0002,
-        "mypy": 5.8044
+        "mypy": 4.8829
       },
       "rag_index_sec": 0.0,
       "rag_retrieval_sec": 0.0,
       "rag_queries": 0,
-      "llm_inference_sec": 16.7972,
+      "llm_inference_sec": 27.2978,
       "llm_calls": 4,
-      "llm_rate_limit_wait_sec": 158.186,
-      "validation_sec": 0.0031,
+      "llm_rate_limit_wait_sec": 0.0,
+      "validation_sec": 0.0056,
       "report_generation_sec": null,
-      "ingestion_parsing_sec": 0.0137,
-      "other_sec": 158.2044,
-      "concurrency": 1
+      "ingestion_parsing_sec": 0.0133,
+      "other_sec": 0.0328,
+      "concurrency": 1,
+      "file_ingestion_sec": 0.0064,
+      "parsing_sec": 0.0067,
+      "ast_call_graph_sec": 0.0002,
+      "prompt_construction_sec": 0.0008,
+      "evidence_validation_sec": 0.0023,
+      "dedup_severity_sec": 0.0025,
+      "fix_generation_sec": null,
+      "classifier_sec": null,
+      "failed_stages": []
+    },
+    "conditions": {},
+    "notes": [
+      "precision over defect findings (bug, security, error handling, edge case)",
+      "earlier run 20261012T161133Z_planted_static_llm: precision 1.0, recall 1.0, f1 1.0",
+      "earlier run 20261111T111123Z_planted_static_llm: precision 0.933, recall 1.0, f1 0.966",
+      "earlier run 20261111T111237Z_planted_static_llm: precision 1.0, recall 1.0, f1 1.0"
+    ],
+    "how_to_run": null
+  },
+  {
+    "component": "detection",
+    "benchmark": "Planted issues",
+    "configuration": "static + LLM (qwen2.5-coder:7b), no RAG",
+    "status": "ok",
+    "run_id": "20261108T074755Z_planted_static_llm",
+    "n": 17,
+    "quality_metrics": {
+      "precision": 0.929,
+      "recall": 0.941,
+      "f1": 0.935
+    },
+    "counts": {
+      "tp": 13,
+      "fp": 1,
+      "fn": 1,
+      "expected_issues": 17
+    },
+    "timing": {
+      "total_sec": 651.6466,
+      "static_analysis_sec": 5.8928,
+      "static_tools_sec": {
+        "ruff": 0.0726,
+        "radon": 0.0127,
+        "ast": 0.0057,
+        "design": 0.0071,
+        "secrets": 0.0012,
+        "test_gap": 0.0002,
+        "mypy": 5.7934
+      },
+      "rag_index_sec": 0.0,
+      "rag_retrieval_sec": 0.0,
+      "rag_queries": 0,
+      "llm_inference_sec": 645.7267,
+      "llm_calls": 4,
+      "llm_rate_limit_wait_sec": null,
+      "validation_sec": 0.0052,
+      "report_generation_sec": null,
+      "ingestion_parsing_sec": 0.0152,
+      "other_sec": 0.0219,
+      "concurrency": 1,
+      "file_ingestion_sec": 0.0074,
+      "parsing_sec": 0.0074,
+      "ast_call_graph_sec": 0.0003,
+      "prompt_construction_sec": 0.001,
+      "evidence_validation_sec": 0.0018,
+      "dedup_severity_sec": 0.0025,
+      "fix_generation_sec": null,
+      "classifier_sec": null,
+      "failed_stages": []
     },
     "conditions": {},
     "notes": [
@@ -252,7 +383,7 @@
     "benchmark": "Planted issues",
     "configuration": "static + LLM + RAG (openai/gpt-oss-120b)",
     "status": "ok",
-    "run_id": "20261012T161434Z_planted_static_llm_rag",
+    "run_id": "20261111T111430Z_planted_static_llm_rag",
     "n": 17,
     "quality_metrics": {
       "precision": 1.0,
@@ -266,33 +397,46 @@
       "expected_issues": 17
     },
     "timing": {
-      "total_sec": 190.3066,
-      "static_analysis_sec": 5.2722,
+      "total_sec": 37.8383,
+      "static_analysis_sec": 4.9389,
       "static_tools_sec": {
-        "ruff": 0.0506,
-        "radon": 0.0137,
+        "ruff": 0.0485,
+        "radon": 0.0129,
         "ast": 0.0056,
+        "design": 0.0059,
         "secrets": 0.001,
         "test_gap": 0.0002,
-        "mypy": 5.2011
+        "mypy": 4.8649
       },
-      "rag_index_sec": 0.1197,
-      "rag_retrieval_sec": 0.0559,
+      "rag_index_sec": 0.0046,
+      "rag_retrieval_sec": 0.0555,
       "rag_queries": 8,
-      "llm_inference_sec": 19.5181,
+      "llm_inference_sec": 32.7678,
       "llm_calls": 4,
-      "llm_rate_limit_wait_sec": 163.78,
-      "validation_sec": 0.0045,
+      "llm_rate_limit_wait_sec": 0.0,
+      "validation_sec": 0.005,
       "report_generation_sec": null,
-      "ingestion_parsing_sec": 0.0121,
-      "other_sec": 165.3363,
-      "concurrency": 1
+      "ingestion_parsing_sec": 0.0127,
+      "other_sec": 0.0666,
+      "concurrency": 1,
+      "file_ingestion_sec": 0.0063,
+      "parsing_sec": 0.0063,
+      "ast_call_graph_sec": 0.0002,
+      "prompt_construction_sec": 0.0015,
+      "evidence_validation_sec": 0.0015,
+      "dedup_severity_sec": 0.0026,
+      "fix_generation_sec": null,
+      "classifier_sec": null,
+      "failed_stages": []
     },
     "conditions": {},
     "notes": [
       "precision over defect findings (bug, security, error handling, edge case)",
       "earlier run 20260929T194203Z_planted_full: precision 1.0, recall 1.0, f1 1.0",
-      "earlier run 20261012T090444Z_planted_full: precision 1.0, recall 0.941, f1 0.97"
+      "earlier run 20261012T090444Z_planted_full: precision 1.0, recall 0.941, f1 0.97",
+      "earlier run 20261012T161434Z_planted_static_llm_rag: precision 1.0, recall 1.0, f1 1.0",
+      "earlier run 20261111T111144Z_planted_static_llm_rag: precision 1.0, recall 1.0, f1 1.0",
+      "earlier run 20261111T111306Z_planted_static_llm_rag: precision 1.0, recall 1.0, f1 1.0"
     ],
     "how_to_run": null
   },
@@ -349,9 +493,66 @@
   {
     "component": "detection",
     "benchmark": "Planted issues",
+    "configuration": "static + LLM + RAG (qwen2.5-coder:7b)",
+    "status": "ok",
+    "run_id": "20261108T075847Z_planted_static_llm_rag",
+    "n": 17,
+    "quality_metrics": {
+      "precision": 0.929,
+      "recall": 0.941,
+      "f1": 0.935
+    },
+    "counts": {
+      "tp": 13,
+      "fp": 1,
+      "fn": 1,
+      "expected_issues": 17
+    },
+    "timing": {
+      "total_sec": 822.7292,
+      "static_analysis_sec": 5.6217,
+      "static_tools_sec": {
+        "ruff": 0.068,
+        "radon": 0.0141,
+        "ast": 0.0056,
+        "design": 0.0057,
+        "secrets": 0.0011,
+        "test_gap": 0.0004,
+        "mypy": 5.5268
+      },
+      "rag_index_sec": 0.329,
+      "rag_retrieval_sec": 0.081,
+      "rag_queries": 8,
+      "llm_inference_sec": 814.5519,
+      "llm_calls": 4,
+      "llm_rate_limit_wait_sec": null,
+      "validation_sec": 0.0049,
+      "report_generation_sec": null,
+      "ingestion_parsing_sec": 0.0162,
+      "other_sec": 2.1406,
+      "concurrency": 1,
+      "file_ingestion_sec": 0.0086,
+      "parsing_sec": 0.0075,
+      "ast_call_graph_sec": 0.0002,
+      "prompt_construction_sec": 0.0019,
+      "evidence_validation_sec": 0.0018,
+      "dedup_severity_sec": 0.0023,
+      "fix_generation_sec": null,
+      "classifier_sec": null,
+      "failed_stages": []
+    },
+    "conditions": {},
+    "notes": [
+      "precision over defect findings (bug, security, error handling, edge case)"
+    ],
+    "how_to_run": null
+  },
+  {
+    "component": "detection",
+    "benchmark": "Planted issues",
     "configuration": "static only",
     "status": "ok",
-    "run_id": "20261108T055008Z_planted_static_only",
+    "run_id": "20261111T111332Z_planted_static_only",
     "n": 17,
     "quality_metrics": {
       "precision": 1.0,
@@ -365,15 +566,16 @@
       "expected_issues": 17
     },
     "timing": {
-      "total_sec": 9.7467,
-      "static_analysis_sec": 9.6821,
+      "total_sec": 5.6121,
+      "static_analysis_sec": 5.5894,
       "static_tools_sec": {
-        "ruff": 0.0793,
-        "radon": 0.0278,
-        "ast": 0.0063,
-        "secrets": 0.0012,
-        "test_gap": 0.0002,
-        "mypy": 9.5672
+        "ruff": 0.0523,
+        "radon": 0.0128,
+        "ast": 0.0059,
+        "design": 0.01,
+        "secrets": 0.0018,
+        "test_gap": 0.0004,
+        "mypy": 5.5062
       },
       "rag_index_sec": 0.0,
       "rag_retrieval_sec": 0.0,
@@ -381,17 +583,17 @@
       "llm_inference_sec": 0.0,
       "llm_calls": 0,
       "llm_rate_limit_wait_sec": null,
-      "validation_sec": 0.0015,
+      "validation_sec": 0.0035,
       "report_generation_sec": null,
-      "ingestion_parsing_sec": 0.0616,
-      "other_sec": 0.0631,
+      "ingestion_parsing_sec": 0.0173,
+      "other_sec": 0.0192,
       "concurrency": 1,
-      "file_ingestion_sec": 0.0074,
-      "parsing_sec": 0.054,
+      "file_ingestion_sec": 0.0079,
+      "parsing_sec": 0.0091,
       "ast_call_graph_sec": 0.0002,
       "prompt_construction_sec": null,
-      "evidence_validation_sec": 0.0005,
-      "dedup_severity_sec": 0.001,
+      "evidence_validation_sec": 0.0007,
+      "dedup_severity_sec": 0.0028,
       "fix_generation_sec": null,
       "classifier_sec": null,
       "failed_stages": []
@@ -402,7 +604,12 @@
       "earlier run 20260929T193007Z_planted_static_only: precision 1.0, recall 0.941, f1 0.97",
       "earlier run 20261005T115337Z_planted_static_only: precision 1.0, recall 0.941, f1 0.97",
       "earlier run 20261012T084950Z_planted_static_only: precision 1.0, recall 0.941, f1 0.97",
-      "earlier run 20261012T161020Z_planted_static_only: precision 1.0, recall 0.941, f1 0.97"
+      "earlier run 20261012T161020Z_planted_static_only: precision 1.0, recall 0.941, f1 0.97",
+      "earlier run 20261108T055008Z_planted_static_only: precision 1.0, recall 0.941, f1 0.97",
+      "earlier run 20261108T073637Z_planted_static_only: precision 1.0, recall 0.941, f1 0.97",
+      "earlier run 20261108T074047Z_planted_static_only: precision 1.0, recall 0.941, f1 0.97",
+      "earlier run 20261111T111100Z_planted_static_only: precision 1.0, recall 0.941, f1 0.97",
+      "earlier run 20261111T111212Z_planted_static_only: precision 1.0, recall 0.941, f1 0.97"
     ],
     "how_to_run": null
   },
@@ -724,6 +931,475 @@
   {
     "component": "codereviewer",
     "benchmark": "CodeReviewer msg (test, Python)",
+    "configuration": "LLM only (gemini-3.6-flash)",
+    "status": "ok",
+    "run_id": "20261109T083055Z_codereviewer_msg_test_llm_only_n40",
+    "n": 40,
+    "quality_metrics": {
+      "coverage": 0.475,
+      "chrf": 8.669
+    },
+    "counts": {
+      "failed": 0
+    },
+    "timing": {
+      "total_sec": {
+        "n": 40,
+        "mean": 6.7517,
+        "median": 2.3119,
+        "min": 0.0161,
+        "max": 26.3808
+      },
+      "static_analysis_sec": {
+        "n": 40,
+        "mean": 0.0,
+        "median": 0.0,
+        "min": 0.0,
+        "max": 0.0
+      },
+      "rag_sec": {
+        "n": 40,
+        "mean": 0.0,
+        "median": 0.0,
+        "min": 0.0,
+        "max": 0.0
+      },
+      "llm_inference_sec": {
+        "n": 40,
+        "mean": 6.5419,
+        "median": 2.0628,
+        "min": 0.0,
+        "max": 26.3105
+      },
+      "validation_sec": {
+        "n": 40,
+        "mean": 0.0047,
+        "median": 0.0014,
+        "min": 0.0,
+        "max": 0.026
+      },
+      "other_sec": {
+        "n": 40,
+        "mean": 0.205,
+        "median": 0.0695,
+        "min": 0.0161,
+        "max": 4.0698
+      },
+      "llm_rate_limit_wait_sec": {
+        "n": 40,
+        "mean": 0.1,
+        "median": 0.0,
+        "min": 0.0,
+        "max": 4.0
+      },
+      "conditions": {
+        "samples": 40,
+        "workers": 1,
+        "note": "per-sample review time; samples ran concurrently on `workers` workers"
+      }
+    },
+    "conditions": {},
+    "notes": [
+      "random subset: n=40 (seed 42), 0 failed",
+      "BLEU-4 (approved-deck metric, still computed): 1.865",
+      "earlier run 20261109T065441Z_codereviewer_msg_test_llm_only_n40: coverage 0.55, chrf 9.605"
+    ],
+    "how_to_run": null
+  },
+  {
+    "component": "codereviewer",
+    "benchmark": "CodeReviewer msg (test, Python)",
+    "configuration": "LLM only (openai/gpt-oss-120b)",
+    "status": "ok",
+    "run_id": "20261111T113839Z_codereviewer_msg_test_llm_only_n40",
+    "n": 40,
+    "quality_metrics": {
+      "coverage": 0.65,
+      "chrf": 11.748
+    },
+    "counts": {
+      "failed": 0
+    },
+    "timing": {
+      "total_sec": {
+        "n": 40,
+        "mean": 4.1461,
+        "median": 3.7992,
+        "min": 0.71,
+        "max": 8.4286
+      },
+      "static_analysis_sec": {
+        "n": 40,
+        "mean": 0.0,
+        "median": 0.0,
+        "min": 0.0,
+        "max": 0.0
+      },
+      "rag_sec": {
+        "n": 40,
+        "mean": 0.0,
+        "median": 0.0,
+        "min": 0.0,
+        "max": 0.0
+      },
+      "llm_inference_sec": {
+        "n": 40,
+        "mean": 4.1019,
+        "median": 3.7447,
+        "min": 0.6919,
+        "max": 8.3738
+      },
+      "validation_sec": {
+        "n": 40,
+        "mean": 0.0043,
+        "median": 0.0011,
+        "min": 0.0001,
+        "max": 0.0667
+      },
+      "other_sec": {
+        "n": 40,
+        "mean": 0.0399,
+        "median": 0.0383,
+        "min": 0.0115,
+        "max": 0.1192
+      },
+      "llm_rate_limit_wait_sec": {
+        "n": 40,
+        "mean": 0.0,
+        "median": 0.0,
+        "min": 0.0,
+        "max": 0.0
+      },
+      "conditions": {
+        "samples": 40,
+        "workers": 1,
+        "note": "per-sample review time; samples ran concurrently on `workers` workers"
+      }
+    },
+    "conditions": {},
+    "notes": [
+      "random subset: n=40 (seed 42), 0 failed",
+      "BLEU-4 (approved-deck metric, still computed): 1.651",
+      "earlier run 20261111T111615Z_codereviewer_msg_test_llm_only_n40: coverage 0.65, chrf 10.694",
+      "earlier run 20261111T112702Z_codereviewer_msg_test_llm_only_n40: coverage 0.625, chrf 10.828"
+    ],
+    "how_to_run": null
+  },
+  {
+    "component": "codereviewer",
+    "benchmark": "CodeReviewer msg (test, Python)",
+    "configuration": "LLM only (qwen2.5-coder:7b)",
+    "status": "ok",
+    "run_id": "20261109T084547Z_codereviewer_msg_test_llm_only_n40",
+    "n": 40,
+    "quality_metrics": {
+      "coverage": 0.2,
+      "chrf": 3.563
+    },
+    "counts": {
+      "failed": 0
+    },
+    "timing": {
+      "total_sec": {
+        "n": 40,
+        "mean": 124.8046,
+        "median": 123.8026,
+        "min": 26.2772,
+        "max": 231.0126
+      },
+      "static_analysis_sec": {
+        "n": 40,
+        "mean": 0.0,
+        "median": 0.0,
+        "min": 0.0,
+        "max": 0.0
+      },
+      "rag_sec": {
+        "n": 40,
+        "mean": 0.0,
+        "median": 0.0,
+        "min": 0.0,
+        "max": 0.0
+      },
+      "llm_inference_sec": {
+        "n": 40,
+        "mean": 124.7559,
+        "median": 123.7556,
+        "min": 26.2551,
+        "max": 230.9667
+      },
+      "validation_sec": {
+        "n": 40,
+        "mean": 0.0011,
+        "median": 0.0001,
+        "min": 0.0001,
+        "max": 0.0074
+      },
+      "other_sec": {
+        "n": 40,
+        "mean": 0.0476,
+        "median": 0.0452,
+        "min": 0.0081,
+        "max": 0.1535
+      },
+      "llm_rate_limit_wait_sec": {
+        "n": 0,
+        "mean": null,
+        "median": null,
+        "min": null,
+        "max": null
+      },
+      "conditions": {
+        "samples": 40,
+        "workers": 1,
+        "note": "per-sample review time; samples ran concurrently on `workers` workers"
+      }
+    },
+    "conditions": {},
+    "notes": [
+      "random subset: n=40 (seed 42), 0 failed",
+      "BLEU-4 (approved-deck metric, still computed): 0.768"
+    ],
+    "how_to_run": null
+  },
+  {
+    "component": "codereviewer",
+    "benchmark": "CodeReviewer msg (test, Python)",
+    "configuration": "static + LLM (openai/gpt-oss-120b), no RAG",
+    "status": "ok",
+    "run_id": "20261111T114143Z_codereviewer_msg_test_static_llm_n40",
+    "n": 40,
+    "quality_metrics": {
+      "coverage": 0.7,
+      "chrf": 12.731
+    },
+    "counts": {
+      "failed": 0
+    },
+    "timing": {
+      "total_sec": {
+        "n": 40,
+        "mean": 5.6836,
+        "median": 5.4427,
+        "min": 1.5856,
+        "max": 12.9069
+      },
+      "static_analysis_sec": {
+        "n": 40,
+        "mean": 0.0839,
+        "median": 0.0729,
+        "min": 0.0386,
+        "max": 0.2522
+      },
+      "rag_sec": {
+        "n": 40,
+        "mean": 0.0,
+        "median": 0.0,
+        "min": 0.0,
+        "max": 0.0
+      },
+      "llm_inference_sec": {
+        "n": 40,
+        "mean": 5.5541,
+        "median": 5.3351,
+        "min": 1.49,
+        "max": 12.7891
+      },
+      "validation_sec": {
+        "n": 40,
+        "mean": 0.0057,
+        "median": 0.0027,
+        "min": 0.0001,
+        "max": 0.031
+      },
+      "other_sec": {
+        "n": 40,
+        "mean": 0.04,
+        "median": 0.0388,
+        "min": 0.0116,
+        "max": 0.1084
+      },
+      "llm_rate_limit_wait_sec": {
+        "n": 40,
+        "mean": 0.0,
+        "median": 0.0,
+        "min": 0.0,
+        "max": 0.0
+      },
+      "conditions": {
+        "samples": 40,
+        "workers": 1,
+        "note": "per-sample review time; samples ran concurrently on `workers` workers"
+      }
+    },
+    "conditions": {},
+    "notes": [
+      "random subset: n=40 (seed 42), 0 failed",
+      "BLEU-4 (approved-deck metric, still computed): 1.708",
+      "earlier run 20261111T111914Z_codereviewer_msg_test_static_llm_n40: coverage 0.625, chrf 11.179",
+      "earlier run 20261111T113024Z_codereviewer_msg_test_static_llm_n40: coverage 0.7, chrf 13.276"
+    ],
+    "how_to_run": null
+  },
+  {
+    "component": "codereviewer",
+    "benchmark": "CodeReviewer msg (test, Python)",
+    "configuration": "static + LLM (qwen2.5-coder:7b), no RAG",
+    "status": "ok",
+    "run_id": "20261109T100904Z_codereviewer_msg_test_static_llm_n40",
+    "n": 40,
+    "quality_metrics": {
+      "coverage": 0.6,
+      "chrf": 10.896
+    },
+    "counts": {
+      "failed": 0
+    },
+    "timing": {
+      "total_sec": {
+        "n": 40,
+        "mean": 150.0803,
+        "median": 138.7534,
+        "min": 20.8695,
+        "max": 385.6088
+      },
+      "static_analysis_sec": {
+        "n": 40,
+        "mean": 0.2848,
+        "median": 0.1522,
+        "min": 0.0666,
+        "max": 2.4658
+      },
+      "rag_sec": {
+        "n": 40,
+        "mean": 0.0,
+        "median": 0.0,
+        "min": 0.0,
+        "max": 0.0
+      },
+      "llm_inference_sec": {
+        "n": 40,
+        "mean": 149.7418,
+        "median": 138.5285,
+        "min": 20.6767,
+        "max": 385.4231
+      },
+      "validation_sec": {
+        "n": 40,
+        "mean": 0.0036,
+        "median": 0.0009,
+        "min": 0.0001,
+        "max": 0.0312
+      },
+      "other_sec": {
+        "n": 40,
+        "mean": 0.05,
+        "median": 0.0453,
+        "min": 0.0124,
+        "max": 0.1423
+      },
+      "llm_rate_limit_wait_sec": {
+        "n": 0,
+        "mean": null,
+        "median": null,
+        "min": null,
+        "max": null
+      },
+      "conditions": {
+        "samples": 40,
+        "workers": 1,
+        "note": "per-sample review time; samples ran concurrently on `workers` workers"
+      }
+    },
+    "conditions": {},
+    "notes": [
+      "random subset: n=40 (seed 42), 0 failed",
+      "BLEU-4 (approved-deck metric, still computed): 2.269"
+    ],
+    "how_to_run": null
+  },
+  {
+    "component": "codereviewer",
+    "benchmark": "CodeReviewer msg (test, Python)",
+    "configuration": "static + LLM + RAG (openai/gpt-oss-120b)",
+    "status": "ok",
+    "run_id": "20261111T114545Z_codereviewer_msg_test_static_llm_rag_n40",
+    "n": 40,
+    "quality_metrics": {
+      "coverage": 0.675,
+      "chrf": 12.268
+    },
+    "counts": {
+      "failed": 0
+    },
+    "timing": {
+      "total_sec": {
+        "n": 40,
+        "mean": 6.8574,
+        "median": 5.4781,
+        "min": 1.9402,
+        "max": 22.4599
+      },
+      "static_analysis_sec": {
+        "n": 40,
+        "mean": 0.102,
+        "median": 0.0791,
+        "min": 0.0411,
+        "max": 0.2784
+      },
+      "rag_sec": {
+        "n": 40,
+        "mean": 0.0459,
+        "median": 0.0406,
+        "min": 0.021,
+        "max": 0.0995
+      },
+      "llm_inference_sec": {
+        "n": 40,
+        "mean": 6.3255,
+        "median": 5.2264,
+        "min": 1.8267,
+        "max": 22.3081
+      },
+      "validation_sec": {
+        "n": 40,
+        "mean": 0.0145,
+        "median": 0.0024,
+        "min": 0.0001,
+        "max": 0.1528
+      },
+      "other_sec": {
+        "n": 40,
+        "mean": 0.3696,
+        "median": 0.0428,
+        "min": 0.0117,
+        "max": 7.4251
+      },
+      "llm_rate_limit_wait_sec": {
+        "n": 40,
+        "mean": 0.0,
+        "median": 0.0,
+        "min": 0.0,
+        "max": 0.0
+      },
+      "conditions": {
+        "samples": 40,
+        "workers": 1,
+        "note": "per-sample review time; samples ran concurrently on `workers` workers"
+      }
+    },
+    "conditions": {},
+    "notes": [
+      "random subset: n=40 (seed 42), 0 failed",
+      "BLEU-4 (approved-deck metric, still computed): 1.553",
+      "earlier run 20261111T112247Z_codereviewer_msg_test_static_llm_rag_n40: coverage 0.75, chrf 13.159",
+      "earlier run 20261111T113432Z_codereviewer_msg_test_static_llm_rag_n40: coverage 0.725, chrf 14.045"
+    ],
+    "how_to_run": null
+  },
+  {
+    "component": "codereviewer",
+    "benchmark": "CodeReviewer msg (test, Python)",
     "configuration": "static + LLM + RAG (qwen/qwen3.8-27b)",
     "status": "ok",
     "run_id": "20261005T120433Z_codereviewer_msg_test_full_n40",
@@ -746,59 +1422,59 @@
   {
     "component": "codereviewer",
     "benchmark": "CodeReviewer msg (test, Python)",
-    "configuration": "static only",
+    "configuration": "static + LLM + RAG (qwen2.5-coder:7b)",
     "status": "ok",
-    "run_id": "20261012T163624Z_codereviewer_msg_test_static_only_n1403",
-    "n": 1403,
+    "run_id": "20261109T114916Z_codereviewer_msg_test_static_llm_rag_n40",
+    "n": 40,
     "quality_metrics": {
-      "coverage": 0.281,
-      "chrf": 4.832
+      "coverage": 0.625,
+      "chrf": 10.978
     },
     "counts": {
       "failed": 0
     },
     "timing": {
       "total_sec": {
-        "n": 1403,
-        "mean": 0.3734,
-        "median": 0.2011,
-        "min": 0.0685,
-        "max": 18.8009
+        "n": 40,
+        "mean": 213.4025,
+        "median": 212.0289,
+        "min": 48.9832,
+        "max": 464.5902
       },
       "static_analysis_sec": {
-        "n": 1403,
-        "mean": 0.2941,
-        "median": 0.1401,
-        "min": 0.0422,
-        "max": 18.6547
+        "n": 40,
+        "mean": 0.3669,
+        "median": 0.1367,
+        "min": 0.0701,
+        "max": 6.6526
       },
       "rag_sec": {
-        "n": 1403,
-        "mean": 0.0,
-        "median": 0.0,
-        "min": 0.0,
-        "max": 0.0
+        "n": 40,
+        "mean": 0.0467,
+        "median": 0.0395,
+        "min": 0.0225,
+        "max": 0.1182
       },
       "llm_inference_sec": {
-        "n": 1403,
-        "mean": 0.0,
-        "median": 0.0,
-        "min": 0.0,
-        "max": 0.0
+        "n": 40,
+        "mean": 212.8012,
+        "median": 211.7371,
+        "min": 48.8,
+        "max": 464.2564
       },
       "validation_sec": {
-        "n": 1403,
-        "mean": 0.0069,
-        "median": 0.0005,
-        "min": 0.0,
-        "max": 0.5727
+        "n": 40,
+        "mean": 0.0031,
+        "median": 0.0012,
+        "min": 0.0001,
+        "max": 0.0232
       },
       "other_sec": {
-        "n": 1403,
-        "mean": 0.0725,
-        "median": 0.0568,
-        "min": 0.0238,
-        "max": 0.5795
+        "n": 40,
+        "mean": 0.1846,
+        "median": 0.0504,
+        "min": 0.0109,
+        "max": 5.191
       },
       "llm_rate_limit_wait_sec": {
         "n": 0,
@@ -808,18 +1484,120 @@
         "max": null
       },
       "conditions": {
-        "samples": 1403,
-        "workers": 8,
+        "samples": 40,
+        "workers": 1,
         "note": "per-sample review time; samples ran concurrently on `workers` workers"
       }
     },
     "conditions": {},
     "notes": [
-      "BLEU-4 (approved-deck metric, still computed): 1.177",
+      "random subset: n=40 (seed 42), 0 failed",
+      "BLEU-4 (approved-deck metric, still computed): 2.588"
+    ],
+    "how_to_run": null
+  },
+  {
+    "component": "codereviewer",
+    "benchmark": "CodeReviewer msg (test, Python)",
+    "configuration": "static only",
+    "status": "ok",
+    "run_id": "20261111T113829Z_codereviewer_msg_test_static_only_n40",
+    "n": 40,
+    "quality_metrics": {
+      "coverage": 0.425,
+      "chrf": 7.858
+    },
+    "counts": {
+      "failed": 0
+    },
+    "timing": {
+      "total_sec": {
+        "n": 40,
+        "mean": 0.121,
+        "median": 0.1042,
+        "min": 0.0493,
+        "max": 0.3583
+      },
+      "static_analysis_sec": {
+        "n": 40,
+        "mean": 0.0855,
+        "median": 0.0713,
+        "min": 0.0386,
+        "max": 0.2653
+      },
+      "rag_sec": {
+        "n": 40,
+        "mean": 0.0,
+        "median": 0.0,
+        "min": 0.0,
+        "max": 0.0
+      },
+      "llm_inference_sec": {
+        "n": 40,
+        "mean": 0.0,
+        "median": 0.0,
+        "min": 0.0,
+        "max": 0.0
+      },
+      "validation_sec": {
+        "n": 40,
+        "mean": 0.001,
+        "median": 0.0004,
+        "min": 0.0,
+        "max": 0.0102
+      },
+      "other_sec": {
+        "n": 40,
+        "mean": 0.0345,
+        "median": 0.0328,
+        "min": 0.0071,
+        "max": 0.0942
+      },
+      "llm_rate_limit_wait_sec": {
+        "n": 0,
+        "mean": null,
+        "median": null,
+        "min": null,
+        "max": null
+      },
+      "conditions": {
+        "samples": 40,
+        "workers": 1,
+        "note": "per-sample review time; samples ran concurrently on `workers` workers"
+      }
+    },
+    "conditions": {},
+    "notes": [
+      "random subset: n=40 (seed 42), 0 failed",
+      "BLEU-4 (approved-deck metric, still computed): 1.781",
       "earlier run 20260929T192630Z_codereviewer_msg_test_static_only_n1403: coverage 0.281, chrf 4.832",
       "earlier run 20261005T115807Z_codereviewer_msg_test_static_only_n1403: coverage 0.281, chrf 4.832",
-      "earlier run 20261012T085436Z_codereviewer_msg_test_static_only_n1403: coverage 0.281, chrf 4.832"
+      "earlier run 20261012T085436Z_codereviewer_msg_test_static_only_n1403: coverage 0.281, chrf 4.832",
+      "earlier run 20261012T163624Z_codereviewer_msg_test_static_only_n1403: coverage 0.281, chrf 4.832",
+      "earlier run 20261109T084532Z_codereviewer_msg_test_static_only_n40: coverage 0.425, chrf 7.858",
+      "earlier run 20261111T111605Z_codereviewer_msg_test_static_only_n40: coverage 0.425, chrf 7.858",
+      "earlier run 20261111T112652Z_codereviewer_msg_test_static_only_n40: coverage 0.425, chrf 7.858"
     ],
+    "how_to_run": null
+  },
+  {
+    "component": "rag",
+    "benchmark": "Call-graph retrieval (src)",
+    "configuration": "bm25, hashing embedder",
+    "status": "ok",
+    "run_id": "20261110T114239Z_retrieval_src",
+    "n": 711,
+    "quality_metrics": {
+      "recall@10 (bm25)": 0.362,
+      "recall@10 (hashing)": 0.382,
+      "recall@10 (random baseline)": 0.007
+    },
+    "counts": {
+      "chunks": 1258
+    },
+    "timing": null,
+    "conditions": {},
+    "notes": [],
     "how_to_run": null
   },
   {
