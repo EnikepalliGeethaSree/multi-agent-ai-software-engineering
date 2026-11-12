@@ -408,3 +408,10 @@ def test_groq_is_selectable_per_review_without_exposing_the_key(monkeypatch) -> 
     assert body["requests_per_minute"] == 123  # GROQ_* settings applied to the per-review copy
     assert "groq" in body["selectable_providers"] and "Groq" in (body["data_notice"] or "")
     assert "gsk_" not in r.text
+
+
+def test_review_options_accept_groq_as_provider() -> None:
+    from marl_agents.api.jobs import ReviewOptions
+
+    assert ReviewOptions(provider="groq").provider == "groq"
+    assert ReviewOptions(provider="ollama").provider == "ollama"

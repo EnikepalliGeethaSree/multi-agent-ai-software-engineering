@@ -77,7 +77,7 @@ class ReviewOptions(BaseModel):
     failing_test: str | None = None  # bug detection: e.g. tests/test_x.py::test_y
     mode: Literal["full", "static_only", "llm_only"] = "full"
     # None: the server's provider. "ollama" runs locally; nothing is sent to a hosted API.
-    provider: Literal["gemini", "ollama"] | None = None
+    provider: Literal["groq", "gemini", "ollama"] | None = None
     rag_enabled: bool = True
     structural_context: bool = True
     model: str | None = None

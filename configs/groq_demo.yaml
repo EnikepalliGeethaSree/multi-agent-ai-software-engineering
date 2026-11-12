@@ -1,0 +1,42 @@
+# Groq developer/testing mode for the dashboard: like configs/groq.yaml, but max_tokens 8192 and no
+# app-level token or cost cap. Spending is still tracked; the Groq console's own limit still applies.
+# one pinned model. Load it on top of configs/default.yaml with `--config configs/groq.yaml`.
+# The key comes from the environment only: GROQ_API_KEY in .env (never in this file).
+# GROQ_* variables in .env override the values below; see .env.example and docs/llm-groq.md.
+#
+#   python -m marl_agents.cli check --config configs/groq.yaml    # one tiny call + usage so far
+
+llm:
+  provider: groq
+  model: openai/gpt-oss-120b  # pinned for the whole evaluation; GROQ_MODEL overrides it
+  temperature: 0.0
+  max_tokens: 8192            # dashboard/demo: room for gpt-oss reasoning on bug-heavy files (evaluation used 4096)
+  seed: 42
+  json_mode: true             # Groq JSON mode; falls back automatically if the model rejects it
+  # Organization limits from the Groq console (GROQ_RPM, GROQ_TPM). null = not paced locally; the
+  # server's x-ratelimit-* headers and HTTP 429 still govern. No limit is assumed here.
+  requests_per_minute: null
+  tokens_per_minute: null
+  # Optional daily caps (GROQ_DAILY_REQUEST_LIMIT, GROQ_DAILY_TOKEN_LIMIT), counted per UTC day.
+  requests_per_day: null
+  tokens_per_day: null
+  # Pay-as-you-go safeguards: cumulative hard caps (GROQ_MAX_TOTAL_TOKENS,
+  # GROQ_MAX_ESTIMATED_COST_USD) and prices from the console (GROQ_INPUT_PRICE_PER_1M_TOKENS_USD,
+  # GROQ_OUTPUT_PRICE_PER_1M_TOKENS_USD). Without a cap the provider refuses to start.
+  max_total_tokens: null      # developer/testing mode: no app-level token cap
+  max_estimated_cost_usd: null  # developer/testing mode: no app-level cost cap (the Groq console limit still applies)
+  allow_uncapped: true          # chosen on purpose by the team for dashboard testing
+  input_price_per_1m_tokens_usd: null
+  output_price_per_1m_tokens_usd: null
+  response_cache: true        # repeated requests cost nothing; --no-cache bypasses it
+  max_retries: 5              # attempts per request (GROQ_MAX_RETRIES)
+  base_backoff_s: 2           # GROQ_BASE_BACKOFF_SECONDS
+  timeout_s: 120
+  # Reasoning models: e.g. extra_params: {reasoning_effort: low} for gpt-oss models.
+  extra_params: {}
+
+review:
+  concurrency: 2              # parallel LLM calls; pacing keeps them within the limits
+
+rag:
+  max_context_chars: 8000     # a smaller prompt uses fewer tokens per call
