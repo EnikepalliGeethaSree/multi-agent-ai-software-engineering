@@ -72,7 +72,9 @@ export default function History() {
                     )}
                   </td>
                   <td className="px-4 py-2.5 text-ink-2">
-                    {MODE_LABEL[j.options.mode]}
+                    <span className="font-medium text-ink">{j.options.agent === "bug_detection" ? "Bug detection" : "Code review"}</span>
+                    {" · "}
+                    <span>{MODE_LABEL[j.options.mode]}</span>
                     {j.model && j.options.mode !== "static_only" && <p className="text-xs text-ink-3">{j.model}</p>}
                   </td>
                   <td className="tabular px-4 py-2.5 text-right text-ink">{j.summary?.total_findings ?? "–"}</td>

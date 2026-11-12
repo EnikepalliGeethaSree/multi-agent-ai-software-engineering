@@ -62,7 +62,7 @@ export function Layout() {
                 <path d="M10 11l-5 5 5 5M22 11l5 5-5 5M18 8l-4 16" stroke="white" strokeWidth="2.6" fill="none" strokeLinecap="round" strokeLinejoin="round" />
               </svg>
             </span>
-            <span className="text-sm font-semibold text-ink">Code Review Agent</span>
+            <span className="text-sm font-semibold text-ink">Code Review &amp; Bug Detection</span>
           </NavLink>
           <nav aria-label="Main" className="flex max-w-full gap-1 overflow-x-auto">
             {NAV.map((n) => (
@@ -88,7 +88,7 @@ export function Layout() {
         <Outlet context={{ llm }} />
       </main>
       <footer className="mx-auto max-w-7xl px-4 pb-8 text-xs text-ink-3">
-        Multi-Agent AI Assistant for Software Engineering · Code Review Agent · static analysis + RAG + LLM
+        Multi-Agent AI Assistant for Software Engineering · Code Review and Bug Detection agents · static analysis + RAG + LLM
       </footer>
     </div>
   );

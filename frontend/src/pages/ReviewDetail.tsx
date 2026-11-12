@@ -222,6 +222,7 @@ export default function ReviewDetail() {
                 {job.change.kind === "git" ? "git" : "ZIPs"}: {job.change.base} → {job.change.head}
               </Chip>
             )}
+            <Chip>{job.options.agent === "bug_detection" ? "Bug Detection Agent" : "Code Review Agent"}</Chip>
             <Chip>{MODE_LABEL[job.options.mode]}</Chip>
             {job.options.mode !== "static_only" && <Chip>{job.provider} · {job.model}</Chip>}
             {job.options.mode !== "static_only" && <Chip>RAG {job.options.rag_enabled ? "on" : "off"}</Chip>}
