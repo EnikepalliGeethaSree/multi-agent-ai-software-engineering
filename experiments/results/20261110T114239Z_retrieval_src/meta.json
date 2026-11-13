@@ -1,0 +1,18 @@
+{
+  "name": "retrieval_src",
+  "started_at": "2026-11-10T11:42:39.394017+00:00",
+  "git_commit": "196857f3cf95e7b646fce6b4e596e3adddd184a0-dirty",
+  "python": "3.11.7",
+  "platform": "Windows-10-10.0.26300-SP0",
+  "packages": {
+    "marl-agents": "0.1.0",
+    "pydantic": "2.13.5",
+    "ruff": "0.16.9",
+    "radon": "6.0.1",
+    "chromadb": "1.5.9",
+    "openai": "3.21.0",
+    "sentence-transformers": "6.1.0"
+  },
+  "finished_at": "2026-11-10T11:45:06.131884+00:00",
+  "errors": 0
+}

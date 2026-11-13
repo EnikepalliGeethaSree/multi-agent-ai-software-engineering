@@ -1,0 +1,234 @@
+{
+  "group_id": "abl-20261109T083055Z",
+  "benchmark": "codereviewer_msg",
+  "configurations": [
+    "llm_only"
+  ],
+  "repeats": 1,
+  "suggested_fixes": false,
+  "runs": {
+    "llm_only": [
+      "20261109T083055Z_codereviewer_msg_test_llm_only_n40"
+    ]
+  },
+  "tables": [
+    {
+      "id": "codereviewer_msg",
+      "section": "3. Review comment generation",
+      "title": "CodeReviewer: review comment generation",
+      "about": "Paired comparison: every row is scored on the same samples.",
+      "columns": [
+        {
+          "key": "bleu4",
+          "label": "BLEU-4",
+          "metric": "bleu4",
+          "group": null,
+          "digits": 2
+        },
+        {
+          "key": "rouge_l",
+          "label": "ROUGE-L",
+          "metric": "rouge_l",
+          "group": null,
+          "digits": 2
+        },
+        {
+          "key": "chrf",
+          "label": "chrF",
+          "metric": "chrf",
+          "group": null,
+          "digits": 2
+        },
+        {
+          "key": "coverage",
+          "label": "Coverage",
+          "metric": "coverage",
+          "group": null,
+          "digits": 3
+        }
+      ],
+      "rows": [
+        {
+          "label": "Static Only",
+          "configuration": {
+            "key": "static_only",
+            "letter": "A",
+            "label": "Static Only",
+            "static": true,
+            "llm": false,
+            "rag": false,
+            "mode": "static_only",
+            "description": "Ruff, Radon, AST checks, secrets, test gaps (and mypy when enabled)."
+          },
+          "status": "not_run",
+          "values": {},
+          "sd": {},
+          "spread": {},
+          "na": {
+            "*": "no saved run"
+          },
+          "n": null,
+          "n_failed": null,
+          "n_runs": 0,
+          "model": null,
+          "run_ids": [],
+          "notes": [],
+          "how_to_run": "python -m marl_agents.cli eval codereviewer --task msg --limit 40 --seed 42 --configuration static_only"
+        },
+        {
+          "label": "LLM Only",
+          "configuration": {
+            "key": "llm_only",
+            "letter": "B",
+            "label": "LLM Only",
+            "static": false,
+            "llm": true,
+            "rag": false,
+            "mode": "llm_only",
+            "description": "The LLM reviews the code alone: no static findings, no project context."
+          },
+          "status": "ok",
+          "values": {
+            "bleu4": 1.864965944664256,
+            "rouge_l": 4.990307856954568,
+            "chrf": 8.669079209313235,
+            "coverage": 0.475
+          },
+          "sd": {},
+          "spread": {},
+          "na": {},
+          "n": 40,
+          "n_failed": 0,
+          "n_runs": 1,
+          "model": "gemini-3.6-flash",
+          "run_ids": [
+            "20261109T083055Z_codereviewer_msg_test_llm_only_n40"
+          ],
+          "notes": [],
+          "how_to_run": null
+        },
+        {
+          "label": "Static + LLM",
+          "configuration": {
+            "key": "static_llm",
+            "letter": "C",
+            "label": "Static + LLM",
+            "static": true,
+            "llm": true,
+            "rag": false,
+            "mode": "full",
+            "description": "Static findings plus LLM review and triage, without project context."
+          },
+          "status": "not_run",
+          "values": {},
+          "sd": {},
+          "spread": {},
+          "na": {
+            "*": "no saved run"
+          },
+          "n": null,
+          "n_failed": null,
+          "n_runs": 0,
+          "model": null,
+          "run_ids": [],
+          "notes": [],
+          "how_to_run": "python -m marl_agents.cli eval codereviewer --task msg --limit 40 --seed 42 --configuration static_llm --workers 1 --config configs/gemini.yaml"
+        },
+        {
+          "label": "Static + LLM + RAG",
+          "configuration": {
+            "key": "static_llm_rag",
+            "letter": "D",
+            "label": "Static + LLM + RAG",
+            "static": true,
+            "llm": true,
+            "rag": true,
+            "mode": "full",
+            "description": "The full agent: static analysis, LLM review, retrieved project context."
+          },
+          "status": "not_run",
+          "values": {},
+          "sd": {},
+          "spread": {},
+          "na": {
+            "*": "no saved run"
+          },
+          "n": null,
+          "n_failed": null,
+          "n_runs": 0,
+          "model": null,
+          "run_ids": [],
+          "notes": [],
+          "how_to_run": "python -m marl_agents.cli eval codereviewer --task msg --limit 40 --seed 42 --configuration static_llm_rag --workers 1 --config configs/gemini.yaml"
+        }
+      ],
+      "conditions": {
+        "dataset": "CodeReviewer, test split, Python only",
+        "paired samples": "40 of 40 requested",
+        "evaluated per configuration": "A not run, B 40/40, C not run, D not run",
+        "requested samples": 40,
+        "samples in every row": 40,
+        "sampling seed": 42,
+        "limit": 40,
+        "comment": "top finding's title + recommendation",
+        "scale": "BLEU-4, ROUGE-L, chrF: 0-100; coverage: 0-1"
+      },
+      "fairness": [
+        {
+          "name": "Same samples",
+          "ok": false,
+          "detail": "40 of 40 requested samples evaluated by LLM Only; no scored samples for Static Only, Static + LLM, Static + LLM + RAG (reference run 20261109T083055Z_codereviewer_msg_test_llm_only_n40)"
+        },
+        {
+          "name": "Same LLM model",
+          "ok": true,
+          "detail": "gemini-3.6-flash"
+        },
+        {
+          "name": "Same temperature",
+          "ok": true,
+          "detail": "0.0"
+        },
+        {
+          "name": "Same prompt versions",
+          "ok": true,
+          "detail": "{'system': '1.0', 'review': '1.0'}"
+        },
+        {
+          "name": "Fresh LLM calls",
+          "ok": false,
+          "detail": "replies reused from the cache in LLM Only: quality metrics compare, times do not"
+        },
+        {
+          "name": "Same confidence threshold",
+          "ok": true,
+          "detail": "0.3"
+        },
+        {
+          "name": "Same evaluation rules",
+          "ok": true,
+          "detail": "{'comment': 'top-ranked finding: title + recommendation (variant title_fix)', 'text_metric_scale': 'BLEU-4, ROUGE-L, chrF in 0-100; coverage in 0-1'}"
+        },
+        {
+          "name": "Run together (one ablation group)",
+          "ok": true,
+          "detail": "abl-20261109T083055Z"
+        }
+      ],
+      "observations": [],
+      "notes": [
+        "Run all four on one sample set: python -m marl_agents.cli eval ablation --benchmark codereviewer --task msg --limit 40 --seed 42 --configurations static_only,llm_only,static_llm,static_llm_rag --config configs/gemini.yaml",
+        "n = 40: differences of a few points are within sampling noise (see the bootstrap CIs in each run's summary).",
+        "The effect of RAG on comment quality cannot be judged here: it needs Static + LLM and Static + LLM + RAG on the same samples. Static Only vs Static + LLM + RAG changes two things at once.",
+        "Gemini: set GEMINI_MODEL=gemini-3.6-flash first. Three LLM configurations on 40 samples need at least 120 requests, and the free tier allows 20 per day per model. Add --reuse-llm-cache and repeat the command each day: cached replies carry it forward, and the run that finishes is complete."
+      ],
+      "supplementary": false,
+      "show_counts": true,
+      "badges": [
+        "Incomplete",
+        "Gemini: gemini-3.6-flash"
+      ],
+      "warning": "Incomplete comparison: Static Only, Static + LLM, Static + LLM + RAG have no results. This table does not show that RAG improves comment quality."
+    }
+  ]
+}

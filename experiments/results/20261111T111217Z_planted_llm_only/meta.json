@@ -1,0 +1,66 @@
+{
+  "name": "planted_llm_only",
+  "started_at": "2026-11-11T11:12:17.968587+00:00",
+  "git_commit": "8588ac6d12bbfd8aec03ab16f8adf41fc8e103c2-dirty",
+  "python": "3.11.7",
+  "platform": "Windows-10-10.0.26300-SP0",
+  "packages": {
+    "marl-agents": "0.1.0",
+    "pydantic": "2.13.5",
+    "ruff": "0.16.9",
+    "radon": "6.0.1",
+    "chromadb": "1.5.9",
+    "openai": "3.21.0",
+    "sentence-transformers": "6.1.0"
+  },
+  "llm_provider": "groq",
+  "llm_model": "openai/gpt-oss-120b",
+  "experiment": {
+    "configuration": {
+      "key": "llm_only",
+      "letter": "B",
+      "label": "LLM Only",
+      "static": false,
+      "llm": true,
+      "rag": false,
+      "mode": "llm_only"
+    },
+    "benchmark": "planted",
+    "dataset": "planted-issue fixture (tests/fixtures/repos/planted)",
+    "split": null,
+    "sampling_seed": null,
+    "limit": null,
+    "sample_count": 17,
+    "sample_fingerprint": "0001417736134671",
+    "n_evaluated": 17,
+    "n_failed": 0,
+    "llm": {
+      "provider": "groq",
+      "model": "openai/gpt-oss-120b",
+      "temperature": 0.0,
+      "seed": 42,
+      "max_tokens": 4096
+    },
+    "rag": null,
+    "static_analyzers": [],
+    "classifier": null,
+    "confidence_threshold": 0.3,
+    "include_info": true,
+    "evaluation_rules": {
+      "line_tolerance": 2,
+      "match": "same file, start within +-2 lines, compatible category",
+      "precision_over": "defect findings (bug, security, error_handling, edge_case)"
+    },
+    "prompt_versions": {
+      "system": "1.0",
+      "review": "1.1"
+    },
+    "llm_cache_reused": false,
+    "group_id": "abl-20261111T111100Z",
+    "repeat": 2,
+    "repeats": 3,
+    "timestamp": "2026-11-11T11:12:37.351509+00:00"
+  },
+  "finished_at": "2026-11-11T11:12:37.351509+00:00",
+  "errors": 0
+}

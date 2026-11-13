@@ -1,0 +1,34 @@
+Traceback (most recent call last):
+  File "<frozen runpy>", line 198, in _run_module_as_main
+  File "<frozen runpy>", line 88, in _run_code
+  File "C:\Users\enike\Downloads\marl-agents\src\marl_agents\cli.py", line 1276, in <module>
+    sys.exit(main())
+             ^^^^^^
+  File "C:\Users\enike\Downloads\marl-agents\src\marl_agents\cli.py", line 1269, in main
+    return int(args.func(args))
+               ^^^^^^^^^^^^^^^
+  File "C:\Users\enike\Downloads\marl-agents\src\marl_agents\cli.py", line 942, in cmd_eval_bugs
+    for path in runner.run_bug_evaluation(options, s, llm, progress=print):
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\enike\Downloads\marl-agents\src\marl_agents\evaluation\runners\bug_detection.py", line 595, in run_bug_evaluation
+    spent += _run_bug(bug, work, options, settings, llm, cache, ledger)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\enike\Downloads\marl-agents\src\marl_agents\evaluation\runners\bug_detection.py", line 411, in _run_bug
+    repo, index = snapshot.load(version or "buggy")
+                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\enike\Downloads\marl-agents\src\marl_agents\evaluation\runners\bug_detection.py", line 376, in load
+    self.cache.snapshot(
+  File "C:\Users\enike\Downloads\marl-agents\src\marl_agents\evaluation\datasets\bugsinpy_repo.py", line 218, in snapshot
+    target.write_bytes(data.read())
+  File "C:\Program Files\Python311\Lib\pathlib.py", line 1067, in write_bytes
+    with self.open(mode='wb') as f:
+         ^^^^^^^^^^^^^^^^^^^^
+  File "C:\Program Files\Python311\Lib\pathlib.py", line 1044, in open
+    return io.open(self, mode, buffering, encoding, errors, newline)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+FileNotFoundError: [Errno 2] No such file or directory: 'C:\\Users\\enike\\Downloads\\marl-agents\\data\\cache\\bugsinpy\\snapshots\\ansible-7_jjdqomge\\test\\units\\modules\\cloud\\amazon\\placebo_recordings\\aws_direct_connect_link_aggregation_group\\delete_lag_with_connections_without_force_delete\\directconnect.DescribeLags_1.json'
+ansible-12: not usable (change_outside_a_function)
+spacy-8: not usable (change_outside_a_function)
+thefuck-23: not usable (change_outside_a_function)
+fastapi-7: not usable (change_outside_a_function)
+20 usable bugs (of 20 requested)

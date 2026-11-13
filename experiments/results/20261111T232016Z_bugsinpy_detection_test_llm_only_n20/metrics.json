@@ -1,0 +1,116 @@
+{
+  "n_functions": 40,
+  "n_bugs": 20,
+  "n_failed": 0,
+  "function_level": {
+    "n": 40,
+    "tp": 14,
+    "fp": 16,
+    "tn": 4,
+    "fn": 6,
+    "accuracy": 0.45,
+    "precision": 0.4666666666666667,
+    "recall": 0.7,
+    "f1": 0.56,
+    "positive_rate": 0.75
+  },
+  "at_gold_lines": {
+    "n": 40,
+    "tp": 9,
+    "fp": 16,
+    "tn": 4,
+    "fn": 11,
+    "accuracy": 0.325,
+    "precision": 0.36,
+    "recall": 0.45,
+    "f1": 0.39999999999999997,
+    "positive_rate": 0.625
+  },
+  "ci_f1": [
+    0.364,
+    0.714
+  ],
+  "auc": 0.39,
+  "pairs": {
+    "n": 20,
+    "both_flagged": 13,
+    "only_buggy": 1,
+    "only_fixed": 3,
+    "neither": 3,
+    "discrimination": 0.05
+  },
+  "wilson": {
+    "precision": {
+      "k": 14,
+      "n": 30,
+      "value": 0.4666666666666667,
+      "low": 0.30232388907699753,
+      "high": 0.638577003801267
+    },
+    "recall": {
+      "k": 14,
+      "n": 20,
+      "value": 0.7,
+      "low": 0.4810271816464765,
+      "high": 0.8545227551323956
+    },
+    "detection_rate": {
+      "k": 1,
+      "n": 20,
+      "value": 0.05,
+      "low": 0.008881448800795402,
+      "high": 0.23613119344674205
+    }
+  },
+  "llm_calls": 44,
+  "llm_rejected": 0,
+  "complete": true,
+  "experiment": {
+    "configuration": {
+      "key": "llm_only",
+      "letter": "B",
+      "label": "LLM Only",
+      "static": false,
+      "llm": true,
+      "rag": false,
+      "mode": "llm_only"
+    },
+    "benchmark": "bugsinpy_detection",
+    "dataset": "BugsInPy",
+    "split": "test",
+    "sampling_seed": 42,
+    "limit": 20,
+    "sample_count": 20,
+    "sample_fingerprint": "96332d9426655179",
+    "n_evaluated": 40,
+    "n_failed": 0,
+    "llm": {
+      "provider": "groq",
+      "model": "openai/gpt-oss-120b",
+      "temperature": 0.0,
+      "seed": 42,
+      "max_tokens": 4096
+    },
+    "rag": null,
+    "static_analyzers": [],
+    "classifier": null,
+    "confidence_threshold": 0.3,
+    "include_info": true,
+    "evaluation_rules": {
+      "pool": "one source file, at most 10 changed lines, change inside a function",
+      "failed_samples": "counted as wrong, never dropped (D22)",
+      "line_tolerance": 2
+    },
+    "prompt_versions": {
+      "bug_system": "1.0",
+      "bug_review": "1.1",
+      "bug_localize": "1.0"
+    },
+    "llm_cache_reused": false,
+    "group_id": null,
+    "repeat": null,
+    "repeats": null,
+    "timestamp": "2026-11-11T23:20:16.514253+00:00",
+    "agent": "bug_detection"
+  }
+}

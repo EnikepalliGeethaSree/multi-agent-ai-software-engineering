@@ -1,0 +1,67 @@
+{
+  "name": "cleanrepo_requests_static_llm_rag",
+  "started_at": "2026-11-11T11:54:58.749517+00:00",
+  "git_commit": "af6003ba9484c7207aadaf6b911131905653c4c2-dirty",
+  "python": "3.11.7",
+  "platform": "Windows-10-10.0.26300-SP0",
+  "packages": {
+    "marl-agents": "0.1.0",
+    "pydantic": "2.13.5",
+    "ruff": "0.16.9",
+    "radon": "6.0.1",
+    "chromadb": "1.5.9",
+    "openai": "3.21.0",
+    "sentence-transformers": "6.1.0"
+  },
+  "experiment": {
+    "configuration": {
+      "key": "static_llm_rag",
+      "letter": "D",
+      "label": "Static + LLM + RAG",
+      "static": true,
+      "llm": true,
+      "rag": true,
+      "mode": "full"
+    },
+    "benchmark": "clean_repos",
+    "dataset": "https://github.com/psf/requests@3c7baaa05ab4",
+    "split": "package folder src/requests",
+    "sampling_seed": null,
+    "limit": null,
+    "sample_count": 1,
+    "sample_fingerprint": "ec72420df5dfbdce",
+    "n_evaluated": 1,
+    "n_failed": 0,
+    "llm": {
+      "provider": "groq",
+      "model": "openai/gpt-oss-120b",
+      "temperature": 0.0,
+      "seed": 42,
+      "max_tokens": 4096
+    },
+    "rag": {
+      "top_k": 6,
+      "guideline_k": 2,
+      "embedding_model": "hashing",
+      "vector_store": "chroma",
+      "structural_context": true,
+      "max_context_chars": 8000
+    },
+    "static_analyzers": null,
+    "classifier": null,
+    "confidence_threshold": 0.3,
+    "include_info": true,
+    "evaluation_rules": {},
+    "prompt_versions": {
+      "system": "1.0",
+      "review": "1.1"
+    },
+    "llm_cache_reused": false,
+    "group_id": null,
+    "repeat": null,
+    "repeats": null,
+    "timestamp": "2026-11-11T11:54:58.958632+00:00"
+  },
+  "finished_at": "2026-11-11T11:54:58.959631+00:00",
+  "errors": 0
+}

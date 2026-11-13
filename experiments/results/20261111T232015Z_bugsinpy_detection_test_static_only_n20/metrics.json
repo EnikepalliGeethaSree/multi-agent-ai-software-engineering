@@ -1,0 +1,111 @@
+{
+  "n_functions": 40,
+  "n_bugs": 20,
+  "n_failed": 0,
+  "function_level": {
+    "n": 40,
+    "tp": 2,
+    "fp": 1,
+    "tn": 19,
+    "fn": 18,
+    "accuracy": 0.525,
+    "precision": 0.6666666666666666,
+    "recall": 0.1,
+    "f1": 0.1739130434782609,
+    "positive_rate": 0.075
+  },
+  "at_gold_lines": {
+    "n": 40,
+    "tp": 0,
+    "fp": 1,
+    "tn": 19,
+    "fn": 20,
+    "accuracy": 0.475,
+    "precision": 0.0,
+    "recall": 0.0,
+    "f1": 0.0,
+    "positive_rate": 0.025
+  },
+  "ci_f1": [
+    0.0,
+    0.381
+  ],
+  "auc": 0.525,
+  "pairs": {
+    "n": 20,
+    "both_flagged": 1,
+    "only_buggy": 1,
+    "only_fixed": 0,
+    "neither": 18,
+    "discrimination": 0.05
+  },
+  "wilson": {
+    "precision": {
+      "k": 2,
+      "n": 3,
+      "value": 0.6666666666666666,
+      "low": 0.2076596008020477,
+      "high": 0.9385080552796037
+    },
+    "recall": {
+      "k": 2,
+      "n": 20,
+      "value": 0.1,
+      "low": 0.027866481213768224,
+      "high": 0.3010336452284873
+    },
+    "detection_rate": {
+      "k": 1,
+      "n": 20,
+      "value": 0.05,
+      "low": 0.008881448800795402,
+      "high": 0.23613119344674205
+    }
+  },
+  "llm_calls": 0,
+  "llm_rejected": 0,
+  "complete": true,
+  "experiment": {
+    "configuration": {
+      "key": "static_only",
+      "letter": "A",
+      "label": "Static Only",
+      "static": true,
+      "llm": false,
+      "rag": false,
+      "mode": "static_only"
+    },
+    "benchmark": "bugsinpy_detection",
+    "dataset": "BugsInPy",
+    "split": "test",
+    "sampling_seed": 42,
+    "limit": 20,
+    "sample_count": 20,
+    "sample_fingerprint": "96332d9426655179",
+    "n_evaluated": 40,
+    "n_failed": 0,
+    "llm": null,
+    "rag": null,
+    "static_analyzers": [
+      "ruff",
+      "ast",
+      "flow",
+      "loop"
+    ],
+    "classifier": null,
+    "confidence_threshold": 0.3,
+    "include_info": true,
+    "evaluation_rules": {
+      "pool": "one source file, at most 10 changed lines, change inside a function",
+      "failed_samples": "counted as wrong, never dropped (D22)",
+      "line_tolerance": 2
+    },
+    "prompt_versions": {},
+    "llm_cache_reused": null,
+    "group_id": null,
+    "repeat": null,
+    "repeats": null,
+    "timestamp": "2026-11-11T23:20:16.125404+00:00",
+    "agent": "bug_detection"
+  }
+}

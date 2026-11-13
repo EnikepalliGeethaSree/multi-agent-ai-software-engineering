@@ -1,0 +1,111 @@
+{
+  "n_functions": 40,
+  "n_bugs": 20,
+  "n_failed": 0,
+  "function_level": {
+    "n": 40,
+    "tp": 4,
+    "fp": 3,
+    "tn": 17,
+    "fn": 16,
+    "accuracy": 0.525,
+    "precision": 0.5714285714285714,
+    "recall": 0.2,
+    "f1": 0.29629629629629634,
+    "positive_rate": 0.175
+  },
+  "at_gold_lines": {
+    "n": 40,
+    "tp": 2,
+    "fp": 3,
+    "tn": 17,
+    "fn": 18,
+    "accuracy": 0.475,
+    "precision": 0.4,
+    "recall": 0.1,
+    "f1": 0.16000000000000003,
+    "positive_rate": 0.125
+  },
+  "ci_f1": [
+    0.08,
+    0.516
+  ],
+  "auc": 0.52875,
+  "pairs": {
+    "n": 20,
+    "both_flagged": 3,
+    "only_buggy": 1,
+    "only_fixed": 0,
+    "neither": 16,
+    "discrimination": 0.05
+  },
+  "wilson": {
+    "precision": {
+      "k": 4,
+      "n": 7,
+      "value": 0.5714285714285714,
+      "low": 0.2504583645276572,
+      "high": 0.8417801447485302
+    },
+    "recall": {
+      "k": 4,
+      "n": 20,
+      "value": 0.2,
+      "low": 0.08065766257979806,
+      "high": 0.41601743225189364
+    },
+    "detection_rate": {
+      "k": 1,
+      "n": 20,
+      "value": 0.05,
+      "low": 0.008881448800795402,
+      "high": 0.23613119344674205
+    }
+  },
+  "llm_calls": 0,
+  "llm_rejected": 0,
+  "complete": true,
+  "experiment": {
+    "configuration": {
+      "key": "static_only",
+      "letter": "A",
+      "label": "Static Only",
+      "static": true,
+      "llm": false,
+      "rag": false,
+      "mode": "static_only"
+    },
+    "benchmark": "bugsinpy_detection",
+    "dataset": "BugsInPy",
+    "split": "dev",
+    "sampling_seed": 42,
+    "limit": 20,
+    "sample_count": 20,
+    "sample_fingerprint": "c851aa15f4030de6",
+    "n_evaluated": 40,
+    "n_failed": 0,
+    "llm": null,
+    "rag": null,
+    "static_analyzers": [
+      "ruff",
+      "ast",
+      "flow",
+      "loop"
+    ],
+    "classifier": null,
+    "confidence_threshold": 0.3,
+    "include_info": true,
+    "evaluation_rules": {
+      "pool": "one source file, at most 10 changed lines, change inside a function",
+      "failed_samples": "counted as wrong, never dropped (D22)",
+      "line_tolerance": 2
+    },
+    "prompt_versions": {},
+    "llm_cache_reused": null,
+    "group_id": null,
+    "repeat": null,
+    "repeats": null,
+    "timestamp": "2026-11-11T14:18:31.446452+00:00",
+    "agent": "bug_detection"
+  }
+}

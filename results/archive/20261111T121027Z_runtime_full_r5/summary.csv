@@ -1,0 +1,7 @@
+category,run_type,runs,complete,partial,failed,skipped,success_rate,mean_sec,median_sec,p95_sec,min_sec,max_sec,mean_llm_inference_sec,mean_rag_retrieval_sec,mean_static_analysis_sec,mean_input_tokens,mean_output_tokens,mean_findings,mean_cache_hit_rate,mean_review_chunks,mean_lines,mean_size_kb,skipped_chunks
+small,cold,5,5,0,0,0,1.0,4.2266,2.7366,8.8376,2.6045,10.3512,1.086,0.0134,2.3392,2410.0,1886.0,18.0,0.0,1.0,36.0,0.89,0
+small,warm,5,5,0,0,0,1.0,0.1591,0.1554,0.1734,0.1453,0.1744,0.0,0.0127,0.0234,,,18.0,1.0,1.0,36.0,0.89,0
+medium,cold,5,5,0,0,0,1.0,8.715,3.0125,20.1757,2.8454,22.0297,5.6835,0.032,2.4441,8579.5,4858.5,30.4,0.0,2.0,356.0,13.31,0
+medium,warm,5,5,0,0,0,1.0,0.3091,0.294,0.3562,0.2822,0.3656,0.0,0.0322,0.048,,,30.4,1.0,2.0,356.0,13.31,0
+large,cold,5,5,0,0,0,1.0,21.0298,7.4884,61.8246,7.3018,75.3836,13.4801,0.1589,6.4323,54933.0,19341.0,20.0,0.0,10.0,1790.0,78.99,0
+large,warm,5,5,0,0,0,1.0,0.7667,0.7342,0.8785,0.7107,0.9097,0.0,0.1571,0.0408,,,20.0,1.0,10.0,1790.0,78.99,0

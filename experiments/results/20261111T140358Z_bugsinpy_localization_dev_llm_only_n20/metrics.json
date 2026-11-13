@@ -1,0 +1,146 @@
+{
+  "n": 20,
+  "top_function": {
+    "top_1": 0.55,
+    "top_3": 0.6,
+    "top_5": 0.6
+  },
+  "top_file": {
+    "top_1": 0.65,
+    "top_3": 0.75,
+    "top_5": 0.8
+  },
+  "mrr_function": 0.5805555555555555,
+  "mrr_file": 0.7208333333333334,
+  "n_failed": 0,
+  "gold_in_candidates": 0.85,
+  "gold_shown_to_llm": 0.7,
+  "mean_candidates": 108.2,
+  "random_expected": {
+    "top_1": 0.0109,
+    "top_3": 0.0318,
+    "top_5": 0.0515
+  },
+  "ci_top_1": [
+    0.35,
+    0.75
+  ],
+  "ci_top_5": [
+    0.4,
+    0.8
+  ],
+  "ci_mrr": [
+    0.39,
+    0.781
+  ],
+  "wilson": {
+    "top_1": {
+      "k": 11,
+      "n": 20,
+      "value": 0.55,
+      "low": 0.34208534245034233,
+      "high": 0.7418021417443759
+    },
+    "top_3": {
+      "k": 12,
+      "n": 20,
+      "value": 0.6,
+      "low": 0.3865815007622531,
+      "high": 0.781193467627183
+    },
+    "top_5": {
+      "k": 12,
+      "n": 20,
+      "value": 0.6,
+      "low": 0.3865815007622531,
+      "high": 0.781193467627183
+    }
+  },
+  "llm_calls": 20,
+  "by_project": {
+    "PySnooper": {
+      "n": 1,
+      "top_1": 1.0,
+      "top_5": 1.0
+    },
+    "black": {
+      "n": 5,
+      "top_1": 0.2,
+      "top_5": 0.4
+    },
+    "cookiecutter": {
+      "n": 2,
+      "top_1": 1.0,
+      "top_5": 1.0
+    },
+    "httpie": {
+      "n": 2,
+      "top_1": 0.0,
+      "top_5": 0.0
+    },
+    "sanic": {
+      "n": 3,
+      "top_1": 0.667,
+      "top_5": 0.667
+    },
+    "tornado": {
+      "n": 3,
+      "top_1": 0.333,
+      "top_5": 0.333
+    },
+    "tqdm": {
+      "n": 4,
+      "top_1": 1.0,
+      "top_5": 1.0
+    }
+  },
+  "complete": true,
+  "experiment": {
+    "configuration": {
+      "key": "llm_only",
+      "letter": "B",
+      "label": "LLM Only",
+      "static": false,
+      "llm": true,
+      "rag": false,
+      "mode": "llm_only"
+    },
+    "benchmark": "bugsinpy_localization",
+    "dataset": "BugsInPy",
+    "split": "dev",
+    "sampling_seed": 42,
+    "limit": 20,
+    "sample_count": 20,
+    "sample_fingerprint": "c851aa15f4030de6",
+    "n_evaluated": 20,
+    "n_failed": 0,
+    "llm": {
+      "provider": "groq",
+      "model": "openai/gpt-oss-120b",
+      "temperature": 0.0,
+      "seed": 42,
+      "max_tokens": 4096
+    },
+    "rag": null,
+    "static_analyzers": [],
+    "classifier": null,
+    "confidence_threshold": 0.3,
+    "include_info": true,
+    "evaluation_rules": {
+      "pool": "one source file, at most 10 changed lines, change inside a function",
+      "failed_samples": "counted as wrong, never dropped (D22)",
+      "line_tolerance": 2
+    },
+    "prompt_versions": {
+      "bug_system": "1.0",
+      "bug_review": "1.1",
+      "bug_localize": "1.0"
+    },
+    "llm_cache_reused": false,
+    "group_id": null,
+    "repeat": null,
+    "repeats": null,
+    "timestamp": "2026-11-11T14:03:58.620641+00:00",
+    "agent": "bug_detection"
+  }
+}

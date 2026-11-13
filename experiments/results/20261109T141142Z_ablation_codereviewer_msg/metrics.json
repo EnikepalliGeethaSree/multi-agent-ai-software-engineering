@@ -1,0 +1,267 @@
+{
+  "group_id": "abl-20261109T084532Z",
+  "benchmark": "codereviewer_msg",
+  "configurations": [
+    "static_only",
+    "llm_only",
+    "static_llm",
+    "static_llm_rag"
+  ],
+  "repeats": 1,
+  "suggested_fixes": false,
+  "runs": {
+    "static_only": [
+      "20261109T084532Z_codereviewer_msg_test_static_only_n40"
+    ],
+    "llm_only": [
+      "20261109T084547Z_codereviewer_msg_test_llm_only_n40"
+    ],
+    "static_llm": [
+      "20261109T100904Z_codereviewer_msg_test_static_llm_n40"
+    ],
+    "static_llm_rag": [
+      "20261109T114916Z_codereviewer_msg_test_static_llm_rag_n40"
+    ]
+  },
+  "tables": [
+    {
+      "id": "codereviewer_msg",
+      "section": "3. Review comment generation",
+      "title": "CodeReviewer: review comment generation",
+      "about": "Paired comparison: every row is scored on the same samples.",
+      "columns": [
+        {
+          "key": "bleu4",
+          "label": "BLEU-4",
+          "metric": "bleu4",
+          "group": null,
+          "digits": 2
+        },
+        {
+          "key": "rouge_l",
+          "label": "ROUGE-L",
+          "metric": "rouge_l",
+          "group": null,
+          "digits": 2
+        },
+        {
+          "key": "chrf",
+          "label": "chrF",
+          "metric": "chrf",
+          "group": null,
+          "digits": 2
+        },
+        {
+          "key": "coverage",
+          "label": "Coverage",
+          "metric": "coverage",
+          "group": null,
+          "digits": 3
+        }
+      ],
+      "rows": [
+        {
+          "label": "Static Only",
+          "configuration": {
+            "key": "static_only",
+            "letter": "A",
+            "label": "Static Only",
+            "static": true,
+            "llm": false,
+            "rag": false,
+            "mode": "static_only",
+            "description": "Ruff, Radon, AST checks, secrets, test gaps (and mypy when enabled)."
+          },
+          "status": "ok",
+          "values": {
+            "bleu4": 1.781349254941544,
+            "rouge_l": 4.904162982729681,
+            "chrf": 7.857566979213385,
+            "coverage": 0.425
+          },
+          "sd": {},
+          "spread": {},
+          "na": {},
+          "n": 40,
+          "n_failed": 0,
+          "n_runs": 1,
+          "model": null,
+          "run_ids": [
+            "20261109T084532Z_codereviewer_msg_test_static_only_n40"
+          ],
+          "notes": [],
+          "how_to_run": null
+        },
+        {
+          "label": "LLM Only",
+          "configuration": {
+            "key": "llm_only",
+            "letter": "B",
+            "label": "LLM Only",
+            "static": false,
+            "llm": true,
+            "rag": false,
+            "mode": "llm_only",
+            "description": "The LLM reviews the code alone: no static findings, no project context."
+          },
+          "status": "ok",
+          "values": {
+            "bleu4": 0.7676815084572095,
+            "rouge_l": 2.6414036549432085,
+            "chrf": 3.5629343910178277,
+            "coverage": 0.2
+          },
+          "sd": {},
+          "spread": {},
+          "na": {},
+          "n": 40,
+          "n_failed": 0,
+          "n_runs": 1,
+          "model": "qwen2.5-coder:7b",
+          "run_ids": [
+            "20261109T084547Z_codereviewer_msg_test_llm_only_n40"
+          ],
+          "notes": [],
+          "how_to_run": null
+        },
+        {
+          "label": "Static + LLM",
+          "configuration": {
+            "key": "static_llm",
+            "letter": "C",
+            "label": "Static + LLM",
+            "static": true,
+            "llm": true,
+            "rag": false,
+            "mode": "full",
+            "description": "Static findings plus LLM review and triage, without project context."
+          },
+          "status": "ok",
+          "values": {
+            "bleu4": 2.268753488407264,
+            "rouge_l": 6.296544431698972,
+            "chrf": 10.89601454534081,
+            "coverage": 0.6
+          },
+          "sd": {},
+          "spread": {},
+          "na": {},
+          "n": 40,
+          "n_failed": 0,
+          "n_runs": 1,
+          "model": "qwen2.5-coder:7b",
+          "run_ids": [
+            "20261109T100904Z_codereviewer_msg_test_static_llm_n40"
+          ],
+          "notes": [],
+          "how_to_run": null
+        },
+        {
+          "label": "Static + LLM + RAG",
+          "configuration": {
+            "key": "static_llm_rag",
+            "letter": "D",
+            "label": "Static + LLM + RAG",
+            "static": true,
+            "llm": true,
+            "rag": true,
+            "mode": "full",
+            "description": "The full agent: static analysis, LLM review, retrieved project context."
+          },
+          "status": "ok",
+          "values": {
+            "bleu4": 2.5876239712221714,
+            "rouge_l": 6.531827707208782,
+            "chrf": 10.978079536112348,
+            "coverage": 0.625
+          },
+          "sd": {},
+          "spread": {},
+          "na": {},
+          "n": 40,
+          "n_failed": 0,
+          "n_runs": 1,
+          "model": "qwen2.5-coder:7b",
+          "run_ids": [
+            "20261109T114916Z_codereviewer_msg_test_static_llm_rag_n40"
+          ],
+          "notes": [],
+          "how_to_run": null
+        }
+      ],
+      "conditions": {
+        "dataset": "CodeReviewer, test split, Python only",
+        "paired samples": "40 of 40 requested",
+        "evaluated per configuration": "A 40/40, B 40/40, C 40/40, D 40/40",
+        "requested samples": 40,
+        "samples in every row": 40,
+        "sampling seed": 42,
+        "limit": 40,
+        "comment": "top finding's title + recommendation",
+        "scale": "BLEU-4, ROUGE-L, chrF: 0-100; coverage: 0-1"
+      },
+      "fairness": [
+        {
+          "name": "Same samples",
+          "ok": true,
+          "detail": "40 samples evaluated by every configuration (40 requested; reference run 20261109T114916Z_codereviewer_msg_test_static_llm_rag_n40)"
+        },
+        {
+          "name": "Same LLM model",
+          "ok": true,
+          "detail": "qwen2.5-coder:7b"
+        },
+        {
+          "name": "Same temperature",
+          "ok": true,
+          "detail": "0.0"
+        },
+        {
+          "name": "Same prompt versions",
+          "ok": true,
+          "detail": "{'system': '1.0', 'review': '1.1'}"
+        },
+        {
+          "name": "Fresh LLM calls",
+          "ok": true,
+          "detail": "every LLM run called the model"
+        },
+        {
+          "name": "Same confidence threshold",
+          "ok": true,
+          "detail": "0.3"
+        },
+        {
+          "name": "Same evaluation rules",
+          "ok": true,
+          "detail": "{'comment': 'top-ranked finding: title + recommendation (variant title_fix)', 'text_metric_scale': 'BLEU-4, ROUGE-L, chrF in 0-100; coverage in 0-1'}"
+        },
+        {
+          "name": "Run together (one ablation group)",
+          "ok": true,
+          "detail": "abl-20261109T084532Z"
+        }
+      ],
+      "observations": [
+        "Static + LLM has a higher chrF than Static Only (10.90 vs 7.86).",
+        "Static + LLM + RAG has a higher chrF than Static + LLM (10.98 vs 10.90).",
+        "Static Only has a higher chrF than LLM Only (7.86 vs 3.56).",
+        "Static + LLM has a higher coverage than Static Only (0.600 vs 0.425).",
+        "Static + LLM + RAG has a higher coverage than Static + LLM (0.625 vs 0.600).",
+        "Static Only has a higher coverage than LLM Only (0.425 vs 0.200)."
+      ],
+      "notes": [
+        "Run all four on one sample set: python -m marl_agents.cli eval ablation --benchmark codereviewer --task msg --limit 40 --seed 42 --configurations static_only,llm_only,static_llm,static_llm_rag --config configs/gemini.yaml",
+        "n = 40: differences of a few points are within sampling noise (see the bootstrap CIs in each run's summary).",
+        "Gemini: set GEMINI_MODEL=gemini-3.6-flash first. Three LLM configurations on 40 samples need at least 120 requests, and the free tier allows 20 per day per model. Add --reuse-llm-cache and repeat the command each day: cached replies carry it forward, and the run that finishes is complete."
+      ],
+      "supplementary": false,
+      "show_counts": true,
+      "badges": [
+        "Complete",
+        "Local: Ollama (qwen2.5-coder:7b)"
+      ],
+      "warning": null
+    }
+  ]
+}

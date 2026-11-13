@@ -1,0 +1,25 @@
+{
+  "name": "ablation_codereviewer_msg",
+  "started_at": "2026-11-11T11:50:35.506315+00:00",
+  "git_commit": "af6003ba9484c7207aadaf6b911131905653c4c2-dirty",
+  "python": "3.11.7",
+  "platform": "Windows-10-10.0.26300-SP0",
+  "packages": {
+    "marl-agents": "0.1.0",
+    "pydantic": "2.13.5",
+    "ruff": "0.16.9",
+    "radon": "6.0.1",
+    "chromadb": "1.5.9",
+    "openai": "3.21.0",
+    "sentence-transformers": "6.1.0"
+  },
+  "group_id": "abl-20261111T111605Z",
+  "configurations": [
+    "static_only",
+    "llm_only",
+    "static_llm",
+    "static_llm_rag"
+  ],
+  "finished_at": "2026-11-11T11:50:35.667311+00:00",
+  "errors": 0
+}

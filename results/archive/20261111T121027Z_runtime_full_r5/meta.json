@@ -1,0 +1,27 @@
+{
+  "name": "runtime_full_r5",
+  "started_at": "2026-11-11T12:10:27.574052+00:00",
+  "git_commit": "0eb149cb6d1e8932659bcadc342413de796a3af2-dirty",
+  "python": "3.11.7",
+  "platform": "Windows-10-10.0.26300-SP0",
+  "packages": {
+    "marl-agents": "0.1.0",
+    "pydantic": "2.13.5",
+    "ruff": "0.16.9",
+    "radon": "6.0.1",
+    "chromadb": "1.5.9",
+    "openai": "3.21.0",
+    "sentence-transformers": "6.1.0"
+  },
+  "benchmark": "runtime",
+  "repeats": 5,
+  "llm_provider": "groq",
+  "llm_model": "openai/gpt-oss-120b",
+  "sample_ids": [
+    "45805f726bf977290dfac21aeac1e506e7759804bf9d01db5dcf7d17337aea30",
+    "da46fa7c6c554a0705cf9a7318279b56fd5f62f71a55ac28e9579616f11129d6",
+    "08417bfd8b0bff87f63c2d0f333cd768d5bbe7072d6e6883bda199b5c47221a0"
+  ],
+  "finished_at": "2026-11-11T12:13:27.563665+00:00",
+  "errors": 0
+}

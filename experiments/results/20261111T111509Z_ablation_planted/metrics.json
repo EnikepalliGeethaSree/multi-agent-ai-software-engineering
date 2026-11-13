@@ -1,0 +1,777 @@
+{
+  "group_id": "abl-20261111T111100Z",
+  "benchmark": "planted",
+  "configurations": [
+    "static_only",
+    "llm_only",
+    "static_llm",
+    "static_llm_rag"
+  ],
+  "repeats": 3,
+  "suggested_fixes": false,
+  "runs": {
+    "static_only": [
+      "20261111T111100Z_planted_static_only",
+      "20261111T111212Z_planted_static_only",
+      "20261111T111332Z_planted_static_only"
+    ],
+    "llm_only": [
+      "20261111T111106Z_planted_llm_only",
+      "20261111T111217Z_planted_llm_only",
+      "20261111T111338Z_planted_llm_only"
+    ],
+    "static_llm": [
+      "20261111T111123Z_planted_static_llm",
+      "20261111T111237Z_planted_static_llm",
+      "20261111T111358Z_planted_static_llm"
+    ],
+    "static_llm_rag": [
+      "20261111T111144Z_planted_static_llm_rag",
+      "20261111T111306Z_planted_static_llm_rag",
+      "20261111T111430Z_planted_static_llm_rag"
+    ]
+  },
+  "tables": [
+    {
+      "id": "planted",
+      "section": "1. Planted issues",
+      "title": "Planted-issue benchmark: detection by configuration",
+      "about": "17 hand-labelled issues in a fixture repository (16 detectable by a rule, 1 needing semantic reasoning) plus a clean negative-control file.",
+      "columns": [
+        {
+          "key": "recall",
+          "label": "Issue recall",
+          "metric": "issue_recall",
+          "group": "Labelled issues",
+          "digits": 3
+        },
+        {
+          "key": "issues_found",
+          "label": "Found",
+          "metric": null,
+          "group": "Labelled issues",
+          "digits": 0
+        },
+        {
+          "key": "fn",
+          "label": "Missed",
+          "metric": null,
+          "group": "Labelled issues",
+          "digits": 0
+        },
+        {
+          "key": "recall_static",
+          "label": "Rule-detectable recall",
+          "metric": "issue_recall",
+          "group": "Labelled issues",
+          "digits": 3
+        },
+        {
+          "key": "recall_llm",
+          "label": "Semantic recall",
+          "metric": "issue_recall",
+          "group": "Labelled issues",
+          "digits": 3
+        },
+        {
+          "key": "precision",
+          "label": "Precision",
+          "metric": "defect_precision",
+          "group": "Defect findings",
+          "digits": 3
+        },
+        {
+          "key": "tp",
+          "label": "Correct",
+          "metric": null,
+          "group": "Defect findings",
+          "digits": 0
+        },
+        {
+          "key": "fp",
+          "label": "False positives",
+          "metric": null,
+          "group": "Defect findings",
+          "digits": 0
+        },
+        {
+          "key": "clean_fp",
+          "label": "FP in clean file",
+          "metric": null,
+          "group": "Defect findings",
+          "digits": 0
+        },
+        {
+          "key": "f1",
+          "label": "F1 (mixed basis)",
+          "metric": "mixed_f1",
+          "group": "Other",
+          "digits": 3
+        },
+        {
+          "key": "roc_auc",
+          "label": "ROC-AUC",
+          "metric": "roc_auc",
+          "group": "Other",
+          "digits": 3
+        },
+        {
+          "key": "line_error",
+          "label": "Mean line error",
+          "metric": null,
+          "group": "Other",
+          "digits": 2
+        }
+      ],
+      "rows": [
+        {
+          "label": "Static Only",
+          "configuration": {
+            "key": "static_only",
+            "letter": "A",
+            "label": "Static Only",
+            "static": true,
+            "llm": false,
+            "rag": false,
+            "mode": "static_only",
+            "description": "Ruff, Radon, AST checks, secrets, test gaps (and mypy when enabled)."
+          },
+          "status": "ok",
+          "values": {
+            "recall": 0.9411764705882352,
+            "issues_found": 16.0,
+            "fn": 1.0,
+            "recall_static": 1.0,
+            "recall_llm": 0.0,
+            "precision": 1.0,
+            "tp": 13.0,
+            "fp": 0.0,
+            "clean_fp": 0.0,
+            "f1": 0.9696969696969697,
+            "roc_auc": null,
+            "line_error": 0.0
+          },
+          "sd": {
+            "recall": 0.0,
+            "issues_found": 0.0,
+            "fn": 0.0,
+            "recall_static": 0.0,
+            "recall_llm": 0.0,
+            "precision": 0.0,
+            "tp": 0.0,
+            "fp": 0.0,
+            "clean_fp": 0.0,
+            "f1": 0.0,
+            "line_error": 0.0
+          },
+          "spread": {},
+          "na": {
+            "roc_auc": "not applicable: the planted suite labels positives only (no scored negative cases), so a ROC curve is undefined"
+          },
+          "ci": {
+            "recall": [
+              0.7301796936242461,
+              0.9895395990150025
+            ],
+            "precision": [
+              0.7719046276458016,
+              0.9999999999999999
+            ]
+          },
+          "n": 17,
+          "n_failed": 0,
+          "n_runs": 3,
+          "model": null,
+          "run_ids": [
+            "20261111T111100Z_planted_static_only",
+            "20261111T111212Z_planted_static_only",
+            "20261111T111332Z_planted_static_only"
+          ],
+          "notes": [],
+          "how_to_run": null
+        },
+        {
+          "label": "LLM Only",
+          "configuration": {
+            "key": "llm_only",
+            "letter": "B",
+            "label": "LLM Only",
+            "static": false,
+            "llm": true,
+            "rag": false,
+            "mode": "llm_only",
+            "description": "The LLM reviews the code alone: no static findings, no project context."
+          },
+          "status": "ok",
+          "values": {
+            "recall": 0.6666666666666666,
+            "issues_found": 11.333333333333334,
+            "fn": 5.666666666666667,
+            "recall_static": 0.6458333333333334,
+            "recall_llm": 1.0,
+            "precision": 1.0,
+            "tp": 11.333333333333334,
+            "fp": 0.0,
+            "clean_fp": 0.0,
+            "f1": 0.7996715927750411,
+            "roc_auc": null,
+            "line_error": 0.7727272727272728
+          },
+          "sd": {
+            "recall": 0.03396178054056623,
+            "issues_found": 0.5773502691896257,
+            "fn": 0.5773502691896257,
+            "recall_static": 0.03608439182435161,
+            "recall_llm": 0.0,
+            "precision": 0.0,
+            "tp": 0.5773502691896257,
+            "fp": 0.0,
+            "clean_fp": 0.0,
+            "f1": 0.02417476496606801,
+            "line_error": 0.23618874648666507
+          },
+          "spread": {},
+          "na": {
+            "roc_auc": "not applicable: the planted suite labels positives only (no scored negative cases), so a ROC curve is undefined"
+          },
+          "ci": {
+            "recall": [
+              0.4686688993346016,
+              0.8672001038970478
+            ],
+            "precision": [
+              0.7575059933447592,
+              1.0
+            ]
+          },
+          "n": 17,
+          "n_failed": 0,
+          "n_runs": 3,
+          "model": "openai/gpt-oss-120b",
+          "run_ids": [
+            "20261111T111106Z_planted_llm_only",
+            "20261111T111217Z_planted_llm_only",
+            "20261111T111338Z_planted_llm_only"
+          ],
+          "notes": [],
+          "how_to_run": null
+        },
+        {
+          "label": "Static + LLM",
+          "configuration": {
+            "key": "static_llm",
+            "letter": "C",
+            "label": "Static + LLM",
+            "static": true,
+            "llm": true,
+            "rag": false,
+            "mode": "full",
+            "description": "Static findings plus LLM review and triage, without project context."
+          },
+          "status": "ok",
+          "values": {
+            "recall": 0.9803921568627452,
+            "issues_found": 16.666666666666668,
+            "fn": 0.3333333333333333,
+            "recall_static": 1.0,
+            "recall_llm": 0.6666666666666666,
+            "precision": 0.953968253968254,
+            "tp": 13.666666666666666,
+            "fp": 0.6666666666666666,
+            "clean_fp": 0.3333333333333333,
+            "f1": 0.9667829006844894,
+            "roc_auc": null,
+            "line_error": 0.2622549019607843
+          },
+          "sd": {
+            "recall": 0.03396178054056623,
+            "issues_found": 0.5773502691896257,
+            "fn": 0.5773502691896257,
+            "recall_static": 0.0,
+            "recall_llm": 0.5773502691896257,
+            "precision": 0.03993570039812419,
+            "tp": 0.5773502691896257,
+            "fp": 0.5773502691896257,
+            "clean_fp": 0.5773502691896257,
+            "f1": 0.032602700035021095,
+            "line_error": 0.22786209887012676
+          },
+          "spread": {},
+          "na": {
+            "roc_auc": "not applicable: the planted suite labels positives only (no scored negative cases), so a ROC curve is undefined"
+          },
+          "ci": {
+            "recall": [
+              0.7301796936242461,
+              0.9895395990150025
+            ],
+            "precision": [
+              0.6853129557584889,
+              0.9872777847521093
+            ]
+          },
+          "n": 17,
+          "n_failed": 0,
+          "n_runs": 3,
+          "model": "openai/gpt-oss-120b",
+          "run_ids": [
+            "20261111T111123Z_planted_static_llm",
+            "20261111T111237Z_planted_static_llm",
+            "20261111T111358Z_planted_static_llm"
+          ],
+          "notes": [],
+          "how_to_run": null
+        },
+        {
+          "label": "Static + LLM + RAG",
+          "configuration": {
+            "key": "static_llm_rag",
+            "letter": "D",
+            "label": "Static + LLM + RAG",
+            "static": true,
+            "llm": true,
+            "rag": true,
+            "mode": "full",
+            "description": "The full agent: static analysis, LLM review, retrieved project context."
+          },
+          "status": "ok",
+          "values": {
+            "recall": 1.0,
+            "issues_found": 17.0,
+            "fn": 0.0,
+            "recall_static": 1.0,
+            "recall_llm": 1.0,
+            "precision": 1.0,
+            "tp": 14.0,
+            "fp": 0.0,
+            "clean_fp": 0.0,
+            "f1": 1.0,
+            "roc_auc": null,
+            "line_error": 0.17647058823529413
+          },
+          "sd": {
+            "recall": 0.0,
+            "issues_found": 0.0,
+            "fn": 0.0,
+            "recall_static": 0.0,
+            "recall_llm": 0.0,
+            "precision": 0.0,
+            "tp": 0.0,
+            "fp": 0.0,
+            "clean_fp": 0.0,
+            "f1": 0.0,
+            "line_error": 0.15563243006262298
+          },
+          "spread": {},
+          "na": {
+            "roc_auc": "not applicable: the planted suite labels positives only (no scored negative cases), so a ROC curve is undefined"
+          },
+          "ci": {
+            "recall": [
+              0.8156818649911483,
+              1.0
+            ],
+            "precision": [
+              0.7846891972623643,
+              1.0
+            ]
+          },
+          "n": 17,
+          "n_failed": 0,
+          "n_runs": 3,
+          "model": "openai/gpt-oss-120b",
+          "run_ids": [
+            "20261111T111144Z_planted_static_llm_rag",
+            "20261111T111306Z_planted_static_llm_rag",
+            "20261111T111430Z_planted_static_llm_rag"
+          ],
+          "notes": [],
+          "how_to_run": null
+        }
+      ],
+      "conditions": {
+        "answer key": "tests/fixtures/repos/planted_expected.json (17 issues)",
+        "negative control": "shop/utils.py",
+        "matching": "same file, start within +-2 lines, compatible category",
+        "precision counts": "defect findings only (bug, security, error handling, edge case)"
+      },
+      "fairness": [
+        {
+          "name": "Same samples (answer key)",
+          "ok": true,
+          "detail": "one fixture repository and answer key for every configuration"
+        },
+        {
+          "name": "Same LLM model",
+          "ok": true,
+          "detail": "openai/gpt-oss-120b"
+        },
+        {
+          "name": "Same temperature",
+          "ok": true,
+          "detail": "0.0"
+        },
+        {
+          "name": "Same prompt versions",
+          "ok": true,
+          "detail": "{'system': '1.0', 'review': '1.1'}"
+        },
+        {
+          "name": "Fresh LLM calls",
+          "ok": true,
+          "detail": "every LLM run called the model"
+        },
+        {
+          "name": "Same confidence threshold",
+          "ok": true,
+          "detail": "0.3"
+        },
+        {
+          "name": "Same evaluation rules",
+          "ok": true,
+          "detail": "{'line_tolerance': 2, 'match': 'same file, start within +-2 lines, compatible category', 'precision_over': 'defect findings (bug, security, error_handling, edge_case)'}"
+        },
+        {
+          "name": "Run together (one ablation group)",
+          "ok": true,
+          "detail": "abl-20261111T111100Z"
+        }
+      ],
+      "observations": [
+        "Static + LLM has a higher recall than Static Only (0.980 vs 0.941).",
+        "Static + LLM + RAG has a higher recall than Static + LLM (1.000 vs 0.980).",
+        "Static Only has a higher recall than LLM Only (0.941 vs 0.667).",
+        "Static Only has a higher precision than Static + LLM (1.000 vs 0.954).",
+        "Static + LLM + RAG has a higher precision than Static + LLM (1.000 vs 0.954).",
+        "Static Only and LLM Only have the same precision (1.000).",
+        "Static Only: semantic (LLM-only) issue recall 0.000 (the suite has a single such issue, so this is 0 or 1 per run).",
+        "LLM Only: semantic (LLM-only) issue recall 1.000 (the suite has a single such issue, so this is 0 or 1 per run).",
+        "Static + LLM: semantic (LLM-only) issue recall 0.667 (the suite has a single such issue, so this is 0 or 1 per run).",
+        "Static + LLM + RAG: semantic (LLM-only) issue recall 1.000 (the suite has a single such issue, so this is 0 or 1 per run).",
+        "LLM Only on openai/gpt-oss-120b varies between complete runs (20261111: 11/17, 20261111: 11/17, 20261111: 12/17). The table shows the latest, so 1.000 is not a stable result.",
+        "Static + LLM on openai/gpt-oss-120b varies between complete runs (20261111: 17/17, 20261111: 17/17, 20261111: 16/17). The table shows the latest, so 1.000 is not a stable result.",
+        "Static + LLM + RAG on openai/gpt-oss-120b gave the same recall in 3 runs."
+      ],
+      "statistics": [
+        "A run 1 of 3: issues found 0.941 (16/17; 95% CI 0.730-0.990); defect findings correct 1.000 (13/13; 95% CI 0.772-1.000); false-positive defect findings 0",
+        "A run 2 of 3: issues found 0.941 (16/17; 95% CI 0.730-0.990); defect findings correct 1.000 (13/13; 95% CI 0.772-1.000); false-positive defect findings 0",
+        "A run 3 of 3: issues found 0.941 (16/17; 95% CI 0.730-0.990); defect findings correct 1.000 (13/13; 95% CI 0.772-1.000); false-positive defect findings 0",
+        "B run 1 of 3: issues found 0.647 (11/17; 95% CI 0.413-0.827); defect findings correct 1.000 (11/11; 95% CI 0.741-1.000); false-positive defect findings 0",
+        "B run 2 of 3: issues found 0.647 (11/17; 95% CI 0.413-0.827); defect findings correct 1.000 (11/11; 95% CI 0.741-1.000); false-positive defect findings 0",
+        "B run 3 of 3: issues found 0.706 (12/17; 95% CI 0.469-0.867); defect findings correct 1.000 (12/12; 95% CI 0.758-1.000); false-positive defect findings 0",
+        "C run 1 of 3: issues found 1.000 (17/17; 95% CI 0.816-1.000); defect findings correct 0.933 (14/15; 95% CI 0.702-0.988); false-positive defect findings 1",
+        "C run 2 of 3: issues found 1.000 (17/17; 95% CI 0.816-1.000); defect findings correct 1.000 (14/14; 95% CI 0.785-1.000); false-positive defect findings 0",
+        "C run 3 of 3: issues found 0.941 (16/17; 95% CI 0.730-0.990); defect findings correct 0.929 (13/14; 95% CI 0.685-0.987); false-positive defect findings 1",
+        "D run 1 of 3: issues found 1.000 (17/17; 95% CI 0.816-1.000); defect findings correct 1.000 (14/14; 95% CI 0.785-1.000); false-positive defect findings 0",
+        "D run 2 of 3: issues found 1.000 (17/17; 95% CI 0.816-1.000); defect findings correct 1.000 (14/14; 95% CI 0.785-1.000); false-positive defect findings 0",
+        "D run 3 of 3: issues found 1.000 (17/17; 95% CI 0.816-1.000); defect findings correct 1.000 (14/14; 95% CI 0.785-1.000); false-positive defect findings 0",
+        "A vs B: only A 5, only B 1, both 11, neither 0; exact McNemar p = 0.219 (n = 17) (issues found, latest run each)",
+        "A vs C: only A 0, only C 0, both 16, neither 1; exact McNemar p = 1.000 (n = 17) (issues found, latest run each)",
+        "A vs D: only A 0, only D 1, both 16, neither 0; exact McNemar p = 1.000 (n = 17) (issues found, latest run each)",
+        "B vs C: only B 1, only C 5, both 11, neither 0; exact McNemar p = 0.219 (n = 17) (issues found, latest run each)",
+        "B vs D: only B 0, only D 5, both 12, neither 0; exact McNemar p = 0.062 (n = 17) (issues found, latest run each)",
+        "C vs D: only C 0, only D 1, both 16, neither 0; exact McNemar p = 1.000 (n = 17) (issues found, latest run each)",
+        "Precision is counted per finding (defect-class findings that match an issue / all defect-class findings); recall is counted per issue (issues matched / 17)."
+      ],
+      "notes": [
+        "Why 14 correct findings can sit beside 17 issues found: the answer key has 14 defect-class issues and 3 others (quality, maintainability, standards). Found counts issues of every category. Correct counts findings of the defect classes only. They are separate counts, so Correct + Missed need not equal the number of issues.",
+        "Rule-detectable recall covers 16 issues. Semantic recall covers 1, so it can only be 0 or 1 in a run.",
+        "F1 here mixes defect precision and issue recall, which have different denominators. Treat it as a summary of this benchmark, not a standard F1.",
+        "Precision is N/A, not 1.0, when a configuration reports no defect findings at all.",
+        "Run all four together: python -m marl_agents.cli eval ablation --benchmark planted --configurations static_only,llm_only,static_llm,static_llm_rag --config configs/gemini.yaml"
+      ],
+      "supplementary": false,
+      "show_counts": true,
+      "badges": [
+        "Complete",
+        "Small benchmark (n = 17)",
+        "Historical: Groq (openai/gpt-oss-120b)"
+      ],
+      "warning": "Small benchmark: 17 issues written by the project team. It is a regression check, and a score of 1.000 is not evidence of 100% bug detection in real code."
+    },
+    {
+      "id": "timing_planted_runs",
+      "section": "6c. Efficiency: historical timing (not Gemini)",
+      "title": "Time per review in the planted-benchmark runs (seconds)",
+      "about": "The same repository reviewed under each configuration (the runs in section 1). One measurement per run; repeated runs show the mean.",
+      "columns": [
+        {
+          "key": "total_sec",
+          "label": "Total",
+          "metric": "seconds",
+          "group": null,
+          "digits": 2
+        },
+        {
+          "key": "static_analysis_sec",
+          "label": "Static",
+          "metric": "seconds",
+          "group": null,
+          "digits": 2
+        },
+        {
+          "key": "rag_sec",
+          "label": "RAG",
+          "metric": "seconds",
+          "group": null,
+          "digits": 2
+        },
+        {
+          "key": "llm_inference_sec",
+          "label": "LLM",
+          "metric": "seconds",
+          "group": null,
+          "digits": 2
+        },
+        {
+          "key": "validation_sec",
+          "label": "Validation",
+          "metric": "seconds",
+          "group": null,
+          "digits": 3
+        },
+        {
+          "key": "report_generation_sec",
+          "label": "Reports",
+          "metric": "seconds",
+          "group": null,
+          "digits": 2
+        },
+        {
+          "key": "other_sec",
+          "label": "Other",
+          "metric": "seconds",
+          "group": null,
+          "digits": 2
+        },
+        {
+          "key": "active_sec",
+          "label": "Active (total - quota wait)",
+          "metric": "seconds",
+          "group": null,
+          "digits": 2
+        }
+      ],
+      "rows": [
+        {
+          "label": "Static Only",
+          "configuration": {
+            "key": "static_only",
+            "letter": "A",
+            "label": "Static Only",
+            "static": true,
+            "llm": false,
+            "rag": false,
+            "mode": "static_only",
+            "description": "Ruff, Radon, AST checks, secrets, test gaps (and mypy when enabled)."
+          },
+          "status": "ok",
+          "values": {
+            "total_sec": 5.511733333333333,
+            "static_analysis_sec": 5.490566666666666,
+            "rag_sec": 0.0,
+            "llm_inference_sec": 0.0,
+            "validation_sec": 0.0025,
+            "report_generation_sec": null,
+            "other_sec": 0.018699999999999998,
+            "active_sec": 5.511733333333333
+          },
+          "sd": {
+            "total_sec": 0.20616838587264844,
+            "static_analysis_sec": 0.2048849514565025,
+            "rag_sec": 0.0,
+            "llm_inference_sec": 0.0,
+            "validation_sec": 0.0008717797887081348,
+            "other_sec": 0.0008660254037844374,
+            "active_sec": 0.20616838587264844
+          },
+          "spread": {},
+          "na": {
+            "report_generation_sec": "benchmark runs do not write reports"
+          },
+          "ci": {},
+          "n": null,
+          "n_failed": null,
+          "n_runs": 3,
+          "model": null,
+          "run_ids": [
+            "20261111T111100Z_planted_static_only",
+            "20261111T111212Z_planted_static_only",
+            "20261111T111332Z_planted_static_only"
+          ],
+          "notes": [],
+          "how_to_run": null
+        },
+        {
+          "label": "LLM Only",
+          "configuration": {
+            "key": "llm_only",
+            "letter": "B",
+            "label": "LLM Only",
+            "static": false,
+            "llm": true,
+            "rag": false,
+            "mode": "llm_only",
+            "description": "The LLM reviews the code alone: no static findings, no project context."
+          },
+          "status": "ok",
+          "values": {
+            "total_sec": 18.365066666666667,
+            "static_analysis_sec": 0.0,
+            "rag_sec": 0.0,
+            "llm_inference_sec": 18.323866666666664,
+            "validation_sec": 0.0068,
+            "report_generation_sec": null,
+            "other_sec": 0.03436666666666666,
+            "active_sec": 18.365066666666667
+          },
+          "sd": {
+            "total_sec": 1.8036407744707184,
+            "static_analysis_sec": 0.0,
+            "rag_sec": 0.0,
+            "llm_inference_sec": 1.8099029209693358,
+            "validation_sec": 0.005889821729050888,
+            "other_sec": 0.001274100990241095,
+            "active_sec": 1.8036407744707184
+          },
+          "spread": {},
+          "na": {
+            "report_generation_sec": "benchmark runs do not write reports"
+          },
+          "ci": {},
+          "n": null,
+          "n_failed": null,
+          "n_runs": 3,
+          "model": "openai/gpt-oss-120b",
+          "run_ids": [
+            "20261111T111106Z_planted_llm_only",
+            "20261111T111217Z_planted_llm_only",
+            "20261111T111338Z_planted_llm_only"
+          ],
+          "notes": [],
+          "how_to_run": null
+        },
+        {
+          "label": "Static + LLM",
+          "configuration": {
+            "key": "static_llm",
+            "letter": "C",
+            "label": "Static + LLM",
+            "static": true,
+            "llm": true,
+            "rag": false,
+            "mode": "full",
+            "description": "Static findings plus LLM review and triage, without project context."
+          },
+          "status": "ok",
+          "values": {
+            "total_sec": 27.5311,
+            "static_analysis_sec": 5.292133333333333,
+            "rag_sec": 0.0,
+            "llm_inference_sec": 22.1989,
+            "validation_sec": 0.005366666666666666,
+            "report_generation_sec": null,
+            "other_sec": 0.0347,
+            "active_sec": 27.5311
+          },
+          "sd": {
+            "total_sec": 5.437923093424547,
+            "static_analysis_sec": 0.4844584227086296,
+            "rag_sec": 0.0,
+            "llm_inference_sec": 5.4253576020387815,
+            "validation_sec": 0.00032145502536643167,
+            "other_sec": 0.0034655446902326905,
+            "active_sec": 5.437923093424547
+          },
+          "spread": {},
+          "na": {
+            "report_generation_sec": "benchmark runs do not write reports"
+          },
+          "ci": {},
+          "n": null,
+          "n_failed": null,
+          "n_runs": 3,
+          "model": "openai/gpt-oss-120b",
+          "run_ids": [
+            "20261111T111123Z_planted_static_llm",
+            "20261111T111237Z_planted_static_llm",
+            "20261111T111358Z_planted_static_llm"
+          ],
+          "notes": [],
+          "how_to_run": null
+        },
+        {
+          "label": "Static + LLM + RAG",
+          "configuration": {
+            "key": "static_llm_rag",
+            "letter": "D",
+            "label": "Static + LLM + RAG",
+            "static": true,
+            "llm": true,
+            "rag": true,
+            "mode": "full",
+            "description": "The full agent: static analysis, LLM review, retrieved project context."
+          },
+          "status": "ok",
+          "values": {
+            "total_sec": 30.62483333333333,
+            "static_analysis_sec": 5.261933333333333,
+            "rag_sec": 0.1291,
+            "llm_inference_sec": 24.4421,
+            "validation_sec": 0.010066666666666666,
+            "report_generation_sec": null,
+            "other_sec": 0.7816666666666666,
+            "active_sec": 30.62483333333333
+          },
+          "sd": {
+            "total_sec": 6.268024391571343,
+            "static_analysis_sec": 0.3646854854985776,
+            "rag_sec": 0.10903297666302611,
+            "llm_inference_sec": 7.221793543850447,
+            "validation_sec": 0.005050082507576816,
+            "other_sec": 1.2323881301494806,
+            "active_sec": 6.268024391571343
+          },
+          "spread": {},
+          "na": {
+            "report_generation_sec": "benchmark runs do not write reports"
+          },
+          "ci": {},
+          "n": null,
+          "n_failed": null,
+          "n_runs": 3,
+          "model": "openai/gpt-oss-120b",
+          "run_ids": [
+            "20261111T111144Z_planted_static_llm_rag",
+            "20261111T111306Z_planted_static_llm_rag",
+            "20261111T111430Z_planted_static_llm_rag"
+          ],
+          "notes": [],
+          "how_to_run": null
+        }
+      ],
+      "conditions": {
+        "input": "planted fixture repository (8 files, 6 Python)"
+      },
+      "fairness": [
+        {
+          "name": "Same input",
+          "ok": true,
+          "detail": "planted fixture repository for every row"
+        }
+      ],
+      "observations": [
+        "RAG overhead +11.2% on active time (n = 3 run(s) per configuration; a single run is noisy, the timing benchmark is the fair measure).",
+        "Of that difference, retrieval itself took 0.13s; LLM inference took +2.24s more with RAG (longer prompts carrying the context)."
+      ],
+      "statistics": [],
+      "notes": [],
+      "supplementary": false,
+      "show_counts": true,
+      "badges": [
+        "Historical: Groq (openai/gpt-oss-120b)"
+      ],
+      "warning": null
+    }
+  ]
+}

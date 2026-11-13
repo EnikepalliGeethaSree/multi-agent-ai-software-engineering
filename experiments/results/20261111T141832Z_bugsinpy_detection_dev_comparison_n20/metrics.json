@@ -1,0 +1,67 @@
+{
+  "comparison": {
+    "correct": [
+      {
+        "a": "static_only",
+        "b": "llm_only",
+        "n": 40,
+        "only_a_correct": 13,
+        "only_b_correct": 11,
+        "p_value": 0.8388
+      },
+      {
+        "a": "static_only",
+        "b": "static_llm",
+        "n": 40,
+        "only_a_correct": 11,
+        "only_b_correct": 14,
+        "p_value": 0.69
+      },
+      {
+        "a": "static_only",
+        "b": "static_llm_rag",
+        "n": 40,
+        "only_a_correct": 9,
+        "only_b_correct": 13,
+        "p_value": 0.5235
+      },
+      {
+        "a": "llm_only",
+        "b": "static_llm",
+        "n": 40,
+        "only_a_correct": 3,
+        "only_b_correct": 8,
+        "p_value": 0.2266
+      },
+      {
+        "a": "llm_only",
+        "b": "static_llm_rag",
+        "n": 40,
+        "only_a_correct": 2,
+        "only_b_correct": 8,
+        "p_value": 0.1094
+      },
+      {
+        "a": "static_llm",
+        "b": "static_llm_rag",
+        "n": 40,
+        "only_a_correct": 4,
+        "only_b_correct": 5,
+        "p_value": 1.0
+      }
+    ]
+  },
+  "configurations": [
+    "static_only",
+    "llm_only",
+    "static_llm",
+    "static_llm_rag"
+  ],
+  "finished_configurations": [
+    "static_only",
+    "llm_only",
+    "static_llm",
+    "static_llm_rag"
+  ],
+  "bug_types": {}
+}

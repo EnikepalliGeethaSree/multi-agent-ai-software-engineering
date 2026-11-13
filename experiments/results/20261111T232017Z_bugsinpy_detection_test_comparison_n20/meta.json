@@ -1,0 +1,40 @@
+{
+  "name": "bugsinpy_detection_test_comparison_n20",
+  "started_at": "2026-11-11T23:20:17.182985+00:00",
+  "git_commit": "edd63d45bcd894787a2886d5c34c58875c36e745-dirty",
+  "python": "3.11.7",
+  "platform": "Windows-10-10.0.26300-SP0",
+  "packages": {
+    "marl-agents": "0.1.0",
+    "pydantic": "2.13.5",
+    "ruff": "0.16.9",
+    "radon": "6.0.1",
+    "chromadb": "1.5.9",
+    "openai": "3.21.0",
+    "sentence-transformers": "6.1.0"
+  },
+  "sample_ids": [
+    "ansible-15",
+    "ansible-7",
+    "fastapi-5",
+    "fastapi-6",
+    "keras-17",
+    "keras-38",
+    "keras-6",
+    "luigi-10",
+    "luigi-19",
+    "luigi-21",
+    "matplotlib-10",
+    "matplotlib-2",
+    "pandas-2",
+    "pandas-61",
+    "scrapy-2",
+    "scrapy-32",
+    "spacy-4",
+    "thefuck-15",
+    "youtube-dl-26",
+    "youtube-dl-4"
+  ],
+  "finished_at": "2026-11-11T23:20:17.423531+00:00",
+  "errors": 0
+}

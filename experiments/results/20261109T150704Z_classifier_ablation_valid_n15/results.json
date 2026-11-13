@@ -1,0 +1,1440 @@
+[
+  {
+    "sample_id": "cls-valid-23104-27812",
+    "mode": "disabled",
+    "label": 1,
+    "status": "complete",
+    "units_total": 1,
+    "units_scored": 0,
+    "units_skipped": 0,
+    "units_protected": 0,
+    "units_failed": 0,
+    "llm_calls": 1,
+    "input_tokens": 5321,
+    "output_tokens": 49,
+    "total_sec": 281.9089,
+    "llm_inference_sec": 273.655,
+    "findings_count": 1,
+    "findings": [
+      {
+        "severity": "low",
+        "category": "standards",
+        "confidence": 0.85,
+        "rule": "AST-NAMING",
+        "sources": [
+          "ast"
+        ],
+        "lines": [
+          185,
+          185
+        ],
+        "title": "Naming: function `_get_windowText`"
+      }
+    ],
+    "message": ""
+  },
+  {
+    "sample_id": "cls-valid-23104-27812",
+    "mode": "prioritize",
+    "label": 1,
+    "status": "complete",
+    "units_total": 1,
+    "units_scored": 1,
+    "units_skipped": 0,
+    "units_protected": 0,
+    "units_failed": 0,
+    "llm_calls": 1,
+    "input_tokens": 5321,
+    "output_tokens": 49,
+    "total_sec": 19.599,
+    "llm_inference_sec": 14.2299,
+    "findings_count": 1,
+    "findings": [
+      {
+        "severity": "low",
+        "category": "standards",
+        "confidence": 0.85,
+        "rule": "AST-NAMING",
+        "sources": [
+          "ast"
+        ],
+        "lines": [
+          185,
+          185
+        ],
+        "title": "Naming: function `_get_windowText`"
+      }
+    ],
+    "message": ""
+  },
+  {
+    "sample_id": "cls-valid-23104-27812",
+    "mode": "gate",
+    "label": 1,
+    "status": "complete",
+    "units_total": 1,
+    "units_scored": 1,
+    "units_skipped": 0,
+    "units_protected": 0,
+    "units_failed": 0,
+    "llm_calls": 1,
+    "input_tokens": 5321,
+    "output_tokens": 49,
+    "total_sec": 16.994,
+    "llm_inference_sec": 14.1876,
+    "findings_count": 1,
+    "findings": [
+      {
+        "severity": "low",
+        "category": "standards",
+        "confidence": 0.85,
+        "rule": "AST-NAMING",
+        "sources": [
+          "ast"
+        ],
+        "lines": [
+          185,
+          185
+        ],
+        "title": "Naming: function `_get_windowText`"
+      }
+    ],
+    "message": ""
+  },
+  {
+    "sample_id": "cls-valid-12552-6564",
+    "mode": "prioritize",
+    "label": 0,
+    "status": "complete",
+    "units_total": 1,
+    "units_scored": 1,
+    "units_skipped": 0,
+    "units_protected": 0,
+    "units_failed": 0,
+    "llm_calls": 1,
+    "input_tokens": 6938,
+    "output_tokens": 17,
+    "total_sec": 319.1483,
+    "llm_inference_sec": 317.9153,
+    "findings_count": 0,
+    "findings": [],
+    "message": "[mypy] mypy failed (2): "
+  },
+  {
+    "sample_id": "cls-valid-12552-6564",
+    "mode": "gate",
+    "label": 0,
+    "status": "complete",
+    "units_total": 1,
+    "units_scored": 1,
+    "units_skipped": 1,
+    "units_protected": 0,
+    "units_failed": 0,
+    "llm_calls": 0,
+    "input_tokens": 0,
+    "output_tokens": 0,
+    "total_sec": 1.3665,
+    "llm_inference_sec": 0.0,
+    "findings_count": 0,
+    "findings": [],
+    "message": "[mypy] mypy failed (2): ; classifier: 1 low-risk unit(s) were not sent to the LLM; static analysis still covered them"
+  },
+  {
+    "sample_id": "cls-valid-12552-6564",
+    "mode": "disabled",
+    "label": 0,
+    "status": "complete",
+    "units_total": 1,
+    "units_scored": 0,
+    "units_skipped": 0,
+    "units_protected": 0,
+    "units_failed": 0,
+    "llm_calls": 1,
+    "input_tokens": 6938,
+    "output_tokens": 17,
+    "total_sec": 9.1911,
+    "llm_inference_sec": 8.0371,
+    "findings_count": 0,
+    "findings": [],
+    "message": "[mypy] mypy failed (2): "
+  },
+  {
+    "sample_id": "cls-valid-10854-16290",
+    "mode": "gate",
+    "label": 1,
+    "status": "complete",
+    "units_total": 1,
+    "units_scored": 1,
+    "units_skipped": 0,
+    "units_protected": 1,
+    "units_failed": 0,
+    "llm_calls": 1,
+    "input_tokens": 5473,
+    "output_tokens": 59,
+    "total_sec": 262.5293,
+    "llm_inference_sec": 250.7971,
+    "findings_count": 0,
+    "findings": [],
+    "message": ""
+  },
+  {
+    "sample_id": "cls-valid-10854-16290",
+    "mode": "disabled",
+    "label": 1,
+    "status": "complete",
+    "units_total": 1,
+    "units_scored": 0,
+    "units_skipped": 0,
+    "units_protected": 0,
+    "units_failed": 0,
+    "llm_calls": 1,
+    "input_tokens": 5473,
+    "output_tokens": 56,
+    "total_sec": 36.991,
+    "llm_inference_sec": 15.9149,
+    "findings_count": 0,
+    "findings": [],
+    "message": ""
+  },
+  {
+    "sample_id": "cls-valid-10854-16290",
+    "mode": "prioritize",
+    "label": 1,
+    "status": "complete",
+    "units_total": 1,
+    "units_scored": 1,
+    "units_skipped": 0,
+    "units_protected": 0,
+    "units_failed": 0,
+    "llm_calls": 1,
+    "input_tokens": 5473,
+    "output_tokens": 56,
+    "total_sec": 29.6328,
+    "llm_inference_sec": 16.0103,
+    "findings_count": 0,
+    "findings": [],
+    "message": ""
+  },
+  {
+    "sample_id": "cls-valid-26843-7136",
+    "mode": "disabled",
+    "label": 0,
+    "status": "complete",
+    "units_total": 1,
+    "units_scored": 0,
+    "units_skipped": 0,
+    "units_protected": 0,
+    "units_failed": 0,
+    "llm_calls": 1,
+    "input_tokens": 5631,
+    "output_tokens": 307,
+    "total_sec": 403.1193,
+    "llm_inference_sec": 373.3782,
+    "findings_count": 1,
+    "findings": [
+      {
+        "severity": "medium",
+        "category": "bug",
+        "confidence": 0.612,
+        "rule": null,
+        "sources": [
+          "llm"
+        ],
+        "lines": [
+          247,
+          247
+        ],
+        "title": "Potential off-by-one error in bounding box resizing"
+      }
+    ],
+    "message": ""
+  },
+  {
+    "sample_id": "cls-valid-26843-7136",
+    "mode": "prioritize",
+    "label": 0,
+    "status": "complete",
+    "units_total": 1,
+    "units_scored": 1,
+    "units_skipped": 0,
+    "units_protected": 0,
+    "units_failed": 0,
+    "llm_calls": 1,
+    "input_tokens": 5631,
+    "output_tokens": 358,
+    "total_sec": 109.1572,
+    "llm_inference_sec": 98.8729,
+    "findings_count": 1,
+    "findings": [
+      {
+        "severity": "info",
+        "category": "bug",
+        "confidence": 0.612,
+        "rule": null,
+        "sources": [
+          "llm"
+        ],
+        "lines": [
+          247,
+          247
+        ],
+        "title": "Potential off-by-one error in bounding box clipping"
+      }
+    ],
+    "message": ""
+  },
+  {
+    "sample_id": "cls-valid-26843-7136",
+    "mode": "gate",
+    "label": 0,
+    "status": "complete",
+    "units_total": 1,
+    "units_scored": 1,
+    "units_skipped": 0,
+    "units_protected": 0,
+    "units_failed": 0,
+    "llm_calls": 1,
+    "input_tokens": 5631,
+    "output_tokens": 358,
+    "total_sec": 109.2047,
+    "llm_inference_sec": 98.9959,
+    "findings_count": 1,
+    "findings": [
+      {
+        "severity": "info",
+        "category": "bug",
+        "confidence": 0.612,
+        "rule": null,
+        "sources": [
+          "llm"
+        ],
+        "lines": [
+          247,
+          247
+        ],
+        "title": "Potential off-by-one error in bounding box clipping"
+      }
+    ],
+    "message": ""
+  },
+  {
+    "sample_id": "cls-valid-15460-29382",
+    "mode": "prioritize",
+    "label": 1,
+    "status": "complete",
+    "units_total": 1,
+    "units_scored": 1,
+    "units_skipped": 0,
+    "units_protected": 0,
+    "units_failed": 0,
+    "llm_calls": 1,
+    "input_tokens": 4487,
+    "output_tokens": 50,
+    "total_sec": 239.9791,
+    "llm_inference_sec": 230.2547,
+    "findings_count": 0,
+    "findings": [],
+    "message": ""
+  },
+  {
+    "sample_id": "cls-valid-15460-29382",
+    "mode": "gate",
+    "label": 1,
+    "status": "complete",
+    "units_total": 1,
+    "units_scored": 1,
+    "units_skipped": 0,
+    "units_protected": 0,
+    "units_failed": 0,
+    "llm_calls": 1,
+    "input_tokens": 4487,
+    "output_tokens": 54,
+    "total_sec": 25.026,
+    "llm_inference_sec": 15.7465,
+    "findings_count": 0,
+    "findings": [],
+    "message": ""
+  },
+  {
+    "sample_id": "cls-valid-15460-29382",
+    "mode": "disabled",
+    "label": 1,
+    "status": "complete",
+    "units_total": 1,
+    "units_scored": 0,
+    "units_skipped": 0,
+    "units_protected": 0,
+    "units_failed": 0,
+    "llm_calls": 1,
+    "input_tokens": 4487,
+    "output_tokens": 54,
+    "total_sec": 24.0664,
+    "llm_inference_sec": 15.6241,
+    "findings_count": 0,
+    "findings": [],
+    "message": ""
+  },
+  {
+    "sample_id": "cls-valid-15153-24037",
+    "mode": "gate",
+    "label": 1,
+    "status": "complete",
+    "units_total": 1,
+    "units_scored": 1,
+    "units_skipped": 0,
+    "units_protected": 0,
+    "units_failed": 0,
+    "llm_calls": 1,
+    "input_tokens": 3795,
+    "output_tokens": 281,
+    "total_sec": 240.7977,
+    "llm_inference_sec": 237.5278,
+    "findings_count": 3,
+    "findings": [
+      {
+        "severity": "high",
+        "category": "error_handling",
+        "confidence": 0.955,
+        "rule": "TYPE-attr-defined",
+        "sources": [
+          "llm",
+          "mypy"
+        ],
+        "lines": [
+          110,
+          117
+        ],
+        "title": "Potential missing error handling for `self.config`"
+      },
+      {
+        "severity": "medium",
+        "category": "bug",
+        "confidence": 0.55,
+        "rule": "TYPE-attr-defined",
+        "sources": [
+          "mypy"
+        ],
+        "lines": [
+          113,
+          113
+        ],
+        "title": "Type error: \"ServerConnectionMixin\" has no attribute \"config\""
+      },
+      {
+        "severity": "medium",
+        "category": "bug",
+        "confidence": 0.55,
+        "rule": "TYPE-attr-defined",
+        "sources": [
+          "mypy"
+        ],
+        "lines": [
+          116,
+          116
+        ],
+        "title": "Type error: \"ServerConnectionMixin\" has no attribute \"config\""
+      }
+    ],
+    "message": ""
+  },
+  {
+    "sample_id": "cls-valid-15153-24037",
+    "mode": "disabled",
+    "label": 1,
+    "status": "complete",
+    "units_total": 1,
+    "units_scored": 0,
+    "units_skipped": 0,
+    "units_protected": 0,
+    "units_failed": 0,
+    "llm_calls": 1,
+    "input_tokens": 3795,
+    "output_tokens": 372,
+    "total_sec": 88.0992,
+    "llm_inference_sec": 85.2171,
+    "findings_count": 3,
+    "findings": [
+      {
+        "severity": "medium",
+        "category": "bug",
+        "confidence": 0.91,
+        "rule": "TYPE-attr-defined",
+        "sources": [
+          "llm",
+          "mypy"
+        ],
+        "lines": [
+          110,
+          117
+        ],
+        "title": "Potential off-by-one error in forbidden hosts check"
+      },
+      {
+        "severity": "medium",
+        "category": "bug",
+        "confidence": 0.55,
+        "rule": "TYPE-attr-defined",
+        "sources": [
+          "mypy"
+        ],
+        "lines": [
+          113,
+          113
+        ],
+        "title": "Type error: \"ServerConnectionMixin\" has no attribute \"config\""
+      },
+      {
+        "severity": "medium",
+        "category": "bug",
+        "confidence": 0.55,
+        "rule": "TYPE-attr-defined",
+        "sources": [
+          "mypy"
+        ],
+        "lines": [
+          116,
+          116
+        ],
+        "title": "Type error: \"ServerConnectionMixin\" has no attribute \"config\""
+      }
+    ],
+    "message": ""
+  },
+  {
+    "sample_id": "cls-valid-15153-24037",
+    "mode": "prioritize",
+    "label": 1,
+    "status": "complete",
+    "units_total": 1,
+    "units_scored": 1,
+    "units_skipped": 0,
+    "units_protected": 0,
+    "units_failed": 0,
+    "llm_calls": 1,
+    "input_tokens": 3795,
+    "output_tokens": 372,
+    "total_sec": 90.4383,
+    "llm_inference_sec": 87.302,
+    "findings_count": 3,
+    "findings": [
+      {
+        "severity": "medium",
+        "category": "bug",
+        "confidence": 0.91,
+        "rule": "TYPE-attr-defined",
+        "sources": [
+          "llm",
+          "mypy"
+        ],
+        "lines": [
+          110,
+          117
+        ],
+        "title": "Potential off-by-one error in forbidden hosts check"
+      },
+      {
+        "severity": "medium",
+        "category": "bug",
+        "confidence": 0.55,
+        "rule": "TYPE-attr-defined",
+        "sources": [
+          "mypy"
+        ],
+        "lines": [
+          113,
+          113
+        ],
+        "title": "Type error: \"ServerConnectionMixin\" has no attribute \"config\""
+      },
+      {
+        "severity": "medium",
+        "category": "bug",
+        "confidence": 0.55,
+        "rule": "TYPE-attr-defined",
+        "sources": [
+          "mypy"
+        ],
+        "lines": [
+          116,
+          116
+        ],
+        "title": "Type error: \"ServerConnectionMixin\" has no attribute \"config\""
+      }
+    ],
+    "message": ""
+  },
+  {
+    "sample_id": "cls-valid-14832-7129",
+    "mode": "disabled",
+    "label": 1,
+    "status": "complete",
+    "units_total": 1,
+    "units_scored": 0,
+    "units_skipped": 0,
+    "units_protected": 0,
+    "units_failed": 0,
+    "llm_calls": 1,
+    "input_tokens": 6145,
+    "output_tokens": 57,
+    "total_sec": 317.3982,
+    "llm_inference_sec": 308.3163,
+    "findings_count": 0,
+    "findings": [],
+    "message": ""
+  },
+  {
+    "sample_id": "cls-valid-14832-7129",
+    "mode": "prioritize",
+    "label": 1,
+    "status": "complete",
+    "units_total": 1,
+    "units_scored": 1,
+    "units_skipped": 0,
+    "units_protected": 0,
+    "units_failed": 0,
+    "llm_calls": 1,
+    "input_tokens": 6145,
+    "output_tokens": 57,
+    "total_sec": 24.1851,
+    "llm_inference_sec": 15.7478,
+    "findings_count": 0,
+    "findings": [],
+    "message": ""
+  },
+  {
+    "sample_id": "cls-valid-14832-7129",
+    "mode": "gate",
+    "label": 1,
+    "status": "complete",
+    "units_total": 1,
+    "units_scored": 1,
+    "units_skipped": 0,
+    "units_protected": 0,
+    "units_failed": 0,
+    "llm_calls": 1,
+    "input_tokens": 6145,
+    "output_tokens": 57,
+    "total_sec": 23.2123,
+    "llm_inference_sec": 15.5178,
+    "findings_count": 0,
+    "findings": [],
+    "message": ""
+  },
+  {
+    "sample_id": "cls-valid-13182-18457",
+    "mode": "prioritize",
+    "label": 1,
+    "status": "complete",
+    "units_total": 1,
+    "units_scored": 1,
+    "units_skipped": 0,
+    "units_protected": 0,
+    "units_failed": 0,
+    "llm_calls": 1,
+    "input_tokens": 5925,
+    "output_tokens": 58,
+    "total_sec": 243.2407,
+    "llm_inference_sec": 235.3591,
+    "findings_count": 1,
+    "findings": [
+      {
+        "severity": "info",
+        "category": "documentation",
+        "confidence": 0.93,
+        "rule": "AST-MISSING-DOCSTRING",
+        "sources": [
+          "ast"
+        ],
+        "lines": [
+          913,
+          913
+        ],
+        "title": "Missing docstring on public function SeriesTest.test_pct_change"
+      }
+    ],
+    "message": ""
+  },
+  {
+    "sample_id": "cls-valid-13182-18457",
+    "mode": "gate",
+    "label": 1,
+    "status": "complete",
+    "units_total": 1,
+    "units_scored": 1,
+    "units_skipped": 0,
+    "units_protected": 0,
+    "units_failed": 0,
+    "llm_calls": 1,
+    "input_tokens": 5925,
+    "output_tokens": 58,
+    "total_sec": 23.4619,
+    "llm_inference_sec": 15.8686,
+    "findings_count": 1,
+    "findings": [
+      {
+        "severity": "info",
+        "category": "documentation",
+        "confidence": 0.93,
+        "rule": "AST-MISSING-DOCSTRING",
+        "sources": [
+          "ast"
+        ],
+        "lines": [
+          913,
+          913
+        ],
+        "title": "Missing docstring on public function SeriesTest.test_pct_change"
+      }
+    ],
+    "message": ""
+  },
+  {
+    "sample_id": "cls-valid-13182-18457",
+    "mode": "disabled",
+    "label": 1,
+    "status": "complete",
+    "units_total": 1,
+    "units_scored": 0,
+    "units_skipped": 0,
+    "units_protected": 0,
+    "units_failed": 0,
+    "llm_calls": 1,
+    "input_tokens": 5925,
+    "output_tokens": 58,
+    "total_sec": 23.2621,
+    "llm_inference_sec": 15.8857,
+    "findings_count": 1,
+    "findings": [
+      {
+        "severity": "info",
+        "category": "documentation",
+        "confidence": 0.93,
+        "rule": "AST-MISSING-DOCSTRING",
+        "sources": [
+          "ast"
+        ],
+        "lines": [
+          913,
+          913
+        ],
+        "title": "Missing docstring on public function SeriesTest.test_pct_change"
+      }
+    ],
+    "message": ""
+  },
+  {
+    "sample_id": "cls-valid-26795-5003",
+    "mode": "gate",
+    "label": 1,
+    "status": "complete",
+    "units_total": 1,
+    "units_scored": 1,
+    "units_skipped": 1,
+    "units_protected": 0,
+    "units_failed": 0,
+    "llm_calls": 0,
+    "input_tokens": 0,
+    "output_tokens": 0,
+    "total_sec": 2.8451,
+    "llm_inference_sec": 0.0,
+    "findings_count": 0,
+    "findings": [],
+    "message": "classifier: 1 low-risk unit(s) were not sent to the LLM; static analysis still covered them"
+  },
+  {
+    "sample_id": "cls-valid-26795-5003",
+    "mode": "disabled",
+    "label": 1,
+    "status": "complete",
+    "units_total": 1,
+    "units_scored": 0,
+    "units_skipped": 0,
+    "units_protected": 0,
+    "units_failed": 0,
+    "llm_calls": 1,
+    "input_tokens": 3084,
+    "output_tokens": 17,
+    "total_sec": 101.1674,
+    "llm_inference_sec": 98.7105,
+    "findings_count": 0,
+    "findings": [],
+    "message": ""
+  },
+  {
+    "sample_id": "cls-valid-26795-5003",
+    "mode": "prioritize",
+    "label": 1,
+    "status": "complete",
+    "units_total": 1,
+    "units_scored": 1,
+    "units_skipped": 0,
+    "units_protected": 0,
+    "units_failed": 0,
+    "llm_calls": 1,
+    "input_tokens": 3084,
+    "output_tokens": 17,
+    "total_sec": 7.9975,
+    "llm_inference_sec": 5.2812,
+    "findings_count": 0,
+    "findings": [],
+    "message": ""
+  },
+  {
+    "sample_id": "cls-valid-12298-29749",
+    "mode": "disabled",
+    "label": 0,
+    "status": "complete",
+    "units_total": 1,
+    "units_scored": 0,
+    "units_skipped": 0,
+    "units_protected": 0,
+    "units_failed": 0,
+    "llm_calls": 1,
+    "input_tokens": 5742,
+    "output_tokens": 250,
+    "total_sec": 276.4161,
+    "llm_inference_sec": 275.1646,
+    "findings_count": 0,
+    "findings": [],
+    "message": "[mypy] mypy failed (2): "
+  },
+  {
+    "sample_id": "cls-valid-12298-29749",
+    "mode": "prioritize",
+    "label": 0,
+    "status": "partial",
+    "units_total": 1,
+    "units_scored": 1,
+    "units_skipped": 0,
+    "units_protected": 0,
+    "units_failed": 1,
+    "llm_calls": 0,
+    "input_tokens": 0,
+    "output_tokens": 0,
+    "total_sec": 903.3918,
+    "llm_inference_sec": 902.041,
+    "findings_count": 0,
+    "findings": [],
+    "message": "[mypy] mypy failed (2): ; [changed_file.py:201-400] LLM review failed: Ollama did not answer within 900s. Local inference can be slow; raise llm.timeout_s or use a smaller prompt."
+  },
+  {
+    "sample_id": "cls-valid-12298-29749",
+    "mode": "gate",
+    "label": 0,
+    "status": "partial",
+    "units_total": 1,
+    "units_scored": 1,
+    "units_skipped": 0,
+    "units_protected": 1,
+    "units_failed": 1,
+    "llm_calls": 0,
+    "input_tokens": 0,
+    "output_tokens": 0,
+    "total_sec": 905.1998,
+    "llm_inference_sec": 902.0484,
+    "findings_count": 0,
+    "findings": [],
+    "message": "[mypy] mypy failed (2): ; [changed_file.py:201-400] LLM review failed: Ollama did not answer within 900s. Local inference can be slow; raise llm.timeout_s or use a smaller prompt."
+  },
+  {
+    "sample_id": "cls-valid-24814-12775",
+    "mode": "prioritize",
+    "label": 0,
+    "status": "complete",
+    "units_total": 1,
+    "units_scored": 1,
+    "units_skipped": 0,
+    "units_protected": 0,
+    "units_failed": 0,
+    "llm_calls": 1,
+    "input_tokens": 4630,
+    "output_tokens": 39,
+    "total_sec": 304.0134,
+    "llm_inference_sec": 227.7672,
+    "findings_count": 0,
+    "findings": [],
+    "message": ""
+  },
+  {
+    "sample_id": "cls-valid-24814-12775",
+    "mode": "gate",
+    "label": 0,
+    "status": "complete",
+    "units_total": 1,
+    "units_scored": 1,
+    "units_skipped": 0,
+    "units_protected": 1,
+    "units_failed": 0,
+    "llm_calls": 1,
+    "input_tokens": 4630,
+    "output_tokens": 39,
+    "total_sec": 58.9226,
+    "llm_inference_sec": 11.9648,
+    "findings_count": 0,
+    "findings": [],
+    "message": ""
+  },
+  {
+    "sample_id": "cls-valid-24814-12775",
+    "mode": "disabled",
+    "label": 0,
+    "status": "complete",
+    "units_total": 1,
+    "units_scored": 0,
+    "units_skipped": 0,
+    "units_protected": 0,
+    "units_failed": 0,
+    "llm_calls": 1,
+    "input_tokens": 4630,
+    "output_tokens": 39,
+    "total_sec": 55.8667,
+    "llm_inference_sec": 11.889,
+    "findings_count": 0,
+    "findings": [],
+    "message": ""
+  },
+  {
+    "sample_id": "cls-valid-26837-13928",
+    "mode": "gate",
+    "label": 0,
+    "status": "complete",
+    "units_total": 1,
+    "units_scored": 1,
+    "units_skipped": 0,
+    "units_protected": 1,
+    "units_failed": 0,
+    "llm_calls": 1,
+    "input_tokens": 6265,
+    "output_tokens": 466,
+    "total_sec": 459.3019,
+    "llm_inference_sec": 449.6238,
+    "findings_count": 1,
+    "findings": [
+      {
+        "severity": "high",
+        "category": "bug",
+        "confidence": 0.495,
+        "rule": "TYPE-attr-defined",
+        "sources": [
+          "llm",
+          "mypy"
+        ],
+        "lines": [
+          2384,
+          2392
+        ],
+        "title": "Incorrect bbox adjustment"
+      }
+    ],
+    "message": ""
+  },
+  {
+    "sample_id": "cls-valid-26837-13928",
+    "mode": "disabled",
+    "label": 0,
+    "status": "complete",
+    "units_total": 1,
+    "units_scored": 0,
+    "units_skipped": 0,
+    "units_protected": 0,
+    "units_failed": 0,
+    "llm_calls": 1,
+    "input_tokens": 6265,
+    "output_tokens": 183,
+    "total_sec": 63.3993,
+    "llm_inference_sec": 54.3657,
+    "findings_count": 0,
+    "findings": [],
+    "message": ""
+  },
+  {
+    "sample_id": "cls-valid-26837-13928",
+    "mode": "prioritize",
+    "label": 0,
+    "status": "complete",
+    "units_total": 1,
+    "units_scored": 1,
+    "units_skipped": 0,
+    "units_protected": 0,
+    "units_failed": 0,
+    "llm_calls": 1,
+    "input_tokens": 6265,
+    "output_tokens": 183,
+    "total_sec": 62.6835,
+    "llm_inference_sec": 53.7426,
+    "findings_count": 0,
+    "findings": [],
+    "message": ""
+  },
+  {
+    "sample_id": "cls-valid-35849-27630",
+    "mode": "disabled",
+    "label": 1,
+    "status": "complete",
+    "units_total": 1,
+    "units_scored": 0,
+    "units_skipped": 0,
+    "units_protected": 0,
+    "units_failed": 0,
+    "llm_calls": 1,
+    "input_tokens": 4799,
+    "output_tokens": 283,
+    "total_sec": 279.8484,
+    "llm_inference_sec": 276.1308,
+    "findings_count": 0,
+    "findings": [],
+    "message": ""
+  },
+  {
+    "sample_id": "cls-valid-35849-27630",
+    "mode": "prioritize",
+    "label": 1,
+    "status": "complete",
+    "units_total": 1,
+    "units_scored": 1,
+    "units_skipped": 0,
+    "units_protected": 0,
+    "units_failed": 0,
+    "llm_calls": 1,
+    "input_tokens": 4799,
+    "output_tokens": 294,
+    "total_sec": 77.2266,
+    "llm_inference_sec": 74.147,
+    "findings_count": 0,
+    "findings": [],
+    "message": ""
+  },
+  {
+    "sample_id": "cls-valid-35849-27630",
+    "mode": "gate",
+    "label": 1,
+    "status": "complete",
+    "units_total": 1,
+    "units_scored": 1,
+    "units_skipped": 0,
+    "units_protected": 1,
+    "units_failed": 0,
+    "llm_calls": 1,
+    "input_tokens": 4799,
+    "output_tokens": 294,
+    "total_sec": 75.478,
+    "llm_inference_sec": 72.5754,
+    "findings_count": 0,
+    "findings": [],
+    "message": ""
+  },
+  {
+    "sample_id": "cls-valid-19978-4280",
+    "mode": "prioritize",
+    "label": 0,
+    "status": "complete",
+    "units_total": 1,
+    "units_scored": 1,
+    "units_skipped": 0,
+    "units_protected": 0,
+    "units_failed": 0,
+    "llm_calls": 1,
+    "input_tokens": 4775,
+    "output_tokens": 350,
+    "total_sec": 300.0222,
+    "llm_inference_sec": 296.1196,
+    "findings_count": 1,
+    "findings": [
+      {
+        "severity": "high",
+        "category": "error_handling",
+        "confidence": 0.72,
+        "rule": null,
+        "sources": [
+          "llm"
+        ],
+        "lines": [
+          167,
+          173
+        ],
+        "title": "Potential silent exception handling"
+      }
+    ],
+    "message": ""
+  },
+  {
+    "sample_id": "cls-valid-19978-4280",
+    "mode": "gate",
+    "label": 0,
+    "status": "complete",
+    "units_total": 1,
+    "units_scored": 1,
+    "units_skipped": 0,
+    "units_protected": 0,
+    "units_failed": 0,
+    "llm_calls": 1,
+    "input_tokens": 4775,
+    "output_tokens": 368,
+    "total_sec": 93.2193,
+    "llm_inference_sec": 89.2416,
+    "findings_count": 1,
+    "findings": [
+      {
+        "severity": "high",
+        "category": "error_handling",
+        "confidence": 0.8,
+        "rule": null,
+        "sources": [
+          "llm"
+        ],
+        "lines": [
+          167,
+          173
+        ],
+        "title": "Over-broad exception handling"
+      }
+    ],
+    "message": ""
+  },
+  {
+    "sample_id": "cls-valid-19978-4280",
+    "mode": "disabled",
+    "label": 0,
+    "status": "complete",
+    "units_total": 1,
+    "units_scored": 0,
+    "units_skipped": 0,
+    "units_protected": 0,
+    "units_failed": 0,
+    "llm_calls": 1,
+    "input_tokens": 4775,
+    "output_tokens": 368,
+    "total_sec": 92.548,
+    "llm_inference_sec": 89.2952,
+    "findings_count": 1,
+    "findings": [
+      {
+        "severity": "high",
+        "category": "error_handling",
+        "confidence": 0.8,
+        "rule": null,
+        "sources": [
+          "llm"
+        ],
+        "lines": [
+          167,
+          173
+        ],
+        "title": "Over-broad exception handling"
+      }
+    ],
+    "message": ""
+  },
+  {
+    "sample_id": "cls-valid-12059-18516",
+    "mode": "gate",
+    "label": 0,
+    "status": "complete",
+    "units_total": 1,
+    "units_scored": 1,
+    "units_skipped": 0,
+    "units_protected": 0,
+    "units_failed": 0,
+    "llm_calls": 1,
+    "input_tokens": 7626,
+    "output_tokens": 254,
+    "total_sec": 408.2208,
+    "llm_inference_sec": 404.8356,
+    "findings_count": 6,
+    "findings": [
+      {
+        "severity": "high",
+        "category": "bug",
+        "confidence": 0.9,
+        "rule": "F821",
+        "sources": [
+          "ruff"
+        ],
+        "lines": [
+          504,
+          504
+        ],
+        "title": "F821: Undefined name `sys`"
+      },
+      {
+        "severity": "high",
+        "category": "bug",
+        "confidence": 0.9,
+        "rule": "F821",
+        "sources": [
+          "ruff"
+        ],
+        "lines": [
+          513,
+          513
+        ],
+        "title": "F821: Undefined name `sys`"
+      },
+      {
+        "severity": "high",
+        "category": "bug",
+        "confidence": 0.9,
+        "rule": "F821",
+        "sources": [
+          "ruff"
+        ],
+        "lines": [
+          523,
+          523
+        ],
+        "title": "F821: Undefined name `sys`"
+      },
+      {
+        "severity": "high",
+        "category": "bug",
+        "confidence": 0.9,
+        "rule": "F821",
+        "sources": [
+          "ruff"
+        ],
+        "lines": [
+          534,
+          534
+        ],
+        "title": "F821: Undefined name `sys`"
+      },
+      {
+        "severity": "high",
+        "category": "bug",
+        "confidence": 0.45,
+        "rule": "F821",
+        "sources": [
+          "ruff"
+        ],
+        "lines": [
+          488,
+          488
+        ],
+        "title": "F821: Undefined name `sys`"
+      },
+      {
+        "severity": "info",
+        "category": "standards",
+        "confidence": 0.8,
+        "rule": null,
+        "sources": [
+          "llm"
+        ],
+        "lines": [
+          488,
+          538
+        ],
+        "title": "Use of `sys.version_info` for JSON encoding"
+      }
+    ],
+    "message": ""
+  },
+  {
+    "sample_id": "cls-valid-12059-18516",
+    "mode": "disabled",
+    "label": 0,
+    "status": "complete",
+    "units_total": 1,
+    "units_scored": 0,
+    "units_skipped": 0,
+    "units_protected": 0,
+    "units_failed": 0,
+    "llm_calls": 1,
+    "input_tokens": 7626,
+    "output_tokens": 614,
+    "total_sec": 178.3984,
+    "llm_inference_sec": 174.1386,
+    "findings_count": 6,
+    "findings": [
+      {
+        "severity": "high",
+        "category": "bug",
+        "confidence": 0.45,
+        "rule": "F821",
+        "sources": [
+          "ruff"
+        ],
+        "lines": [
+          488,
+          488
+        ],
+        "title": "F821: Undefined name `sys`"
+      },
+      {
+        "severity": "high",
+        "category": "bug",
+        "confidence": 0.45,
+        "rule": "F821",
+        "sources": [
+          "ruff"
+        ],
+        "lines": [
+          504,
+          504
+        ],
+        "title": "F821: Undefined name `sys`"
+      },
+      {
+        "severity": "high",
+        "category": "bug",
+        "confidence": 0.45,
+        "rule": "F821",
+        "sources": [
+          "ruff"
+        ],
+        "lines": [
+          513,
+          513
+        ],
+        "title": "F821: Undefined name `sys`"
+      },
+      {
+        "severity": "high",
+        "category": "bug",
+        "confidence": 0.45,
+        "rule": "F821",
+        "sources": [
+          "ruff"
+        ],
+        "lines": [
+          523,
+          523
+        ],
+        "title": "F821: Undefined name `sys`"
+      },
+      {
+        "severity": "high",
+        "category": "bug",
+        "confidence": 0.45,
+        "rule": "F821",
+        "sources": [
+          "ruff"
+        ],
+        "lines": [
+          534,
+          534
+        ],
+        "title": "F821: Undefined name `sys`"
+      },
+      {
+        "severity": "info",
+        "category": "standards",
+        "confidence": 0.8,
+        "rule": null,
+        "sources": [
+          "llm"
+        ],
+        "lines": [
+          488,
+          538
+        ],
+        "title": "Use of `sys.version_info` for JSON encoding"
+      }
+    ],
+    "message": ""
+  },
+  {
+    "sample_id": "cls-valid-12059-18516",
+    "mode": "prioritize",
+    "label": 0,
+    "status": "complete",
+    "units_total": 1,
+    "units_scored": 1,
+    "units_skipped": 0,
+    "units_protected": 0,
+    "units_failed": 0,
+    "llm_calls": 1,
+    "input_tokens": 7626,
+    "output_tokens": 614,
+    "total_sec": 176.9464,
+    "llm_inference_sec": 174.0839,
+    "findings_count": 6,
+    "findings": [
+      {
+        "severity": "high",
+        "category": "bug",
+        "confidence": 0.45,
+        "rule": "F821",
+        "sources": [
+          "ruff"
+        ],
+        "lines": [
+          488,
+          488
+        ],
+        "title": "F821: Undefined name `sys`"
+      },
+      {
+        "severity": "high",
+        "category": "bug",
+        "confidence": 0.45,
+        "rule": "F821",
+        "sources": [
+          "ruff"
+        ],
+        "lines": [
+          504,
+          504
+        ],
+        "title": "F821: Undefined name `sys`"
+      },
+      {
+        "severity": "high",
+        "category": "bug",
+        "confidence": 0.45,
+        "rule": "F821",
+        "sources": [
+          "ruff"
+        ],
+        "lines": [
+          513,
+          513
+        ],
+        "title": "F821: Undefined name `sys`"
+      },
+      {
+        "severity": "high",
+        "category": "bug",
+        "confidence": 0.45,
+        "rule": "F821",
+        "sources": [
+          "ruff"
+        ],
+        "lines": [
+          523,
+          523
+        ],
+        "title": "F821: Undefined name `sys`"
+      },
+      {
+        "severity": "high",
+        "category": "bug",
+        "confidence": 0.45,
+        "rule": "F821",
+        "sources": [
+          "ruff"
+        ],
+        "lines": [
+          534,
+          534
+        ],
+        "title": "F821: Undefined name `sys`"
+      },
+      {
+        "severity": "info",
+        "category": "standards",
+        "confidence": 0.8,
+        "rule": null,
+        "sources": [
+          "llm"
+        ],
+        "lines": [
+          488,
+          538
+        ],
+        "title": "Use of `sys.version_info` for JSON encoding"
+      }
+    ],
+    "message": ""
+  }
+]

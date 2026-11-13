@@ -1,0 +1,72 @@
+{
+  "benchmark": "classifier_ablation",
+  "provider": "ollama",
+  "model": "qwen2.5-coder:7b",
+  "seed": 42,
+  "split": "dev (cls valid, dev projects only)",
+  "paired_samples": 14,
+  "status_counts": {
+    "disabled": {
+      "complete": 15
+    },
+    "prioritize": {
+      "complete": 14,
+      "partial": 1
+    },
+    "gate": {
+      "complete": 14,
+      "partial": 1
+    }
+  },
+  "modes": {
+    "disabled": {
+      "samples": 14,
+      "units_total": 14,
+      "units_skipped": 0,
+      "units_protected": 0,
+      "llm_calls": 14,
+      "input_tokens": 74894,
+      "output_tokens": 2474,
+      "total_sec": 1955.26,
+      "findings": 13
+    },
+    "prioritize": {
+      "samples": 14,
+      "units_total": 14,
+      "units_skipped": 0,
+      "units_protected": 0,
+      "llm_calls": 14,
+      "input_tokens": 74894,
+      "output_tokens": 2514,
+      "total_sec": 2004.27,
+      "findings": 13,
+      "baseline_findings": 13,
+      "findings_retained": 13,
+      "useful_baseline": 3,
+      "useful_retained": 3,
+      "important_baseline": 6,
+      "important_missed": 0,
+      "important_missed_detail": [],
+      "static_high_lost_in_skipped_units": 0
+    },
+    "gate": {
+      "samples": 14,
+      "units_total": 14,
+      "units_skipped": 2,
+      "units_protected": 4,
+      "llm_calls": 12,
+      "input_tokens": 64872,
+      "output_tokens": 2337,
+      "total_sec": 1800.58,
+      "findings": 14,
+      "baseline_findings": 13,
+      "findings_retained": 13,
+      "useful_baseline": 3,
+      "useful_retained": 3,
+      "important_baseline": 6,
+      "important_missed": 0,
+      "important_missed_detail": [],
+      "static_high_lost_in_skipped_units": 0
+    }
+  }
+}

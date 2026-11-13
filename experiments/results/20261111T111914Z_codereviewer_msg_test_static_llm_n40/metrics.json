@@ -1,0 +1,209 @@
+{
+  "task": "msg",
+  "n_samples": 40,
+  "n_evaluated": 40,
+  "n_failed": 0,
+  "failure_reasons": {},
+  "seconds": 200.1,
+  "findings_per_sample": 1.15,
+  "timing": {
+    "total_sec": {
+      "n": 40,
+      "mean": 5.0007,
+      "median": 4.6312,
+      "min": 2.0129,
+      "max": 8.9809
+    },
+    "static_analysis_sec": {
+      "n": 40,
+      "mean": 0.0863,
+      "median": 0.0714,
+      "min": 0.037,
+      "max": 0.2441
+    },
+    "rag_sec": {
+      "n": 40,
+      "mean": 0.0,
+      "median": 0.0,
+      "min": 0.0,
+      "max": 0.0
+    },
+    "llm_inference_sec": {
+      "n": 40,
+      "mean": 4.8674,
+      "median": 4.5428,
+      "min": 1.8758,
+      "max": 8.8049
+    },
+    "validation_sec": {
+      "n": 40,
+      "mean": 0.0051,
+      "median": 0.0024,
+      "min": 0.0002,
+      "max": 0.0296
+    },
+    "other_sec": {
+      "n": 40,
+      "mean": 0.0418,
+      "median": 0.0386,
+      "min": 0.0112,
+      "max": 0.114
+    },
+    "llm_rate_limit_wait_sec": {
+      "n": 40,
+      "mean": 0.0,
+      "median": 0.0,
+      "min": 0.0,
+      "max": 0.0
+    },
+    "conditions": {
+      "samples": 40,
+      "workers": 1,
+      "note": "per-sample review time; samples ran concurrently on `workers` workers"
+    }
+  },
+  "finding_categories": {
+    "standards": 13,
+    "error_handling": 3,
+    "bug": 17,
+    "maintainability": 3,
+    "quality": 7,
+    "security": 1,
+    "documentation": 2
+  },
+  "finding_rules_top20": {
+    "llm": 12,
+    "F821": 11,
+    "F401": 9,
+    "E703": 5,
+    "AST-MISSING-DOCSTRING": 2,
+    "E731": 2,
+    "F405": 2,
+    "B006": 1,
+    "E722": 1,
+    "AST-LONG-FUNCTION": 1
+  },
+  "llm_work": {
+    "mean_calls": 1.0,
+    "mean_input_tokens": 2706.4,
+    "mean_output_tokens": 1328.8,
+    "mean_total_sec": 5.001
+  },
+  "llm_funnel": {
+    "llm_items_schema_invalid": 0,
+    "llm_findings_raw": 49,
+    "llm_findings_valid": 20,
+    "llm_findings_actionable": 20,
+    "vague_dropped": 0,
+    "llm_findings_after_dedupe": 20,
+    "llm_rejected_by_reason": {
+      "outside_scope": 28,
+      "evidence_not_found": 1
+    }
+  },
+  "comment_coverage": 0.625,
+  "text_metrics": {
+    "title": {
+      "bleu4_smoothed": 0.649,
+      "rouge_l": 1.795,
+      "chrf": 6.298
+    },
+    "title_fix": {
+      "bleu4_smoothed": 1.755,
+      "rouge_l": 4.806,
+      "chrf": 11.179
+    },
+    "description": {
+      "bleu4_smoothed": 1.294,
+      "rouge_l": 3.898,
+      "chrf": 9.754
+    }
+  },
+  "bleu4_ci95_title_fix": [
+    1.2117633315082537,
+    2.3444833021831144
+  ],
+  "hit_rate_non_info": 0.6,
+  "sensitivity_without_cross_hunk_rules": {
+    "excluded_rules": [
+      "F401",
+      "F403",
+      "F405",
+      "F811",
+      "F821"
+    ],
+    "comment_coverage": 0.45,
+    "text_metrics": {
+      "title": {
+        "bleu4_smoothed": 0.693,
+        "rouge_l": 1.32,
+        "chrf": 5.131
+      },
+      "title_fix": {
+        "bleu4_smoothed": 1.182,
+        "rouge_l": 3.035,
+        "chrf": 7.962
+      },
+      "description": {
+        "bleu4_smoothed": 1.083,
+        "rouge_l": 2.739,
+        "chrf": 7.036
+      }
+    },
+    "bleu4_ci95_title_fix": [
+      0.7314311819304107,
+      1.7458092419538016
+    ],
+    "hit_rate_non_info": 0.425
+  },
+  "experiment": {
+    "configuration": {
+      "key": "static_llm",
+      "letter": "C",
+      "label": "Static + LLM",
+      "static": true,
+      "llm": true,
+      "rag": false,
+      "mode": "full"
+    },
+    "benchmark": "codereviewer_msg",
+    "dataset": "CodeReviewer (Python)",
+    "split": "test",
+    "sampling_seed": 42,
+    "limit": 40,
+    "sample_count": 40,
+    "sample_fingerprint": "e374f12160e589ce",
+    "n_evaluated": 40,
+    "n_failed": 0,
+    "llm": {
+      "provider": "groq",
+      "model": "openai/gpt-oss-120b",
+      "temperature": 0.0,
+      "seed": 42,
+      "max_tokens": 4096
+    },
+    "rag": null,
+    "static_analyzers": [
+      "ruff",
+      "radon",
+      "ast",
+      "secrets"
+    ],
+    "classifier": null,
+    "confidence_threshold": 0.3,
+    "include_info": true,
+    "evaluation_rules": {
+      "comment": "top-ranked finding: title + recommendation (variant title_fix)",
+      "text_metric_scale": "BLEU-4, ROUGE-L, chrF in 0-100; coverage in 0-1"
+    },
+    "prompt_versions": {
+      "system": "1.0",
+      "review": "1.1"
+    },
+    "llm_cache_reused": false,
+    "group_id": "abl-20261111T111605Z",
+    "repeat": 1,
+    "repeats": 3,
+    "timestamp": "2026-11-11T11:22:47.265967+00:00"
+  }
+}

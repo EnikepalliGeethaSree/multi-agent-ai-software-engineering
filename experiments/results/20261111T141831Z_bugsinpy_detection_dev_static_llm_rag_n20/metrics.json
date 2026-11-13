@@ -1,0 +1,128 @@
+{
+  "n_functions": 40,
+  "n_bugs": 20,
+  "n_failed": 0,
+  "function_level": {
+    "n": 40,
+    "tp": 16,
+    "fp": 11,
+    "tn": 9,
+    "fn": 4,
+    "accuracy": 0.625,
+    "precision": 0.5925925925925926,
+    "recall": 0.8,
+    "f1": 0.6808510638297872,
+    "positive_rate": 0.675
+  },
+  "at_gold_lines": {
+    "n": 40,
+    "tp": 12,
+    "fp": 11,
+    "tn": 9,
+    "fn": 8,
+    "accuracy": 0.525,
+    "precision": 0.5217391304347826,
+    "recall": 0.6,
+    "f1": 0.5581395348837209,
+    "positive_rate": 0.575
+  },
+  "ci_f1": [
+    0.5,
+    0.815
+  ],
+  "auc": 0.63625,
+  "pairs": {
+    "n": 20,
+    "both_flagged": 10,
+    "only_buggy": 6,
+    "only_fixed": 1,
+    "neither": 3,
+    "discrimination": 0.3
+  },
+  "wilson": {
+    "precision": {
+      "k": 16,
+      "n": 27,
+      "value": 0.5925925925925926,
+      "low": 0.4072670096806468,
+      "high": 0.7548524292560443
+    },
+    "recall": {
+      "k": 16,
+      "n": 20,
+      "value": 0.8,
+      "low": 0.5839825677481064,
+      "high": 0.919342337420202
+    },
+    "detection_rate": {
+      "k": 6,
+      "n": 20,
+      "value": 0.3,
+      "low": 0.1454772448676043,
+      "high": 0.5189728183535235
+    }
+  },
+  "llm_calls": 40,
+  "llm_rejected": 1,
+  "complete": true,
+  "experiment": {
+    "configuration": {
+      "key": "static_llm_rag",
+      "letter": "D",
+      "label": "Static + LLM + RAG",
+      "static": true,
+      "llm": true,
+      "rag": true,
+      "mode": "full"
+    },
+    "benchmark": "bugsinpy_detection",
+    "dataset": "BugsInPy",
+    "split": "dev",
+    "sampling_seed": 42,
+    "limit": 20,
+    "sample_count": 20,
+    "sample_fingerprint": "c851aa15f4030de6",
+    "n_evaluated": 40,
+    "n_failed": 0,
+    "llm": {
+      "provider": "groq",
+      "model": "openai/gpt-oss-120b",
+      "temperature": 0.0,
+      "seed": 42,
+      "max_tokens": 4096
+    },
+    "rag": {
+      "top_k": 6,
+      "guideline_k": 2,
+      "embedding_model": "hashing",
+      "vector_store": "memory",
+      "structural_context": true,
+      "max_context_chars": 8000
+    },
+    "static_analyzers": [
+      "ruff",
+      "ast",
+      "flow",
+      "loop"
+    ],
+    "classifier": null,
+    "confidence_threshold": 0.3,
+    "include_info": true,
+    "evaluation_rules": {
+      "pool": "one source file, at most 10 changed lines, change inside a function",
+      "failed_samples": "counted as wrong, never dropped (D22)",
+      "line_tolerance": 2
+    },
+    "prompt_versions": {
+      "bug_system": "1.0",
+      "bug_review": "1.1",
+      "bug_localize": "1.0"
+    },
+    "llm_cache_reused": false,
+    "group_id": null,
+    "repeat": null,
+    "repeats": null,
+    "timestamp": "2026-11-11T14:18:32.314452+00:00",
+    "agent": "bug_detection"
+  }
+}

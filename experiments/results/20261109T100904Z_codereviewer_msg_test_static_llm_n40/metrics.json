@@ -1,0 +1,199 @@
+{
+  "task": "msg",
+  "n_samples": 40,
+  "n_evaluated": 40,
+  "n_failed": 0,
+  "failure_reasons": {},
+  "seconds": 6003.4,
+  "findings_per_sample": 1.075,
+  "timing": {
+    "total_sec": {
+      "n": 40,
+      "mean": 150.0803,
+      "median": 138.7534,
+      "min": 20.8695,
+      "max": 385.6088
+    },
+    "static_analysis_sec": {
+      "n": 40,
+      "mean": 0.2848,
+      "median": 0.1522,
+      "min": 0.0666,
+      "max": 2.4658
+    },
+    "rag_sec": {
+      "n": 40,
+      "mean": 0.0,
+      "median": 0.0,
+      "min": 0.0,
+      "max": 0.0
+    },
+    "llm_inference_sec": {
+      "n": 40,
+      "mean": 149.7418,
+      "median": 138.5285,
+      "min": 20.6767,
+      "max": 385.4231
+    },
+    "validation_sec": {
+      "n": 40,
+      "mean": 0.0036,
+      "median": 0.0009,
+      "min": 0.0001,
+      "max": 0.0312
+    },
+    "other_sec": {
+      "n": 40,
+      "mean": 0.05,
+      "median": 0.0453,
+      "min": 0.0124,
+      "max": 0.1423
+    },
+    "llm_rate_limit_wait_sec": {
+      "n": 0,
+      "mean": null,
+      "median": null,
+      "min": null,
+      "max": null
+    },
+    "conditions": {
+      "samples": 40,
+      "workers": 1,
+      "note": "per-sample review time; samples ran concurrently on `workers` workers"
+    }
+  },
+  "finding_categories": {
+    "quality": 9,
+    "bug": 14,
+    "maintainability": 3,
+    "security": 2,
+    "standards": 9,
+    "documentation": 3,
+    "error_handling": 2,
+    "performance": 1
+  },
+  "finding_rules_top20": {
+    "F821": 11,
+    "F401": 9,
+    "llm": 8,
+    "E703": 5,
+    "AST-MISSING-DOCSTRING": 2,
+    "E731": 2,
+    "F405": 2,
+    "S105": 1,
+    "B006": 1,
+    "E722": 1,
+    "AST-LONG-FUNCTION": 1
+  },
+  "llm_work": {
+    "mean_calls": 1.0,
+    "mean_input_tokens": 2857.5,
+    "mean_output_tokens": 223.9,
+    "mean_total_sec": 150.08
+  },
+  "comment_coverage": 0.6,
+  "text_metrics": {
+    "title": {
+      "bleu4_smoothed": 0.731,
+      "rouge_l": 2.274,
+      "chrf": 6.351
+    },
+    "title_fix": {
+      "bleu4_smoothed": 2.269,
+      "rouge_l": 6.297,
+      "chrf": 10.896
+    },
+    "description": {
+      "bleu4_smoothed": 1.983,
+      "rouge_l": 5.838,
+      "chrf": 9.623
+    }
+  },
+  "bleu4_ci95_title_fix": [
+    1.425514290805913,
+    3.1586330277746586
+  ],
+  "hit_rate_non_info": 0.55,
+  "sensitivity_without_cross_hunk_rules": {
+    "excluded_rules": [
+      "F401",
+      "F403",
+      "F405",
+      "F811",
+      "F821"
+    ],
+    "comment_coverage": 0.4,
+    "text_metrics": {
+      "title": {
+        "bleu4_smoothed": 0.416,
+        "rouge_l": 1.018,
+        "chrf": 3.724
+      },
+      "title_fix": {
+        "bleu4_smoothed": 1.497,
+        "rouge_l": 3.942,
+        "chrf": 6.962
+      },
+      "description": {
+        "bleu4_smoothed": 1.555,
+        "rouge_l": 4.232,
+        "chrf": 6.732
+      }
+    },
+    "bleu4_ci95_title_fix": [
+      0.7709155242803724,
+      2.374380445313292
+    ],
+    "hit_rate_non_info": 0.35
+  },
+  "experiment": {
+    "configuration": {
+      "key": "static_llm",
+      "letter": "C",
+      "label": "Static + LLM",
+      "static": true,
+      "llm": true,
+      "rag": false,
+      "mode": "full"
+    },
+    "benchmark": "codereviewer_msg",
+    "dataset": "CodeReviewer (Python)",
+    "split": "test",
+    "sampling_seed": 42,
+    "limit": 40,
+    "sample_count": 40,
+    "sample_fingerprint": "e374f12160e589ce",
+    "n_evaluated": 40,
+    "n_failed": 0,
+    "llm": {
+      "provider": "ollama",
+      "model": "qwen2.5-coder:7b",
+      "temperature": 0.0,
+      "seed": 42,
+      "max_tokens": 4096
+    },
+    "rag": null,
+    "static_analyzers": [
+      "ruff",
+      "radon",
+      "ast",
+      "secrets"
+    ],
+    "classifier": null,
+    "confidence_threshold": 0.3,
+    "include_info": true,
+    "evaluation_rules": {
+      "comment": "top-ranked finding: title + recommendation (variant title_fix)",
+      "text_metric_scale": "BLEU-4, ROUGE-L, chrF in 0-100; coverage in 0-1"
+    },
+    "prompt_versions": {
+      "system": "1.0",
+      "review": "1.1"
+    },
+    "llm_cache_reused": false,
+    "group_id": "abl-20261109T084532Z",
+    "repeat": 1,
+    "repeats": 1,
+    "timestamp": "2026-11-09T11:49:16.031601+00:00"
+  }
+}

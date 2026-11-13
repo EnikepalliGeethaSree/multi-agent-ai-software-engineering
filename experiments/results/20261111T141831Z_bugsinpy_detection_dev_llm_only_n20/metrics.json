@@ -1,0 +1,116 @@
+{
+  "n_functions": 40,
+  "n_bugs": 20,
+  "n_failed": 0,
+  "function_level": {
+    "n": 40,
+    "tp": 14,
+    "fp": 15,
+    "tn": 5,
+    "fn": 6,
+    "accuracy": 0.475,
+    "precision": 0.4827586206896552,
+    "recall": 0.7,
+    "f1": 0.5714285714285714,
+    "positive_rate": 0.725
+  },
+  "at_gold_lines": {
+    "n": 40,
+    "tp": 11,
+    "fp": 15,
+    "tn": 5,
+    "fn": 9,
+    "accuracy": 0.4,
+    "precision": 0.4230769230769231,
+    "recall": 0.55,
+    "f1": 0.47826086956521735,
+    "positive_rate": 0.65
+  },
+  "ci_f1": [
+    0.391,
+    0.72
+  ],
+  "auc": 0.5,
+  "pairs": {
+    "n": 20,
+    "both_flagged": 12,
+    "only_buggy": 2,
+    "only_fixed": 3,
+    "neither": 3,
+    "discrimination": 0.1
+  },
+  "wilson": {
+    "precision": {
+      "k": 14,
+      "n": 29,
+      "value": 0.4827586206896552,
+      "low": 0.3138609015268349,
+      "high": 0.6556897811800528
+    },
+    "recall": {
+      "k": 14,
+      "n": 20,
+      "value": 0.7,
+      "low": 0.4810271816464765,
+      "high": 0.8545227551323956
+    },
+    "detection_rate": {
+      "k": 2,
+      "n": 20,
+      "value": 0.1,
+      "low": 0.027866481213768224,
+      "high": 0.3010336452284873
+    }
+  },
+  "llm_calls": 40,
+  "llm_rejected": 0,
+  "complete": true,
+  "experiment": {
+    "configuration": {
+      "key": "llm_only",
+      "letter": "B",
+      "label": "LLM Only",
+      "static": false,
+      "llm": true,
+      "rag": false,
+      "mode": "llm_only"
+    },
+    "benchmark": "bugsinpy_detection",
+    "dataset": "BugsInPy",
+    "split": "dev",
+    "sampling_seed": 42,
+    "limit": 20,
+    "sample_count": 20,
+    "sample_fingerprint": "c851aa15f4030de6",
+    "n_evaluated": 40,
+    "n_failed": 0,
+    "llm": {
+      "provider": "groq",
+      "model": "openai/gpt-oss-120b",
+      "temperature": 0.0,
+      "seed": 42,
+      "max_tokens": 4096
+    },
+    "rag": null,
+    "static_analyzers": [],
+    "classifier": null,
+    "confidence_threshold": 0.3,
+    "include_info": true,
+    "evaluation_rules": {
+      "pool": "one source file, at most 10 changed lines, change inside a function",
+      "failed_samples": "counted as wrong, never dropped (D22)",
+      "line_tolerance": 2
+    },
+    "prompt_versions": {
+      "bug_system": "1.0",
+      "bug_review": "1.1",
+      "bug_localize": "1.0"
+    },
+    "llm_cache_reused": false,
+    "group_id": null,
+    "repeat": null,
+    "repeats": null,
+    "timestamp": "2026-11-11T14:18:31.700308+00:00",
+    "agent": "bug_detection"
+  }
+}

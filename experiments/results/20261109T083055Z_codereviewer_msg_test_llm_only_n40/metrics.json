@@ -1,0 +1,182 @@
+{
+  "task": "msg",
+  "n_samples": 40,
+  "n_evaluated": 40,
+  "n_failed": 0,
+  "failure_reasons": {},
+  "seconds": 270.3,
+  "findings_per_sample": 0.5,
+  "timing": {
+    "total_sec": {
+      "n": 40,
+      "mean": 6.7517,
+      "median": 2.3119,
+      "min": 0.0161,
+      "max": 26.3808
+    },
+    "static_analysis_sec": {
+      "n": 40,
+      "mean": 0.0,
+      "median": 0.0,
+      "min": 0.0,
+      "max": 0.0
+    },
+    "rag_sec": {
+      "n": 40,
+      "mean": 0.0,
+      "median": 0.0,
+      "min": 0.0,
+      "max": 0.0
+    },
+    "llm_inference_sec": {
+      "n": 40,
+      "mean": 6.5419,
+      "median": 2.0628,
+      "min": 0.0,
+      "max": 26.3105
+    },
+    "validation_sec": {
+      "n": 40,
+      "mean": 0.0047,
+      "median": 0.0014,
+      "min": 0.0,
+      "max": 0.026
+    },
+    "other_sec": {
+      "n": 40,
+      "mean": 0.205,
+      "median": 0.0695,
+      "min": 0.0161,
+      "max": 4.0698
+    },
+    "llm_rate_limit_wait_sec": {
+      "n": 40,
+      "mean": 0.1,
+      "median": 0.0,
+      "min": 0.0,
+      "max": 4.0
+    },
+    "conditions": {
+      "samples": 40,
+      "workers": 1,
+      "note": "per-sample review time; samples ran concurrently on `workers` workers"
+    }
+  },
+  "finding_categories": {
+    "standards": 2,
+    "edge_case": 3,
+    "bug": 7,
+    "performance": 1,
+    "quality": 6,
+    "maintainability": 1
+  },
+  "finding_rules_top20": {
+    "llm": 20
+  },
+  "llm_work": {
+    "mean_calls": 0.5,
+    "mean_input_tokens": 1614.9,
+    "mean_output_tokens": 145.9,
+    "mean_total_sec": 6.752
+  },
+  "comment_coverage": 0.475,
+  "text_metrics": {
+    "title": {
+      "bleu4_smoothed": 0.646,
+      "rouge_l": 1.959,
+      "chrf": 6.318
+    },
+    "title_fix": {
+      "bleu4_smoothed": 1.865,
+      "rouge_l": 4.99,
+      "chrf": 8.669
+    },
+    "description": {
+      "bleu4_smoothed": 1.702,
+      "rouge_l": 4.27,
+      "chrf": 8.97
+    }
+  },
+  "bleu4_ci95_title_fix": [
+    0.8562459485547826,
+    3.2936178039014044
+  ],
+  "hit_rate_non_info": 0.475,
+  "sensitivity_without_cross_hunk_rules": {
+    "excluded_rules": [
+      "F401",
+      "F403",
+      "F405",
+      "F811",
+      "F821"
+    ],
+    "comment_coverage": 0.475,
+    "text_metrics": {
+      "title": {
+        "bleu4_smoothed": 0.646,
+        "rouge_l": 1.959,
+        "chrf": 6.318
+      },
+      "title_fix": {
+        "bleu4_smoothed": 1.865,
+        "rouge_l": 4.99,
+        "chrf": 8.669
+      },
+      "description": {
+        "bleu4_smoothed": 1.702,
+        "rouge_l": 4.27,
+        "chrf": 8.97
+      }
+    },
+    "bleu4_ci95_title_fix": [
+      0.8562459485547826,
+      3.2936178039014044
+    ],
+    "hit_rate_non_info": 0.475
+  },
+  "experiment": {
+    "configuration": {
+      "key": "llm_only",
+      "letter": "B",
+      "label": "LLM Only",
+      "static": false,
+      "llm": true,
+      "rag": false,
+      "mode": "llm_only"
+    },
+    "benchmark": "codereviewer_msg",
+    "dataset": "CodeReviewer (Python)",
+    "split": "test",
+    "sampling_seed": 42,
+    "limit": 40,
+    "sample_count": 40,
+    "sample_fingerprint": "e374f12160e589ce",
+    "n_evaluated": 40,
+    "n_failed": 0,
+    "llm": {
+      "provider": "gemini",
+      "model": "gemini-3.6-flash",
+      "temperature": 0.0,
+      "seed": 42,
+      "max_tokens": 16384
+    },
+    "rag": null,
+    "static_analyzers": [],
+    "classifier": null,
+    "confidence_threshold": 0.3,
+    "include_info": true,
+    "evaluation_rules": {
+      "comment": "top-ranked finding: title + recommendation (variant title_fix)",
+      "text_metric_scale": "BLEU-4, ROUGE-L, chrF in 0-100; coverage in 0-1"
+    },
+    "prompt_versions": {
+      "system": "1.0",
+      "review": "1.0"
+    },
+    "llm_cache_reused": true,
+    "group_id": "abl-20261109T083055Z",
+    "repeat": 1,
+    "repeats": 1,
+    "timestamp": "2026-11-09T08:35:36.174297+00:00"
+  }
+}

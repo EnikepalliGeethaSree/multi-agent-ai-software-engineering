@@ -1,0 +1,205 @@
+{
+  "task": "msg",
+  "n_samples": 40,
+  "n_evaluated": 40,
+  "n_failed": 0,
+  "failure_reasons": {},
+  "seconds": 8536.7,
+  "findings_per_sample": 1.1,
+  "timing": {
+    "total_sec": {
+      "n": 40,
+      "mean": 213.4025,
+      "median": 212.0289,
+      "min": 48.9832,
+      "max": 464.5902
+    },
+    "static_analysis_sec": {
+      "n": 40,
+      "mean": 0.3669,
+      "median": 0.1367,
+      "min": 0.0701,
+      "max": 6.6526
+    },
+    "rag_sec": {
+      "n": 40,
+      "mean": 0.0467,
+      "median": 0.0395,
+      "min": 0.0225,
+      "max": 0.1182
+    },
+    "llm_inference_sec": {
+      "n": 40,
+      "mean": 212.8012,
+      "median": 211.7371,
+      "min": 48.8,
+      "max": 464.2564
+    },
+    "validation_sec": {
+      "n": 40,
+      "mean": 0.0031,
+      "median": 0.0012,
+      "min": 0.0001,
+      "max": 0.0232
+    },
+    "other_sec": {
+      "n": 40,
+      "mean": 0.1846,
+      "median": 0.0504,
+      "min": 0.0109,
+      "max": 5.191
+    },
+    "llm_rate_limit_wait_sec": {
+      "n": 0,
+      "mean": null,
+      "median": null,
+      "min": null,
+      "max": null
+    },
+    "conditions": {
+      "samples": 40,
+      "workers": 1,
+      "note": "per-sample review time; samples ran concurrently on `workers` workers"
+    }
+  },
+  "finding_categories": {
+    "quality": 9,
+    "bug": 16,
+    "maintainability": 3,
+    "security": 2,
+    "standards": 10,
+    "documentation": 2,
+    "error_handling": 2
+  },
+  "finding_rules_top20": {
+    "F821": 11,
+    "F401": 9,
+    "llm": 9,
+    "E703": 5,
+    "AST-MISSING-DOCSTRING": 2,
+    "E731": 2,
+    "F405": 2,
+    "S105": 1,
+    "B006": 1,
+    "E722": 1,
+    "AST-LONG-FUNCTION": 1
+  },
+  "llm_work": {
+    "mean_calls": 1.0,
+    "mean_input_tokens": 4389.2,
+    "mean_output_tokens": 211.6,
+    "mean_total_sec": 213.403
+  },
+  "comment_coverage": 0.625,
+  "text_metrics": {
+    "title": {
+      "bleu4_smoothed": 0.893,
+      "rouge_l": 2.755,
+      "chrf": 6.857
+    },
+    "title_fix": {
+      "bleu4_smoothed": 2.588,
+      "rouge_l": 6.532,
+      "chrf": 10.978
+    },
+    "description": {
+      "bleu4_smoothed": 1.898,
+      "rouge_l": 5.867,
+      "chrf": 10.132
+    }
+  },
+  "bleu4_ci95_title_fix": [
+    1.6674653759038012,
+    3.477085642086321
+  ],
+  "hit_rate_non_info": 0.575,
+  "sensitivity_without_cross_hunk_rules": {
+    "excluded_rules": [
+      "F401",
+      "F403",
+      "F405",
+      "F811",
+      "F821"
+    ],
+    "comment_coverage": 0.425,
+    "text_metrics": {
+      "title": {
+        "bleu4_smoothed": 0.58,
+        "rouge_l": 1.57,
+        "chrf": 4.134
+      },
+      "title_fix": {
+        "bleu4_smoothed": 1.729,
+        "rouge_l": 4.066,
+        "chrf": 7.191
+      },
+      "description": {
+        "bleu4_smoothed": 1.474,
+        "rouge_l": 4.044,
+        "chrf": 6.904
+      }
+    },
+    "bleu4_ci95_title_fix": [
+      0.96560652002662,
+      2.57294446244578
+    ],
+    "hit_rate_non_info": 0.375
+  },
+  "experiment": {
+    "configuration": {
+      "key": "static_llm_rag",
+      "letter": "D",
+      "label": "Static + LLM + RAG",
+      "static": true,
+      "llm": true,
+      "rag": true,
+      "mode": "full"
+    },
+    "benchmark": "codereviewer_msg",
+    "dataset": "CodeReviewer (Python)",
+    "split": "test",
+    "sampling_seed": 42,
+    "limit": 40,
+    "sample_count": 40,
+    "sample_fingerprint": "e374f12160e589ce",
+    "n_evaluated": 40,
+    "n_failed": 0,
+    "llm": {
+      "provider": "ollama",
+      "model": "qwen2.5-coder:7b",
+      "temperature": 0.0,
+      "seed": 42,
+      "max_tokens": 4096
+    },
+    "rag": {
+      "top_k": 6,
+      "guideline_k": 2,
+      "embedding_model": "hashing",
+      "vector_store": "memory",
+      "structural_context": true,
+      "max_context_chars": 12000
+    },
+    "static_analyzers": [
+      "ruff",
+      "radon",
+      "ast",
+      "secrets"
+    ],
+    "classifier": null,
+    "confidence_threshold": 0.3,
+    "include_info": true,
+    "evaluation_rules": {
+      "comment": "top-ranked finding: title + recommendation (variant title_fix)",
+      "text_metric_scale": "BLEU-4, ROUGE-L, chrF in 0-100; coverage in 0-1"
+    },
+    "prompt_versions": {
+      "system": "1.0",
+      "review": "1.1"
+    },
+    "llm_cache_reused": false,
+    "group_id": "abl-20261109T084532Z",
+    "repeat": 1,
+    "repeats": 1,
+    "timestamp": "2026-11-09T14:11:41.874584+00:00"
+  }
+}

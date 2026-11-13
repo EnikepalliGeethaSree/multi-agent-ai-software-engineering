@@ -1,0 +1,25 @@
+{
+  "name": "ablation_planted",
+  "started_at": "2026-11-11T11:15:09.230916+00:00",
+  "git_commit": "8588ac6d12bbfd8aec03ab16f8adf41fc8e103c2-dirty",
+  "python": "3.11.7",
+  "platform": "Windows-10-10.0.26300-SP0",
+  "packages": {
+    "marl-agents": "0.1.0",
+    "pydantic": "2.13.5",
+    "ruff": "0.16.9",
+    "radon": "6.0.1",
+    "chromadb": "1.5.9",
+    "openai": "3.21.0",
+    "sentence-transformers": "6.1.0"
+  },
+  "group_id": "abl-20261111T111100Z",
+  "configurations": [
+    "static_only",
+    "llm_only",
+    "static_llm",
+    "static_llm_rag"
+  ],
+  "finished_at": "2026-11-11T11:15:09.372228+00:00",
+  "errors": 0
+}

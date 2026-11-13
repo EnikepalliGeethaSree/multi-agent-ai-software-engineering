@@ -1,0 +1,217 @@
+{
+  "task": "msg",
+  "n_samples": 40,
+  "n_evaluated": 40,
+  "n_failed": 0,
+  "failure_reasons": {},
+  "seconds": 221.9,
+  "findings_per_sample": 1.3,
+  "timing": {
+    "total_sec": {
+      "n": 40,
+      "mean": 5.543,
+      "median": 5.1966,
+      "min": 2.2618,
+      "max": 11.3185
+    },
+    "static_analysis_sec": {
+      "n": 40,
+      "mean": 0.086,
+      "median": 0.0735,
+      "min": 0.038,
+      "max": 0.2973
+    },
+    "rag_sec": {
+      "n": 40,
+      "mean": 0.0374,
+      "median": 0.0363,
+      "min": 0.0207,
+      "max": 0.0658
+    },
+    "llm_inference_sec": {
+      "n": 40,
+      "mean": 5.3701,
+      "median": 5.0421,
+      "min": 2.139,
+      "max": 11.1723
+    },
+    "validation_sec": {
+      "n": 40,
+      "mean": 0.0075,
+      "median": 0.0026,
+      "min": 0.0001,
+      "max": 0.0581
+    },
+    "other_sec": {
+      "n": 40,
+      "mean": 0.042,
+      "median": 0.0398,
+      "min": 0.012,
+      "max": 0.1022
+    },
+    "llm_rate_limit_wait_sec": {
+      "n": 40,
+      "mean": 0.0,
+      "median": 0.0,
+      "min": 0.0,
+      "max": 0.0
+    },
+    "conditions": {
+      "samples": 40,
+      "workers": 1,
+      "note": "per-sample review time; samples ran concurrently on `workers` workers"
+    }
+  },
+  "finding_categories": {
+    "edge_case": 2,
+    "quality": 11,
+    "bug": 18,
+    "security": 2,
+    "maintainability": 3,
+    "standards": 10,
+    "error_handling": 4,
+    "documentation": 2
+  },
+  "finding_rules_top20": {
+    "llm": 17,
+    "F821": 11,
+    "F401": 9,
+    "E703": 5,
+    "AST-MISSING-DOCSTRING": 2,
+    "E731": 2,
+    "F405": 2,
+    "S105": 1,
+    "B006": 1,
+    "E722": 1,
+    "AST-LONG-FUNCTION": 1
+  },
+  "llm_work": {
+    "mean_calls": 1.0,
+    "mean_input_tokens": 3917.3,
+    "mean_output_tokens": 1538.7,
+    "mean_total_sec": 5.543
+  },
+  "llm_funnel": {
+    "llm_items_schema_invalid": 0,
+    "llm_findings_raw": 61,
+    "llm_findings_valid": 30,
+    "llm_findings_actionable": 30,
+    "vague_dropped": 0,
+    "llm_findings_after_dedupe": 30,
+    "llm_rejected_by_reason": {
+      "outside_scope": 31
+    }
+  },
+  "comment_coverage": 0.725,
+  "text_metrics": {
+    "title": {
+      "bleu4_smoothed": 1.212,
+      "rouge_l": 2.326,
+      "chrf": 9.583
+    },
+    "title_fix": {
+      "bleu4_smoothed": 2.252,
+      "rouge_l": 5.918,
+      "chrf": 14.045
+    },
+    "description": {
+      "bleu4_smoothed": 2.236,
+      "rouge_l": 6.535,
+      "chrf": 13.763
+    }
+  },
+  "bleu4_ci95_title_fix": [
+    1.530645268417477,
+    2.9888935279790707
+  ],
+  "hit_rate_non_info": 0.7,
+  "sensitivity_without_cross_hunk_rules": {
+    "excluded_rules": [
+      "F401",
+      "F403",
+      "F405",
+      "F811",
+      "F821"
+    ],
+    "comment_coverage": 0.575,
+    "text_metrics": {
+      "title": {
+        "bleu4_smoothed": 1.011,
+        "rouge_l": 1.68,
+        "chrf": 7.608
+      },
+      "title_fix": {
+        "bleu4_smoothed": 1.619,
+        "rouge_l": 4.187,
+        "chrf": 10.498
+      },
+      "description": {
+        "bleu4_smoothed": 1.708,
+        "rouge_l": 5.082,
+        "chrf": 10.501
+      }
+    },
+    "bleu4_ci95_title_fix": [
+      1.0100267375350147,
+      2.3763311323689384
+    ],
+    "hit_rate_non_info": 0.55
+  },
+  "experiment": {
+    "configuration": {
+      "key": "static_llm_rag",
+      "letter": "D",
+      "label": "Static + LLM + RAG",
+      "static": true,
+      "llm": true,
+      "rag": true,
+      "mode": "full"
+    },
+    "benchmark": "codereviewer_msg",
+    "dataset": "CodeReviewer (Python)",
+    "split": "test",
+    "sampling_seed": 42,
+    "limit": 40,
+    "sample_count": 40,
+    "sample_fingerprint": "e374f12160e589ce",
+    "n_evaluated": 40,
+    "n_failed": 0,
+    "llm": {
+      "provider": "groq",
+      "model": "openai/gpt-oss-120b",
+      "temperature": 0.0,
+      "seed": 42,
+      "max_tokens": 4096
+    },
+    "rag": {
+      "top_k": 6,
+      "guideline_k": 2,
+      "embedding_model": "hashing",
+      "vector_store": "memory",
+      "structural_context": true,
+      "max_context_chars": 8000
+    },
+    "static_analyzers": [
+      "ruff",
+      "radon",
+      "ast",
+      "secrets"
+    ],
+    "classifier": null,
+    "confidence_threshold": 0.3,
+    "include_info": true,
+    "evaluation_rules": {
+      "comment": "top-ranked finding: title + recommendation (variant title_fix)",
+      "text_metric_scale": "BLEU-4, ROUGE-L, chrF in 0-100; coverage in 0-1"
+    },
+    "prompt_versions": {
+      "system": "1.0",
+      "review": "1.1"
+    },
+    "llm_cache_reused": false,
+    "group_id": "abl-20261111T111605Z",
+    "repeat": 2,
+    "repeats": 3,
+    "timestamp": "2026-11-11T11:38:29.883449+00:00"
+  }
+}

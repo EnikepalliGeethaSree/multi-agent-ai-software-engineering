@@ -1,0 +1,55 @@
+{
+  "repo": "src",
+  "n_chunks": 1258,
+  "n_queries": 711,
+  "relevance": "chunks containing the query function's repo-defined callees (AST call graph)",
+  "relevance_labelling": "automatic, no human labels: for every function with at least one callee defined in the repository, the query is the function's own chunk and the relevant set is the chunks that contain those callees (the query chunk itself is excluded); classes are skipped",
+  "ks": [
+    1,
+    3,
+    5,
+    10
+  ],
+  "seed": 42,
+  "embedders": [
+    "hashing"
+  ],
+  "random_baseline": {
+    "recall@1": 0.0009,
+    "recall@3": 0.0023,
+    "recall@5": 0.0029,
+    "recall@10": 0.0067,
+    "hit@1": 0.0028,
+    "hit@3": 0.0113,
+    "hit@5": 0.0141,
+    "hit@10": 0.0253,
+    "mrr": 0.0175,
+    "ndcg@10": 0.0047
+  },
+  "bm25": {
+    "recall@1": 0.0631,
+    "recall@3": 0.18,
+    "recall@5": 0.2485,
+    "recall@10": 0.362,
+    "hit@1": 0.1364,
+    "hit@3": 0.3277,
+    "hit@5": 0.4262,
+    "hit@10": 0.571,
+    "mrr": 0.2761,
+    "ndcg@10": 0.2439,
+    "seconds": 48.68
+  },
+  "hashing": {
+    "recall@1": 0.0918,
+    "recall@3": 0.191,
+    "recall@5": 0.2642,
+    "recall@10": 0.3819,
+    "hit@1": 0.1744,
+    "hit@3": 0.3488,
+    "hit@5": 0.4515,
+    "hit@10": 0.6006,
+    "mrr": 0.308,
+    "ndcg@10": 0.2676,
+    "seconds": 94.79
+  }
+}
